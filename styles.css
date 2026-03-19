@@ -1,0 +1,96 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #fff; color: #111; padding: 2rem; }
+.cfg { max-width: 740px; margin: 0 auto; padding: 1.5rem 0; }
+.divider { border: none; border-top: 1px solid rgba(0,0,0,0.1); margin: 1.5rem 0; }
+
+/* Steps */
+.step-row { display: flex; align-items: center; gap: 10px; margin-bottom: 1rem; }
+.step-dot { width: 8px; height: 8px; border-radius: 50%; background: #ccc; flex-shrink: 0; transition: background 0.2s; }
+.step-dot.done { background: #111; }
+.step-title { font-size: 15px; font-weight: 500; color: #111; }
+.step-sub { font-size: 13px; color: #666; margin-top: 2px; }
+.step-block { transition: opacity 0.25s; }
+.step-block.locked { opacity: 0.3; pointer-events: none; }
+.step-block.hidden { display: none; }
+
+/* Size cards */
+.size-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.size-card { background: #fff; outline: 1px solid #e0e0e0; outline-offset: -1px; border-radius: 12px; padding: 1rem 1.25rem; cursor: pointer; transition: outline-color 0.15s, outline-width 0.15s; }
+.size-card:hover { outline-color: #999; }
+.size-card.selected { outline: 2px solid #111; outline-offset: -2px; }
+.size-label { font-size: 16px; font-weight: 500; }
+.size-hint { font-size: 13px; color: #666; margin-top: 4px; }
+
+/* Format pills */
+.format-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+.fmt-pill { background: #fff; outline: 1px solid #e0e0e0; outline-offset: -1px; border-radius: 99px; padding: 7px 16px; font-size: 13px; font-weight: 500; cursor: pointer; white-space: nowrap; transition: outline-color 0.15s, outline-width 0.15s; }
+.fmt-pill:hover { outline-color: #999; }
+.fmt-pill.selected { outline: 2px solid #111; outline-offset: -2px; }
+
+/* Type cards */
+.type-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
+.type-card { background: #fff; outline: 1px solid #e0e0e0; outline-offset: -1px; border-radius: 12px; padding: 1rem 1.25rem; cursor: pointer; transition: outline-color 0.15s, outline-width 0.15s; }
+.type-card:hover { outline-color: #999; }
+.type-card.selected { outline: 2px solid #111; outline-offset: -2px; }
+.type-name { font-size: 14px; font-weight: 500; margin-bottom: 2px; }
+.type-tagline { font-size: 12px; color: #666; margin-bottom: 10px; }
+.type-price { font-size: 18px; font-weight: 500; margin-bottom: 8px; }
+.type-includes { font-size: 12px; color: #666; line-height: 1.6; padding: 0; list-style: none; }
+.type-includes li::before { content: "· "; }
+
+/* Package cards */
+.pkg-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
+.pkg-card { background: #fff; outline: 1px solid #e0e0e0; outline-offset: -1px; border-radius: 12px; padding: 1rem; cursor: pointer; transition: outline-color 0.15s, outline-width 0.15s; }
+.pkg-card:hover { outline-color: #999; }
+.pkg-card.selected { outline: 2px solid #111; outline-offset: -2px; }
+.pkg-card.custom { outline-style: dashed; }
+.pkg-name { font-size: 14px; font-weight: 500; margin-bottom: 6px; }
+.pkg-price { font-size: 18px; font-weight: 500; }
+.pkg-price-hint { font-size: 11px; color: #666; }
+.pkg-includes { font-size: 12px; color: #666; margin-top: 8px; line-height: 1.5; }
+
+/* Total bar */
+.total-bar { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; }
+.total-bar-label { font-size: 13px; color: #666; margin-bottom: 4px; }
+.total-bar-note { font-size: 12px; color: #999; }
+.total-bar-right { text-align: right; flex-shrink: 0; }
+.total-bar-val { font-size: 26px; font-weight: 500; }
+
+/* Checkout / Page 2 */
+.checkout-summary { background: #f7f7f5; border-radius: 12px; padding: 1.25rem; margin-bottom: 0; }
+.checkout-row { display: flex; justify-content: space-between; align-items: baseline; padding: 5px 0; font-size: 14px; }
+.checkout-row .lbl { color: #666; }
+.checkout-row .val { color: #111; font-weight: 500; }
+.checkout-total { display: flex; justify-content: space-between; align-items: flex-start; padding-top: 10px; margin-top: 6px; border-top: 1px solid #ddd; }
+
+/* Custom type card */
+.custom-type-card { margin-top: 10px; background: #fff; outline: 1px solid #e0e0e0; outline-offset: -1px; outline-style: dashed; border-radius: 12px; padding: 1rem 1.25rem; cursor: pointer; transition: outline-color 0.15s; }
+.custom-type-card:hover { outline-color: #999; }
+.custom-type-card.selected { outline: 2px solid #111; outline-offset: -2px; outline-style: solid; }
+
+/* Buttons */
+.btn-back { background: none; border: none; font-family: inherit; font-size: 13px; color: #666; cursor: pointer; padding: 0; margin-bottom: 1.5rem; }
+.btn-back:hover { color: #111; }
+.btn-submit { width: 100%; margin-top: 1.25rem; padding: 12px; background: #111; color: #fff; border: none; border-radius: 12px; font-family: inherit; font-size: 15px; font-weight: 500; cursor: pointer; transition: opacity 0.15s; }
+.btn-submit:hover { opacity: 0.85; }
+
+/* Summary rows */
+.sum-row { display: flex; justify-content: space-between; align-items: baseline; padding: 5px 0; font-size: 14px; }
+.sum-row .lbl { color: #666; }
+.sum-row .val { color: #111; font-weight: 500; }
+.sum-total { display: flex; justify-content: space-between; align-items: flex-start; padding-top: 10px; margin-top: 6px; border-top: 1px solid #ddd; }
+.total-lbl { font-size: 15px; font-weight: 500; }
+.total-val { font-size: 22px; font-weight: 500; text-align: right; }
+.total-note { font-size: 12px; color: #666; margin-top: 4px; text-align: right; }
+
+/* Contact form */
+.form-grid { margin-top: 1.5rem; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.fg { display: flex; flex-direction: column; gap: 6px; }
+.fg.full { grid-column: 1 / -1; }
+.fg label { font-size: 13px; color: #666; }
+.fg input, .fg textarea { font-family: inherit; font-size: 14px; padding: 8px 12px; outline: 1px solid #e0e0e0; outline-offset: -1px; border: none; border-radius: 8px; transition: outline-color 0.15s; }
+.fg input:focus, .fg textarea:focus { outline-color: #999; }
+.fg textarea { min-height: 72px; resize: vertical; }
+
+/* Success screen */
+.success-box { text-align: center; padding: 2.5rem 1rem; }

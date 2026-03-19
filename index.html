@@ -4,450 +4,174 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Event Configurator</title>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #fff; color: #111; padding: 2rem; }
-    .cfg { max-width: 740px; margin: 0 auto; padding: 1.5rem 0; }
-    .divider { border: none; border-top: 1px solid rgba(0,0,0,0.1); margin: 1.5rem 0; }
-    .step-row { display: flex; align-items: center; gap: 10px; margin-bottom: 1rem; }
-    .step-dot { width: 8px; height: 8px; border-radius: 50%; background: #ccc; flex-shrink: 0; transition: background 0.2s; }
-    .step-dot.done { background: #111; }
-    .step-title { font-size: 15px; font-weight: 500; color: #111; }
-    .step-sub { font-size: 13px; color: #666; margin-top: 2px; }
-    .step-block { transition: opacity 0.25s; }
-    .step-block.locked { opacity: 0.3; pointer-events: none; }
-    .step-block.hidden { display: none; }
-
-    .size-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .size-card { background: #fff; outline: 1px solid #e0e0e0; outline-offset: -1px; border-radius: 12px; padding: 1rem 1.25rem; cursor: pointer; transition: outline-color 0.15s, outline-width 0.15s; }
-    .size-card:hover { outline-color: #999; }
-    .size-card.selected { outline: 2px solid #111; outline-offset: -2px; }
-    .size-label { font-size: 16px; font-weight: 500; }
-    .size-hint { font-size: 13px; color: #666; margin-top: 4px; }
-
-    .format-grid { display: flex; flex-wrap: wrap; gap: 8px; }
-    .fmt-pill { background: #fff; outline: 1px solid #e0e0e0; outline-offset: -1px; border-radius: 99px; padding: 7px 16px; font-size: 13px; font-weight: 500; cursor: pointer; white-space: nowrap; transition: outline-color 0.15s, outline-width 0.15s; }
-    .fmt-pill:hover { outline-color: #999; }
-    .fmt-pill.selected { outline: 2px solid #111; outline-offset: -2px; }
-
-    .type-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
-    .type-card { background: #fff; outline: 1px solid #e0e0e0; outline-offset: -1px; border-radius: 12px; padding: 1rem 1.25rem; cursor: pointer; transition: outline-color 0.15s, outline-width 0.15s; }
-    .type-card:hover { outline-color: #999; }
-    .type-card.selected { outline: 2px solid #111; outline-offset: -2px; }
-    .type-name { font-size: 14px; font-weight: 500; margin-bottom: 2px; }
-    .type-tagline { font-size: 12px; color: #666; margin-bottom: 10px; }
-    .type-price { font-size: 18px; font-weight: 500; margin-bottom: 8px; }
-    .type-includes { font-size: 12px; color: #666; line-height: 1.6; padding: 0; list-style: none; }
-    .type-includes li::before { content: "· "; }
-
-    .pkg-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
-    .pkg-card { background: #fff; outline: 1px solid #e0e0e0; outline-offset: -1px; border-radius: 12px; padding: 1rem; cursor: pointer; transition: outline-color 0.15s, outline-width 0.15s; }
-    .pkg-card:hover { outline-color: #999; }
-    .pkg-card.selected { outline: 2px solid #111; outline-offset: -2px; }
-    .pkg-card.custom { outline-style: dashed; }
-    .pkg-name { font-size: 14px; font-weight: 500; margin-bottom: 6px; }
-    .pkg-price { font-size: 18px; font-weight: 500; }
-    .pkg-price-hint { font-size: 11px; color: #666; }
-    .pkg-includes { font-size: 12px; color: #666; margin-top: 8px; line-height: 1.5; }
-
-    .total-bar { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; }
-    .total-bar-label { font-size: 13px; color: #666; margin-bottom: 4px; }
-    .total-bar-note { font-size: 12px; color: #999; }
-    .total-bar-right { text-align: right; flex-shrink: 0; }
-    .total-bar-val { font-size: 26px; font-weight: 500; }
-
-    .checkout-summary { background: #f7f7f5; border-radius: 12px; padding: 1.25rem; margin-bottom: 0; }
-    .checkout-row { display: flex; justify-content: space-between; align-items: baseline; padding: 5px 0; font-size: 14px; }
-    .checkout-row .lbl { color: #666; }
-    .checkout-row .val { color: #111; font-weight: 500; }
-    .checkout-total { display: flex; justify-content: space-between; align-items: flex-start; padding-top: 10px; margin-top: 6px; border-top: 1px solid #ddd; }
-
-    .custom-type-card { margin-top: 10px; background: #fff; outline: 1px solid #e0e0e0; outline-offset: -1px; outline-style: dashed; border-radius: 12px; padding: 1rem 1.25rem; cursor: pointer; transition: outline-color 0.15s; }
-    .custom-type-card:hover { outline-color: #999; }
-    .custom-type-card.selected { outline: 2px solid #111; outline-offset: -2px; outline-style: solid; }
-
-    .btn-back { background: none; border: none; font-family: inherit; font-size: 13px; color: #666; cursor: pointer; padding: 0; margin-bottom: 1.5rem; }
-    .btn-back:hover { color: #111; }
-    .sum-row { display: flex; justify-content: space-between; align-items: baseline; padding: 5px 0; font-size: 14px; }
-    .sum-row .lbl { color: #666; }
-    .sum-row .val { color: #111; font-weight: 500; }
-    .sum-total { display: flex; justify-content: space-between; align-items: flex-start; padding-top: 10px; margin-top: 6px; border-top: 1px solid #ddd; }
-    .total-lbl { font-size: 15px; font-weight: 500; }
-    .total-val { font-size: 22px; font-weight: 500; text-align: right; }
-    .total-note { font-size: 12px; color: #666; margin-top: 4px; text-align: right; }
-
-    .form-grid { margin-top: 1.5rem; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    .fg { display: flex; flex-direction: column; gap: 6px; }
-    .fg.full { grid-column: 1 / -1; }
-    .fg label { font-size: 13px; color: #666; }
-    .fg input, .fg textarea { font-family: inherit; font-size: 14px; padding: 8px 12px; outline: 1px solid #e0e0e0; outline-offset: -1px; border: none; border-radius: 8px; transition: outline-color 0.15s; }
-    .fg input:focus, .fg textarea:focus { outline-color: #999; }
-    .fg textarea { min-height: 72px; resize: vertical; }
-    .btn-submit { width: 100%; margin-top: 1.25rem; padding: 12px; background: #111; color: #fff; border: none; border-radius: 12px; font-family: inherit; font-size: 15px; font-weight: 500; cursor: pointer; transition: opacity 0.15s; }
-    .btn-submit:hover { opacity: 0.85; }
-    .success-box { text-align: center; padding: 2.5rem 1rem; }
-  </style>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
 <!-- PAGE 1: Configurator -->
 <div id="page-1">
-<div class="cfg">
+  <div class="cfg">
 
-  <div class="step-block" id="block-format">
-    <div class="step-row">
-      <div class="step-dot" id="dot-format"></div>
-      <div><div class="step-title">Event format</div><div class="step-sub">What kind of event are you planning?</div></div>
-    </div>
-    <div class="format-grid" id="format-grid"></div>
-  </div>
-
-  <hr class="divider">
-
-  <div class="step-block locked" id="block-size">
-    <div class="step-row">
-      <div class="step-dot" id="dot-size"></div>
-      <div><div class="step-title">Group size</div><div class="step-sub">How many guests are you expecting?</div></div>
-    </div>
-    <div class="size-grid">
-      <div class="size-card" onclick="selectSize(50)" id="sz50"><div class="size-label">50 people</div><div class="size-hint">Intimate event</div></div>
-      <div class="size-card" onclick="selectSize(100)" id="sz100"><div class="size-label">100 people</div><div class="size-hint">Large event</div></div>
-    </div>
-  </div>
-
-  <hr class="divider">
-
-  <div class="step-block locked" id="block-type">
-    <div class="step-row">
-      <div class="step-dot" id="dot-type"></div>
-      <div><div class="step-title">Event type</div><div class="step-sub">Choose your participation level</div></div>
-    </div>
-    <div class="type-grid" id="type-grid"></div>
-    <div class="custom-type-card" id="custom-type-card" onclick="selectType('custom')">
-      <div class="type-name">Custom package</div>
-      <div class="type-tagline">Tell us what you need — we'll build it around you</div>
-    </div>
-  </div>
-
-  <div id="options-section" style="display:none;">
-    <hr class="divider">
-    <div class="step-block locked" id="block-catering">
+    <div class="step-block" id="block-format">
       <div class="step-row">
-        <div class="step-dot" id="dot-catering"></div>
-        <div><div class="step-title">Catering</div><div class="step-sub">Prices for <span class="size-label-inline" id="size-label-catering">—</span> people</div></div>
+        <div class="step-dot" id="dot-format"></div>
+        <div>
+          <div class="step-title">Event format</div>
+          <div class="step-sub">What kind of event are you planning?</div>
+        </div>
       </div>
-      <div class="pkg-grid" id="catering-grid"></div>
+      <div class="format-grid" id="format-grid"></div>
     </div>
 
     <hr class="divider">
-    <div class="step-block locked" id="block-drinks">
+
+    <div class="step-block locked" id="block-size">
       <div class="step-row">
-        <div class="step-dot" id="dot-drinks"></div>
-        <div><div class="step-title">Drinks</div><div class="step-sub">Prices for <span class="size-label-inline" id="size-label-drinks">—</span> people</div></div>
+        <div class="step-dot" id="dot-size"></div>
+        <div>
+          <div class="step-title">Group size</div>
+          <div class="step-sub">How many guests are you expecting?</div>
+        </div>
       </div>
-      <div class="pkg-grid" id="drinks-grid"></div>
+      <div class="size-grid">
+        <div class="size-card" onclick="selectSize(50)" id="sz50">
+          <div class="size-label">50 people</div>
+          <div class="size-hint">Intimate event</div>
+        </div>
+        <div class="size-card" onclick="selectSize(100)" id="sz100">
+          <div class="size-label">100 people</div>
+          <div class="size-hint">Large event</div>
+        </div>
+      </div>
     </div>
 
     <hr class="divider">
-    <div class="step-block locked" id="block-hostess">
+
+    <div class="step-block locked" id="block-type">
       <div class="step-row">
-        <div class="step-dot" id="dot-hostess"></div>
-        <div><div class="step-title">Hostess</div><div class="step-sub">Prices for <span class="size-label-inline" id="size-label-hostess">—</span> people</div></div>
+        <div class="step-dot" id="dot-type"></div>
+        <div>
+          <div class="step-title">Event type</div>
+          <div class="step-sub">Choose your participation level</div>
+        </div>
       </div>
-      <div class="pkg-grid" id="hostess-grid"></div>
-    </div>
-  </div>
-
-  <!-- Total bar at bottom of page 1 -->
-  <div class="step-block locked" id="block-total">
-    <hr class="divider">
-    <div class="total-bar">
-      <div>
-        <div class="total-bar-label">Estimated total</div>
-        <div class="total-bar-note" id="p1-note"></div>
-      </div>
-      <div class="total-bar-right">
-        <div class="total-bar-val" id="p1-total">—</div>
-        <button class="btn-submit" style="margin-top:0.75rem;" onclick="goToPage2()">Continue →</button>
+      <div class="type-grid" id="type-grid"></div>
+      <div class="custom-type-card" id="custom-type-card" onclick="selectType('custom')">
+        <div class="type-name">Custom package</div>
+        <div class="type-tagline">Tell us what you need — we'll build it around you</div>
       </div>
     </div>
-  </div>
 
-</div>
+    <div id="options-section" style="display:none;">
+      <hr class="divider">
+      <div class="step-block locked" id="block-catering">
+        <div class="step-row">
+          <div class="step-dot" id="dot-catering"></div>
+          <div>
+            <div class="step-title">Catering</div>
+            <div class="step-sub">Prices for <span id="size-label-catering">—</span> people</div>
+          </div>
+        </div>
+        <div class="pkg-grid" id="catering-grid"></div>
+      </div>
+
+      <hr class="divider">
+      <div class="step-block locked" id="block-drinks">
+        <div class="step-row">
+          <div class="step-dot" id="dot-drinks"></div>
+          <div>
+            <div class="step-title">Drinks</div>
+            <div class="step-sub">Prices for <span id="size-label-drinks">—</span> people</div>
+          </div>
+        </div>
+        <div class="pkg-grid" id="drinks-grid"></div>
+      </div>
+
+      <hr class="divider">
+      <div class="step-block locked" id="block-hostess">
+        <div class="step-row">
+          <div class="step-dot" id="dot-hostess"></div>
+          <div>
+            <div class="step-title">Hostess</div>
+            <div class="step-sub">Prices for <span id="size-label-hostess">—</span> people</div>
+          </div>
+        </div>
+        <div class="pkg-grid" id="hostess-grid"></div>
+      </div>
+    </div>
+
+    <!-- Total bar -->
+    <div class="step-block locked" id="block-total">
+      <hr class="divider">
+      <div class="total-bar">
+        <div>
+          <div class="total-bar-label">Estimated total</div>
+          <div class="total-bar-note" id="p1-note"></div>
+        </div>
+        <div class="total-bar-right">
+          <div class="total-bar-val" id="p1-total">—</div>
+          <button class="btn-submit" style="margin-top:0.75rem;" onclick="goToPage2()">Continue →</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
 </div>
 
 <!-- PAGE 2: Checkout -->
 <div id="page-2" style="display:none;">
-<div class="cfg">
+  <div class="cfg">
 
-  <button class="btn-back" onclick="goToPage1()">← Back</button>
+    <button class="btn-back" onclick="goToPage1()">← Back</button>
 
-  <div class="checkout-summary">
-    <div class="checkout-row"><span class="lbl">Group size</span><span class="val" id="co-size">—</span></div>
-    <div class="checkout-row"><span class="lbl">Event format</span><span class="val" id="co-format">—</span></div>
-    <div class="checkout-row"><span class="lbl">Event type</span><span class="val" id="co-type">—</span></div>
-    <div class="checkout-row" id="co-row-catering"><span class="lbl">Catering</span><span class="val" id="co-catering">—</span></div>
-    <div class="checkout-row" id="co-row-drinks"><span class="lbl">Drinks</span><span class="val" id="co-drinks">—</span></div>
-    <div class="checkout-row" id="co-row-hostess"><span class="lbl">Hostess</span><span class="val" id="co-hostess">—</span></div>
-    <div class="checkout-total">
-      <span class="total-lbl">Estimated total</span>
-      <div style="text-align:right;">
-        <div class="total-val" id="co-total">—</div>
-        <div class="total-note" id="co-note"></div>
+    <div class="checkout-summary">
+      <div class="checkout-row"><span class="lbl">Group size</span><span class="val" id="co-size">—</span></div>
+      <div class="checkout-row"><span class="lbl">Event format</span><span class="val" id="co-format">—</span></div>
+      <div class="checkout-row"><span class="lbl">Event type</span><span class="val" id="co-type">—</span></div>
+      <div class="checkout-row" id="co-row-catering"><span class="lbl">Catering</span><span class="val" id="co-catering">—</span></div>
+      <div class="checkout-row" id="co-row-drinks"><span class="lbl">Drinks</span><span class="val" id="co-drinks">—</span></div>
+      <div class="checkout-row" id="co-row-hostess"><span class="lbl">Hostess</span><span class="val" id="co-hostess">—</span></div>
+      <div class="checkout-total">
+        <span class="total-lbl">Estimated total</span>
+        <div style="text-align:right;">
+          <div class="total-val" id="co-total">—</div>
+          <div class="total-note" id="co-note"></div>
+        </div>
       </div>
     </div>
-  </div>
 
-  <hr class="divider">
+    <hr class="divider">
 
-  <div class="step-row" style="margin-bottom:1.25rem;">
-    <div class="step-dot done"></div>
-    <div><div class="step-title">Your details</div><div class="step-sub">We'll use this to get back to you</div></div>
-  </div>
-
-  <div id="enquiry-form">
-    <div class="form-grid">
-      <div class="fg"><label>Name</label><input type="text" id="f-name" placeholder="Your name"></div>
-      <div class="fg"><label>Email</label><input type="email" id="f-email" placeholder="your@email.com"></div>
-      <div class="fg"><label>Event date</label><input type="date" id="f-date"></div>
-      <div class="fg"><label>Phone (optional)</label><input type="tel" id="f-phone" placeholder="+1 000 000 0000"></div>
-      <div class="fg full"><label>Additional notes</label><textarea id="f-notes" placeholder="Dietary requirements, special requests…"></textarea></div>
+    <div class="step-row" style="margin-bottom:1.25rem;">
+      <div class="step-dot done"></div>
+      <div>
+        <div class="step-title">Your details</div>
+        <div class="step-sub">We'll use this to get back to you</div>
+      </div>
     </div>
-    <button class="btn-submit" onclick="submitEnquiry()">Submit enquiry</button>
-  </div>
 
-  <div id="success-view" style="display:none;">
-    <div class="success-box">
-      <p style="font-size:28px;margin-bottom:12px;">✓</p>
-      <p style="font-size:16px;font-weight:500;margin-bottom:8px;">Enquiry sent!</p>
-      <p style="font-size:14px;color:#666;">We'll be in touch within 24 hours.</p>
+    <div id="enquiry-form">
+      <div class="form-grid">
+        <div class="fg"><label>Name</label><input type="text" id="f-name" placeholder="Your name"></div>
+        <div class="fg"><label>Email</label><input type="email" id="f-email" placeholder="your@email.com"></div>
+        <div class="fg"><label>Event date</label><input type="date" id="f-date"></div>
+        <div class="fg"><label>Phone (optional)</label><input type="tel" id="f-phone" placeholder="+1 000 000 0000"></div>
+        <div class="fg full"><label>Additional notes</label><textarea id="f-notes" placeholder="Dietary requirements, special requests…"></textarea></div>
+      </div>
+      <button class="btn-submit" onclick="submitEnquiry()">Submit enquiry</button>
     </div>
+
+    <div id="success-view" style="display:none;">
+      <div class="success-box">
+        <p style="font-size:28px;margin-bottom:12px;">✓</p>
+        <p style="font-size:16px;font-weight:500;margin-bottom:8px;">Enquiry sent!</p>
+        <p style="font-size:14px;color:#666;">We'll be in touch within 24 hours.</p>
+      </div>
+    </div>
+
   </div>
-
-</div>
 </div>
 
-<script>
-const FORMATS = ['Launch events','AMAs & streams','Brand events','Ecosystem meetups','Roundtables'];
-
-const TYPES = [
-  { id:'branded',     name:'Branded event', tagline:'Full ownership',           price:'From $15K',
-    includes:['Venue rental (3h) + tech setup','Custom digital wall','Event manager & coordinator','IT support','Hostesses for check-in','Bartender & equipped bar'] },
-  { id:'cohost',      name:'Co-host',        tagline:'Shared stage & visibility', price:'From $8K',
-    includes:['Co-host branding on all materials','Logo on main stage screen','Speaker participation','10–15 guest invitations','Photo & video coverage','Livestream option'] },
-  { id:'sponsorship', name:'Sponsorship',    tagline:'Join an existing event',    price:'From $4K',
-    includes:['Logo on Luma event page','Mentions on Telegram & X','Logo on event visuals','Optional CTA/link','Visibility throughout program','Optional cocktail branding'] },
-  { id:'custom',      name:'Custom package', tagline:'Tell us what you need — we\'ll build it around you', price:null, includes:[] }
-];
-
-const CATERING = [
-  { id:'basic',     name:'Basic',     price:{50:500,  100:950},  includes:'Mini pastries · Cheese platter with fruits, olives & crackers' },
-  { id:'classic',   name:'Classic',   price:{50:1120, 100:2150}, includes:'5 items per person · Crostinis, pastry cups, sandwiches, croissants, dessert' },
-  { id:'extended',  name:'Extended',  price:{50:2000, 100:3950}, includes:'6 items per person · Sandwiches, quiche, canapés, crostinis, pastry cups, dessert' },
-  { id:'signature', name:'Signature', price:{50:3900, 100:7500}, includes:'7–8 items · Wagyu, lobster, duck parfait & more · Includes staff & chef' }
-];
-const DRINKS = [
-  { id:'standard',  name:'Standard',  price:{50:680,  100:1225}, includes:'Water · Premium tea (2) · Barista coffee hot & iced' },
-  { id:'extended',  name:'Extended',  price:{50:820,  100:1500}, includes:'Water · Premium tea (3) · Barista coffee · House lemonade' },
-  { id:'signature', name:'Signature', price:{50:1300, 100:2450}, includes:'Water · Ultra premium tea · Barista coffee · Lemonade · Signature mocktails' }
-];
-const HOSTESS = [
-  { id:'basic',    name:'Basic',    price:{50:300, 100:500},  includes:'2 hostesses · Check-in & guest list management · Welcome & directions' },
-  { id:'standard', name:'Standard', price:{50:550, 100:900},  includes:'3 hostesses · Check-in, welcome & floor support · Branded outfit coordination' },
-  { id:'premium',  name:'Premium',  price:{50:900, 100:1500}, includes:'4 hostesses · Full event presence · Branded attire · Dedicated VIP lane' }
-];
-
-const S = { size:null, format:null, type:null, catering:null, drinks:null, hostess:null };
-
-const fmtMoney = n => '$' + n.toLocaleString();
-const isSponsor    = () => S.type && S.type.id === 'sponsorship';
-const isSimpleType = () => S.type && (S.type.id === 'sponsorship' || S.type.id === 'custom');
-
-function allDone() {
-  if (!S.size || !S.format || !S.type) return false;
-  if (isSimpleType()) return true;
-  return !!S.catering && !!S.drinks && !!S.hostess;
-}
-
-function renderFormats() {
-  document.getElementById('format-grid').innerHTML = FORMATS.map(f =>
-    `<div class="fmt-pill${S.format===f?' selected':''}" onclick="selectFormat('${f}')">${f}</div>`
-  ).join('');
-}
-
-function renderTypes() {
-  const mainTypes = TYPES.filter(t => t.id !== 'custom');
-  document.getElementById('type-grid').innerHTML = mainTypes.map(t => {
-    const sel = S.type && S.type.id === t.id;
-    return `<div class="type-card${sel?' selected':''}" onclick="selectType('${t.id}')">
-      <div class="type-name">${t.name}</div>
-      <div class="type-tagline">${t.tagline}</div>
-      <div class="type-price">${t.price}</div>
-      <ul class="type-includes">${t.includes.map(i=>`<li>${i}</li>`).join('')}</ul>
-    </div>`;
-  }).join('');
-  const customSel = S.type && S.type.id === 'custom';
-  document.getElementById('custom-type-card').classList.toggle('selected', customSel);
-}
-
-function isCustomType() { return S.type && S.type.id === 'custom'; }
-
-function renderPkgs(list, id, key) {
-  document.getElementById(id).innerHTML = list.map(pkg => {
-    const priceStr = pkg.price
-      ? (S.size ? fmtMoney(pkg.price[S.size]) : '<span style="font-size:13px;color:#aaa">select size first</span>')
-      : '<span style="font-size:13px;color:#888">On request</span>';
-    const sel = S[key] && S[key].id === pkg.id;
-    return `<div class="pkg-card${sel?' selected':''}${pkg.id==='custom'?' custom':''}" onclick="selectPkg('${key}','${pkg.id}')">
-      <div class="pkg-name">${pkg.name}</div>
-      <div class="pkg-price">${priceStr}</div>
-      <div class="pkg-includes">${pkg.includes}</div>
-    </div>`;
-  }).join('');
-}
-
-function selectSize(n) {
-  S.size = n;
-  document.querySelectorAll('.size-card').forEach(c=>c.classList.remove('selected'));
-  document.getElementById('sz'+n).classList.add('selected');
-  renderPkgs(CATERING,'catering-grid','catering');
-  renderPkgs(DRINKS,'drinks-grid','drinks');
-  renderPkgs(HOSTESS,'hostess-grid','hostess');
-  updateUI();
-}
-function selectFormat(f) { S.format=f; renderFormats(); updateUI(); }
-function selectType(id) {
-  S.type=TYPES.find(t=>t.id===id);
-  S.catering=null; S.drinks=null; S.hostess=null;
-  renderTypes();
-  renderPkgs(CATERING,'catering-grid','catering');
-  renderPkgs(DRINKS,'drinks-grid','drinks');
-  renderPkgs(HOSTESS,'hostess-grid','hostess');
-  updateUI();
-}
-function selectPkg(key, id) {
-  const map={catering:CATERING,drinks:DRINKS,hostess:HOSTESS};
-  S[key]=map[key].find(p=>p.id===id);
-  renderPkgs(map[key],key+'-grid',key);
-  updateUI();
-}
-
-const setLocked = (id,v) => document.getElementById(id).classList.toggle('locked',v);
-const setDone   = (id,v) => document.getElementById(id).classList.toggle('done',v);
-
-function calcTotal() {
-  if (!allDone()) return null;
-  if (isSponsor()) return { display: 'From $4,000', note: 'Final price confirmed after enquiry' };
-  if (isCustomType()) return { display: 'On request', note: 'We\'ll prepare a custom quote for you' };
-  const hasCustom = [S.catering, S.drinks, S.hostess].some(p => p && !p.price);
-  if (hasCustom) return { display: 'On request', note: 'Includes one or more custom packages' };
-  let total = 0;
-  [S.catering, S.drinks, S.hostess].forEach(p => { if (p && p.price) total += p.price[S.size]; });
-  return { display: fmtMoney(total), note: 'Add-ons only · Event type fee billed separately' };
-}
-
-function calcRunningTotal() {
-  if (!S.format || !S.size) return null;
-  if (isSponsor()) return { display: 'From $4,000', note: 'Final price confirmed after enquiry' };
-  if (isCustomType()) return { display: 'On request', note: 'We\'ll prepare a custom quote for you' };
-  let total = 0;
-  let hasAny = false;
-  [S.catering, S.drinks, S.hostess].forEach(p => {
-    if (p) { hasAny = true; if (p.price) total += p.price[S.size]; }
-  });
-  if (!hasAny) return null;
-  return { display: fmtMoney(total), note: 'Add-ons only · Event type fee billed separately' };
-}
-
-function updateUI() {
-  const sponsor = isSponsor();
-
-  setDone('dot-size',    !!S.size);
-  setDone('dot-format',  !!S.format);
-  setDone('dot-type',    !!S.type);
-  setDone('dot-catering',!!S.catering);
-  setDone('dot-drinks',  !!S.drinks);
-  setDone('dot-hostess', !!S.hostess);
-
-  setLocked('block-size',   !S.format);
-  setLocked('block-type',   !S.format || !S.size);
-
-  const optEl = document.getElementById('options-section');
-  if (!S.type || isSimpleType()) {
-    optEl.style.display = 'none';
-  } else {
-    optEl.style.display = '';
-    setLocked('block-catering', false);
-    setLocked('block-drinks',   !S.catering);
-    setLocked('block-hostess',  !S.catering || !S.drinks);
-  }
-
-  // update size labels in section headers
-  ['catering','drinks','hostess'].forEach(key => {
-    const el = document.getElementById('size-label-' + key);
-    if (el) el.textContent = S.size || '—';
-  });
-  // total bar — show as soon as size is picked, update progressively
-  const totalBlock = document.getElementById('block-total');
-  const hasProgress = S.format && S.size && S.type;
-  setLocked('block-total', !hasProgress);
-  const t = hasProgress ? (calcRunningTotal() || calcTotal()) : null;
-  document.getElementById('p1-total').textContent = t ? t.display : '—';
-  document.getElementById('p1-note').textContent  = t ? t.note    : '';
-  // continue button only when fully done
-  const continueBtn = document.querySelector('#block-total .btn-submit');
-  if (continueBtn) continueBtn.style.opacity = allDone() ? '1' : '0.35', continueBtn.style.pointerEvents = allDone() ? '' : 'none';
-}
-
-function goToPage2() {
-  const sponsor = isSponsor();
-  const t = calcTotal();
-
-  // fill checkout summary
-  document.getElementById('co-size').textContent   = S.size   ? S.size + ' people' : '—';
-  document.getElementById('co-format').textContent = S.format || '—';
-  document.getElementById('co-type').textContent   = S.type   ? S.type.name : '—';
-
-  const setCoVal = (id, pkg) => {
-    const el = document.getElementById(id);
-    if (!pkg) { el.textContent='—'; return; }
-    el.textContent = pkg.name + (pkg.price && S.size ? ' · ' + fmtMoney(pkg.price[S.size]) : ' · On request');
-  };
-  setCoVal('co-catering', S.catering);
-  setCoVal('co-drinks',   S.drinks);
-  setCoVal('co-hostess',  S.hostess);
-
-  document.getElementById('co-total').textContent = t ? t.display : '—';
-  document.getElementById('co-note').textContent  = t ? t.note    : '';
-
-  ['co-row-catering','co-row-drinks','co-row-hostess'].forEach(id => {
-    document.getElementById(id).style.display = isSimpleType() ? 'none' : '';
-  });
-
-  document.getElementById('page-1').style.display = 'none';
-  document.getElementById('page-2').style.display = 'block';
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-function goToPage1() {
-  document.getElementById('page-2').style.display = 'none';
-  document.getElementById('page-1').style.display = 'block';
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-function submitEnquiry() {
-  const name  = document.getElementById('f-name').value.trim();
-  const email = document.getElementById('f-email').value.trim();
-  if (!name || !email) { alert('Please enter your name and email.'); return; }
-  document.getElementById('enquiry-form').style.display = 'none';
-  document.getElementById('success-view').style.display = 'block';
-}
-
-renderFormats(); renderTypes();
-renderPkgs(CATERING,'catering-grid','catering');
-renderPkgs(DRINKS,'drinks-grid','drinks');
-renderPkgs(HOSTESS,'hostess-grid','hostess');
-updateUI();
-</script>
+<script src="script.js"></script>
 </body>
 </html>
