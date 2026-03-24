@@ -1,256 +1,334 @@
-// ─── Data ────────────────────────────────────────────────────────────────────
+// ─── Data ─────────────────────────────────────────────────────────────────────
 
-const FORMATS = ['Launch events', 'AMAs & streams', 'Brand events', 'Ecosystem meetups', 'Roundtables'];
-
-const TYPES = [
-  {
-    id: 'branded', name: 'Branded event', tagline: 'Full ownership', price: 'From $15K',
-    includes: ['Venue rental (3h) + tech setup', 'Custom digital wall', 'Event manager & coordinator', 'IT support', 'Hostesses for check-in', 'Bartender & equipped bar']
-  },
-  {
-    id: 'cohost', name: 'Co-host', tagline: 'Shared stage & visibility', price: 'From $8K',
-    includes: ['Co-host branding on all materials', 'Logo on main stage screen', 'Speaker participation', '10–15 guest invitations', 'Photo & video coverage', 'Livestream option']
-  },
-  {
-    id: 'sponsorship', name: 'Sponsorship', tagline: 'Join an existing event', price: 'From $4K',
-    includes: ['Logo on Luma event page', 'Mentions on Telegram & X', 'Logo on event visuals', 'Optional CTA/link', 'Visibility throughout program', 'Optional cocktail branding']
-  },
-  {
-    id: 'custom', name: 'Custom package', tagline: "Tell us what you need — we'll build it around you", price: null, includes: []
-  }
+const VENUE = [
+  { id: 'event-hall',     name: 'Event hall',                         desc: '100 people · stunning Palm views and bar atmosphere',    price: 5000, perHour: true  },
+  { id: 'stage-av',       name: 'Main Stage & AV Setup + Technician', desc: 'LED screen, professional sound, stage lighting',         price: 1000, perHour: false },
+  { id: 'networking',     name: 'Networking area',                    desc: '70 people · stylish lounge and bar setting',             price: 3000, perHour: true  },
+  { id: 'room-dune',      name: 'Meeting room Dune',                  desc: '20 people · workshops and focused discussions',          price: 300,  perHour: true  },
+  { id: 'room-matrix',    name: 'Meeting room Matrix',                desc: '6 people · panoramic windows, skyline views',            price: 200,  perHour: true  },
+  { id: 'room-herous',    name: 'Meeting room Herous',                desc: '6 people · private space for strategic discussions',     price: 200,  perHour: true  },
+  { id: 'room-consensus', name: 'Meeting room Consensus',             desc: '6 people · floor-to-ceiling windows, Dubai skyline',    price: 200,  perHour: true  },
+  { id: 'room-dao',       name: 'Meeting room Dao',                   desc: '4 people · intimate space for quick meetings',          price: 150,  perHour: true  },
+  { id: 'storage',        name: 'Storage',                            desc: 'Secure space for materials, merchandise, equipment',    price: 100,  perHour: true  },
+  { id: 'private-office', name: 'Private Office',                     desc: '2/4/6 people · desk setup, screens',                    price: 500,  perHour: true  },
+  { id: 'conference',     name: 'Conference hall',                    desc: 'Up to 30 people · boardroom style',                     price: 1500, perHour: true  },
 ];
 
 const CATERING = [
-  { id: 'basic',     name: 'Basic',     price: { 50: 500,  100: 950  }, includes: 'Mini pastries · Cheese platter with fruits, olives & crackers' },
-  { id: 'classic',   name: 'Classic',   price: { 50: 1120, 100: 2150 }, includes: '5 items per person · Crostinis, pastry cups, sandwiches, croissants, dessert' },
-  { id: 'extended',  name: 'Extended',  price: { 50: 2000, 100: 3950 }, includes: '6 items per person · Sandwiches, quiche, canapés, crostinis, pastry cups, dessert' },
-  { id: 'signature', name: 'Signature', price: { 50: 3900, 100: 7500 }, includes: '7–8 items · Wagyu, lobster, duck parfait & more · Includes staff & chef' }
+  { id: 'basic',     name: 'Basic Sharing Platters',     desc: 'Light, elegant bites · relaxed networking atmosphere',           price: { 50: 500,  100: 950  } },
+  { id: 'classic',   name: 'Classic Canapés Selection',  desc: '5 items per person · elegant assortment of cold canapés',        price: { 50: 1120, 100: 2150 } },
+  { id: 'extended',  name: 'Extended Canapés Selection', desc: '6 items per person · warm and cold bites',                       price: { 50: 2000, 100: 3950 } },
+  { id: 'signature', name: 'Signature Catering',         desc: '7–8 pieces per person · pass around premium service',            price: { 50: 3900, 100: 7500 } },
 ];
 
-const DRINKS = [
-  { id: 'standard',  name: 'Standard',  price: { 50: 680,  100: 1225 }, includes: 'Water · Premium tea (2) · Barista coffee hot & iced' },
-  { id: 'extended',  name: 'Extended',  price: { 50: 820,  100: 1500 }, includes: 'Water · Premium tea (3) · Barista coffee · House lemonade' },
-  { id: 'signature', name: 'Signature', price: { 50: 1300, 100: 2450 }, includes: 'Water · Ultra premium tea · Barista coffee · Lemonade · Signature mocktails' }
+const BEVERAGES = [
+  { id: 'coffee',    name: 'Tea & Coffee Experience', desc: 'Water, barista coffee (hot or iced), premium teas',               price: { 50: 630,  100: 1075 } },
+  { id: 'lemonade',  name: 'Crafted Lemonades',       desc: 'House-made lemonades · customisable flavours and colours',        price: { 50: 670,  100: 1150 } },
+  { id: 'mocktails', name: 'Signature Mocktails',     desc: 'Alcohol-free cocktails · brand-customisable presentation',        price: { 50: 770,  100: 1100 } },
 ];
 
-const HOSTESS = [
-  { id: 'basic',    name: 'Basic',    price: { 50: 300, 100: 500  }, includes: '2 hostesses · Check-in & guest list management · Welcome & directions' },
-  { id: 'standard', name: 'Standard', price: { 50: 550, 100: 900  }, includes: '3 hostesses · Check-in, welcome & floor support · Branded outfit coordination' },
-  { id: 'premium',  name: 'Premium',  price: { 50: 900, 100: 1500 }, includes: '4 hostesses · Full event presence · Branded attire · Dedicated VIP lane' }
+const MEDIA = [
+  { id: 'photo',     name: 'On-site photographer',              desc: 'High-quality visuals for marketing and social proof',        price: 300,  perHour: true  },
+  { id: 'video',     name: 'On-site videographer',              desc: 'Cinematic video content for post-event promotion',          price: 350,  perHour: true  },
+  { id: 'live',      name: 'Live Broadcast — Social Media',     desc: 'Professional live broadcast across major platforms',        price: 1990, perHour: false },
+  { id: 'recording', name: 'Full event recording',              desc: 'High-quality recording for content and marketing reuse',    price: 600,  perHour: false },
+  { id: 'podcast',   name: 'Podcast room',                      desc: '2/4/6 people · studio-quality recording environment',      price: 300,  perHour: true  },
+];
+
+const PROMO = [
+  { id: 'luma',   name: 'Luma Event Page Setup & Promotion',        desc: 'Creation, optimization, and promotion on Luma',           price: 400  },
+  { id: 'email',  name: 'Targeted Email Campaign — 15k Database',   desc: 'Outreach to 15,000+ curated contact database',           price: 1500 },
+  { id: 'social', name: 'Social Media Campaign & Promo Management', desc: 'Planning and execution of social media promotion',        price: 1000 },
+];
+
+const BRANDING = [
+  { id: 'identity', name: 'Custom Event Branding & Visual Identity', desc: 'Distinctive visual identity, graphics, promo materials', price: 500,  perHour: false },
+  { id: 'lighting', name: 'Custom Lighting in Your Brand Colors',    desc: 'Lighting design tailored to your brand palette',         price: 400,  perHour: false },
+  { id: 'entrance', name: 'Entrance Branding',                       desc: 'Lift Hall Projection Visualisation · immersive environment', price: 1500, perHour: false },
+  { id: 'stage',    name: 'Stage & Backdrop Branding',               desc: 'Branded content for digital screens',                   price: 1000, perHour: false },
+  { id: 'dj',       name: 'DJ Performance',                          desc: 'Live DJ for vibrant atmosphere and networking energy',   price: 300,  perHour: true  },
+];
+
+const PRINTED = [
+  { id: 'photowall', name: 'Photo wall — Design & Printing',   desc: 'Visual centerpiece for social sharing',              price: 400 },
+  { id: 'rollup',    name: 'Roll up — Design & Printing',      desc: 'Professional banners for venue visibility',          price: 150 },
+  { id: 'badge',     name: 'Custom Badge — Design & Printing', desc: 'Branded badges for easy networking',                 price: 100 },
+  { id: 'lanyards',  name: 'Lanyards — Design & Printing',     desc: 'Subtle branding tool for every attendee',            price: 100 },
+  { id: 'notebooks', name: 'Notebooks & pens',                 desc: 'Branded materials guests keep after the event',      price: 250 },
+];
+
+const OPS = [
+  { id: 'manager',     name: 'Dedicated Event Manager',       desc: 'Full preparation and execution oversight',             price: 0,   perHour: false, included: true },
+  { id: 'coordinator', name: 'On-site Event Coordinator',     desc: 'Logistics, timing, and guest flow management',         price: 0,   perHour: false, included: true },
+  { id: 'hostess',     name: 'Hostesses for Guest Check-in',  desc: 'Professional welcome and registration management',     price: 80,  perHour: true  },
+  { id: 'bartender',   name: 'Bartender for Bar Activations', desc: 'Professional drink service and bar atmosphere',        price: 100, perHour: true  },
+  { id: 'waiters',     name: 'Waiters (Catering Service)',    desc: 'Smooth food and beverage service',                    price: 80,  perHour: true  },
 ];
 
 // ─── State ────────────────────────────────────────────────────────────────────
+// Multi-select perHour → value = hours (number)
+// Multi-select fixed   → value = true
+// Single-select        → id string or null
 
-const S = { size: null, format: null, type: null, catering: null, drinks: null, hostess: null };
+const S = {
+  guests:    null,
+  date:      '',
+  time:      '',
+  venue:     {},
+  catering:  null,
+  beverages: null,
+  media:     {},
+  promo:     {},
+  branding:  {},
+  printed:   {},
+  ops:       {},
+};
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-const fmtMoney    = n  => '$' + n.toLocaleString();
-const isSponsor   = () => S.type && S.type.id === 'sponsorship';
-const isCustomType= () => S.type && S.type.id === 'custom';
-const isSimpleType = () => S.type && (S.type.id === 'sponsorship' || S.type.id === 'custom');
+const $ = id => document.getElementById(id);
+const fmtMoney = n => '$' + n.toLocaleString();
 
-const setLocked = (id, v) => document.getElementById(id).classList.toggle('locked', v);
-const setDone   = (id, v) => document.getElementById(id).classList.toggle('done', v);
-
-function allDone() {
-  if (!S.size || !S.format || !S.type) return false;
-  if (isSimpleType()) return true;
-  return !!S.catering && !!S.drinks && !!S.hostess;
+function itemPrice(item, val) {
+  if (item.included) return 0;
+  if (item.perHour) return item.price * (typeof val === 'number' ? val : 1);
+  return item.price;
 }
-
-// ─── Render functions ─────────────────────────────────────────────────────────
-
-function renderFormats() {
-  document.getElementById('format-grid').innerHTML = FORMATS.map(f =>
-    `<div class="fmt-pill${S.format === f ? ' selected' : ''}" onclick="selectFormat('${f}')">${f}</div>`
-  ).join('');
-}
-
-function renderTypes() {
-  const mainTypes = TYPES.filter(t => t.id !== 'custom');
-  document.getElementById('type-grid').innerHTML = mainTypes.map(t => {
-    const sel = S.type && S.type.id === t.id;
-    return `<div class="type-card${sel ? ' selected' : ''}" onclick="selectType('${t.id}')">
-      <div class="type-name">${t.name}</div>
-      <div class="type-tagline">${t.tagline}</div>
-      <div class="type-price">${t.price}</div>
-      <ul class="type-includes">${t.includes.map(i => `<li>${i}</li>`).join('')}</ul>
-    </div>`;
-  }).join('');
-  const customSel = S.type && S.type.id === 'custom';
-  document.getElementById('custom-type-card').classList.toggle('selected', customSel);
-}
-
-function renderPkgs(list, id, key) {
-  document.getElementById(id).innerHTML = list.map(pkg => {
-    const priceStr = pkg.price
-      ? (S.size ? fmtMoney(pkg.price[S.size]) : '<span style="font-size:13px;color:#aaa">select size first</span>')
-      : '<span style="font-size:13px;color:#888">On request</span>';
-    const sel = S[key] && S[key].id === pkg.id;
-    return `<div class="pkg-card${sel ? ' selected' : ''}${pkg.id === 'custom' ? ' custom' : ''}" onclick="selectPkg('${key}','${pkg.id}')">
-      <div class="pkg-name">${pkg.name}</div>
-      <div class="pkg-price">${priceStr}</div>
-      <div class="pkg-includes">${pkg.includes}</div>
-    </div>`;
-  }).join('');
-}
-
-// ─── Selection handlers ───────────────────────────────────────────────────────
-
-function selectSize(n) {
-  S.size = n;
-  document.querySelectorAll('.size-card').forEach(c => c.classList.remove('selected'));
-  document.getElementById('sz' + n).classList.add('selected');
-  renderPkgs(CATERING, 'catering-grid', 'catering');
-  renderPkgs(DRINKS,   'drinks-grid',   'drinks');
-  renderPkgs(HOSTESS,  'hostess-grid',  'hostess');
-  updateUI();
-}
-
-function selectFormat(f) {
-  S.format = f;
-  renderFormats();
-  updateUI();
-}
-
-function selectType(id) {
-  S.type = TYPES.find(t => t.id === id);
-  S.catering = null;
-  S.drinks   = null;
-  S.hostess  = null;
-  renderTypes();
-  renderPkgs(CATERING, 'catering-grid', 'catering');
-  renderPkgs(DRINKS,   'drinks-grid',   'drinks');
-  renderPkgs(HOSTESS,  'hostess-grid',  'hostess');
-  updateUI();
-}
-
-function selectPkg(key, id) {
-  const map = { catering: CATERING, drinks: DRINKS, hostess: HOSTESS };
-  S[key] = map[key].find(p => p.id === id);
-  renderPkgs(map[key], key + '-grid', key);
-  updateUI();
-}
-
-// ─── Totals ───────────────────────────────────────────────────────────────────
 
 function calcTotal() {
-  if (!allDone()) return null;
-  if (isSponsor())    return { display: 'From $4,000', note: 'Final price confirmed after enquiry' };
-  if (isCustomType()) return { display: 'On request',  note: "We'll prepare a custom quote for you" };
-  const hasCustom = [S.catering, S.drinks, S.hostess].some(p => p && !p.price);
-  if (hasCustom) return { display: 'On request', note: 'Includes one or more custom packages' };
   let total = 0;
-  [S.catering, S.drinks, S.hostess].forEach(p => { if (p && p.price) total += p.price[S.size]; });
-  return { display: fmtMoney(total), note: 'Add-ons only · Event type fee billed separately' };
+  const addMulti = (items, stateObj) => {
+    for (const [id, val] of Object.entries(stateObj)) {
+      const item = items.find(i => i.id === id);
+      if (item) total += itemPrice(item, val);
+    }
+  };
+  addMulti(VENUE, S.venue);
+  addMulti(MEDIA, S.media);
+  addMulti(PROMO, S.promo);
+  addMulti(BRANDING, S.branding);
+  addMulti(PRINTED, S.printed);
+  addMulti(OPS, S.ops);
+  if (S.catering && S.guests) {
+    const c = CATERING.find(i => i.id === S.catering);
+    if (c) total += c.price[S.guests];
+  }
+  if (S.beverages && S.guests) {
+    const b = BEVERAGES.find(i => i.id === S.beverages);
+    if (b) total += b.price[S.guests];
+  }
+  return total;
 }
 
-function calcRunningTotal() {
-  if (!S.format || !S.size) return null;
-  if (isSponsor())    return { display: 'From $4,000', note: 'Final price confirmed after enquiry' };
-  if (isCustomType()) return { display: 'On request',  note: "We'll prepare a custom quote for you" };
-  let total = 0;
-  let hasAny = false;
-  [S.catering, S.drinks, S.hostess].forEach(p => {
-    if (p) { hasAny = true; if (p.price) total += p.price[S.size]; }
-  });
-  if (!hasAny) return null;
-  return { display: fmtMoney(total), note: 'Add-ons only · Event type fee billed separately' };
+// ─── Render ───────────────────────────────────────────────────────────────────
+
+function renderItemList(container, items, stateObj, section) {
+  container.innerHTML = items.map(item => {
+    if (item.included) {
+      return `<div class="item-card selected" style="cursor:default">
+        <div class="item-main">
+          <div class="item-chk" style="background:#111;border-color:#111"><span class="item-chk-tick" style="opacity:1">✓</span></div>
+          <div class="item-info">
+            <div class="item-name">${item.name}</div>
+            <div class="item-desc">${item.desc}</div>
+          </div>
+          <div class="item-price"><span class="item-included">Included</span></div>
+        </div>
+      </div>`;
+    }
+
+    const sel = item.id in stateObj;
+    const val = stateObj[item.id];
+    const hours = typeof val === 'number' ? val : 1;
+
+    const priceHtml = item.perHour
+      ? `<div class="item-price">${fmtMoney(item.price)}<div class="item-price-hint">per hour</div></div>`
+      : `<div class="item-price">${fmtMoney(item.price)}</div>`;
+
+    const hrsHtml = (sel && item.perHour) ? `
+      <div class="hrs-row" onclick="event.stopPropagation()">
+        <span class="hrs-label">Hours:</span>
+        <button class="hrs-btn" onclick="changeHrs('${section}','${item.id}',-1)">−</button>
+        <span class="hrs-val" id="hrs-${item.id}">${hours}</span>
+        <button class="hrs-btn" onclick="changeHrs('${section}','${item.id}',+1)">+</button>
+        <span class="hrs-total" id="hrs-total-${item.id}">${fmtMoney(item.price * hours)}</span>
+      </div>` : '';
+
+    return `<div class="item-card${sel ? ' selected' : ''}" onclick="toggleItem('${section}','${item.id}')">
+      <div class="item-main">
+        <div class="item-chk"><span class="item-chk-tick">✓</span></div>
+        <div class="item-info">
+          <div class="item-name">${item.name}</div>
+          <div class="item-desc">${item.desc}</div>
+        </div>
+        ${priceHtml}
+      </div>
+      ${hrsHtml}
+    </div>`;
+  }).join('');
 }
 
-// ─── UI update ────────────────────────────────────────────────────────────────
-
-function updateUI() {
-  setDone('dot-size',     !!S.size);
-  setDone('dot-format',   !!S.format);
-  setDone('dot-type',     !!S.type);
-  setDone('dot-catering', !!S.catering);
-  setDone('dot-drinks',   !!S.drinks);
-  setDone('dot-hostess',  !!S.hostess);
-
-  setLocked('block-size', !S.format);
-  setLocked('block-type', !S.format || !S.size);
-
-  const optEl = document.getElementById('options-section');
-  if (!S.type || isSimpleType()) {
-    optEl.style.display = 'none';
-  } else {
-    optEl.style.display = '';
-    setLocked('block-catering', false);
-    setLocked('block-drinks',   !S.catering);
-    setLocked('block-hostess',  !S.catering || !S.drinks);
+function renderCateringBev(containerId, items, selectedId, subId) {
+  const sub = S.guests ? `Prices for ${S.guests} people` : 'Select guest count to see prices';
+  $(subId).textContent = sub;
+  const container = $(containerId);
+  if (!S.guests) {
+    container.innerHTML = '';
+    return;
   }
+  container.innerHTML = items.map(item => {
+    const sel = selectedId === item.id;
+    return `<div class="pkg-card${sel ? ' selected' : ''}" onclick="selectSingle('${containerId === 'catering-grid' ? 'catering' : 'beverages'}','${item.id}')">
+      <div class="pkg-name">${item.name}</div>
+      <div class="pkg-price">${fmtMoney(item.price[S.guests])}</div>
+      <div class="pkg-includes">${item.desc}</div>
+    </div>`;
+  }).join('');
+}
 
-  ['catering', 'drinks', 'hostess'].forEach(key => {
-    const el = document.getElementById('size-label-' + key);
-    if (el) el.textContent = S.size || '—';
-  });
+function renderAll() {
+  renderItemList($('venue-list'),    VENUE,    S.venue,    'venue');
+  renderItemList($('media-list'),    MEDIA,    S.media,    'media');
+  renderItemList($('promo-list'),    PROMO,    S.promo,    'promo');
+  renderItemList($('branding-list'), BRANDING, S.branding, 'branding');
+  renderItemList($('printed-list'),  PRINTED,  S.printed,  'printed');
+  renderItemList($('ops-list'),      OPS,      S.ops,      'ops');
+  renderCateringBev('catering-grid',  CATERING, S.catering,  'catering-sub');
+  renderCateringBev('beverages-grid', BEVERAGES, S.beverages, 'beverages-sub');
+  updateTotal();
+}
 
-  const hasProgress = S.format && S.size && S.type;
-  setLocked('block-total', !hasProgress);
-  const t = hasProgress ? (calcRunningTotal() || calcTotal()) : null;
-  document.getElementById('p1-total').textContent = t ? t.display : '—';
-  document.getElementById('p1-note').textContent  = t ? t.note    : '';
+// ─── Handlers ─────────────────────────────────────────────────────────────────
 
-  const continueBtn = document.querySelector('#block-total .btn-submit');
-  if (continueBtn) {
-    continueBtn.style.opacity       = allDone() ? '1' : '0.35';
-    continueBtn.style.pointerEvents = allDone() ? '' : 'none';
-  }
+function selectGuests(n) {
+  S.guests = n;
+  document.querySelectorAll('.size-card').forEach(c => c.classList.remove('selected'));
+  $('sz' + n).classList.add('selected');
+  renderCateringBev('catering-grid',  CATERING,  S.catering,  'catering-sub');
+  renderCateringBev('beverages-grid', BEVERAGES, S.beverages, 'beverages-sub');
+  updateTotal();
+}
+
+function toggleItem(section, id) {
+  const MAP = { venue: VENUE, media: MEDIA, promo: PROMO, branding: BRANDING, printed: PRINTED, ops: OPS };
+  const items = MAP[section];
+  const item = items.find(i => i.id === id);
+  if (item.included) return;
+  const obj = S[section];
+  if (id in obj) { delete obj[id]; } else { obj[id] = item.perHour ? 1 : true; }
+  renderItemList($(`${section}-list`), items, obj, section);
+  updateTotal();
+}
+
+function changeHrs(section, id, delta) {
+  const MAP = { venue: VENUE, media: MEDIA, branding: BRANDING, ops: OPS };
+  const item = MAP[section].find(i => i.id === id);
+  const obj = S[section];
+  const cur = typeof obj[id] === 'number' ? obj[id] : 1;
+  const next = Math.max(1, cur + delta);
+  obj[id] = next;
+  $(`hrs-${id}`).textContent = next;
+  $(`hrs-total-${id}`).textContent = fmtMoney(item.price * next);
+  updateTotal();
+}
+
+function selectSingle(section, id) {
+  S[section] = S[section] === id ? null : id;
+  const [items, gridId, subId] = section === 'catering'
+    ? [CATERING,  'catering-grid',  'catering-sub']
+    : [BEVERAGES, 'beverages-grid', 'beverages-sub'];
+  renderCateringBev(gridId, items, S[section], subId);
+  updateTotal();
+}
+
+// ─── Total & dots ─────────────────────────────────────────────────────────────
+
+function updateTotal() {
+  const total = calcTotal();
+  $('p1-total').textContent = total > 0 ? fmtMoney(total) : '—';
+
+  const btn = $('btn-continue');
+  btn.style.opacity       = S.guests ? '1' : '0.35';
+  btn.style.pointerEvents = S.guests ? ''  : 'none';
+
+  $('dot-guests').classList.toggle('done', !!S.guests);
+  $('dot-venue').classList.toggle('done',    Object.keys(S.venue).length    > 0);
+  $('dot-catering').classList.toggle('done', !!S.catering);
+  $('dot-beverages').classList.toggle('done', !!S.beverages);
+  $('dot-media').classList.toggle('done',    Object.keys(S.media).length    > 0);
+  $('dot-promo').classList.toggle('done',    Object.keys(S.promo).length    > 0);
+  $('dot-branding').classList.toggle('done', Object.keys(S.branding).length > 0);
+  $('dot-printed').classList.toggle('done',  Object.keys(S.printed).length  > 0);
+  $('dot-ops').classList.toggle('done',      Object.keys(S.ops).length      > 0);
 }
 
 // ─── Page navigation ──────────────────────────────────────────────────────────
 
 function goToPage2() {
-  const t = calcTotal();
+  const total = calcTotal();
+  const lines = [];
 
-  document.getElementById('co-size').textContent   = S.size   ? S.size + ' people' : '—';
-  document.getElementById('co-format').textContent = S.format || '—';
-  document.getElementById('co-type').textContent   = S.type   ? S.type.name : '—';
+  if (S.date)   lines.push(['Date',   S.date]);
+  if (S.time)   lines.push(['Time',   S.time]);
+  if (S.guests) lines.push(['Guests', S.guests + ' people']);
 
-  const setCoVal = (id, pkg) => {
-    const el = document.getElementById(id);
-    if (!pkg) { el.textContent = '—'; return; }
-    el.textContent = pkg.name + (pkg.price && S.size ? ' · ' + fmtMoney(pkg.price[S.size]) : ' · On request');
+  const addSection = (title, items, stateObj) => {
+    const sel = items.filter(i => i.included || i.id in stateObj);
+    if (!sel.length) return;
+    lines.push({ header: title });
+    sel.forEach(item => {
+      const val = stateObj[item.id];
+      if (item.included) { lines.push([item.name, 'Included']); return; }
+      const hrs = typeof val === 'number' ? val : null;
+      lines.push([item.name, hrs ? `${hrs}h · ${fmtMoney(item.price * hrs)}` : fmtMoney(item.price)]);
+    });
   };
-  setCoVal('co-catering', S.catering);
-  setCoVal('co-drinks',   S.drinks);
-  setCoVal('co-hostess',  S.hostess);
 
-  document.getElementById('co-total').textContent = t ? t.display : '—';
-  document.getElementById('co-note').textContent  = t ? t.note    : '';
+  const addSingle = (title, items, id) => {
+    if (!id || !S.guests) return;
+    const item = items.find(i => i.id === id);
+    if (!item) return;
+    lines.push({ header: title });
+    lines.push([item.name, fmtMoney(item.price[S.guests])]);
+  };
 
-  ['co-row-catering', 'co-row-drinks', 'co-row-hostess'].forEach(id => {
-    document.getElementById(id).style.display = isSimpleType() ? 'none' : '';
-  });
+  addSection('Venue',       VENUE,    S.venue);
+  addSingle('Catering',     CATERING, S.catering);
+  addSingle('Beverages',    BEVERAGES, S.beverages);
+  addSection('Media',       MEDIA,    S.media);
+  addSection('Promo',       PROMO,    S.promo);
+  addSection('Branding',    BRANDING, S.branding);
+  addSection('Printed',     PRINTED,  S.printed);
+  addSection('Operations',  OPS,      S.ops);
 
-  document.getElementById('page-1').style.display = 'none';
-  document.getElementById('page-2').style.display = 'block';
+  $('co-summary').innerHTML = lines.map(line => {
+    if (line.header) return `<div class="co-section-header">${line.header}</div>`;
+    return `<div class="checkout-row"><span class="lbl">${line[0]}</span><span class="val">${line[1]}</span></div>`;
+  }).join('');
+
+  $('co-total').textContent = total > 0 ? fmtMoney(total) : '—';
+
+  $('page-1').style.display = 'none';
+  $('page-2').style.display = 'block';
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function goToPage1() {
-  document.getElementById('page-2').style.display = 'none';
-  document.getElementById('page-1').style.display = 'block';
+  $('page-2').style.display = 'none';
+  $('page-1').style.display = 'block';
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 // ─── Form submit ──────────────────────────────────────────────────────────────
 
 function submitEnquiry() {
-  const name  = document.getElementById('f-name').value.trim();
-  const email = document.getElementById('f-email').value.trim();
+  const name  = $('f-name').value.trim();
+  const email = $('f-email').value.trim();
   if (!name || !email) { alert('Please enter your name and email.'); return; }
-  document.getElementById('enquiry-form').style.display = 'none';
-  document.getElementById('success-view').style.display = 'block';
+  $('enquiry-form').style.display = 'none';
+  $('success-view').style.display = 'block';
 }
 
 // ─── Init ─────────────────────────────────────────────────────────────────────
 
-renderFormats();
-renderTypes();
-renderPkgs(CATERING, 'catering-grid', 'catering');
-renderPkgs(DRINKS,   'drinks-grid',   'drinks');
-renderPkgs(HOSTESS,  'hostess-grid',  'hostess');
-updateUI();
+renderAll();

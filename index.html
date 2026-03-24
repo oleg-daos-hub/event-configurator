@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Event Configurator</title>
+  <title>Build Your Event — DAOS Hub</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -12,106 +12,134 @@
 <div id="page-1">
   <div class="cfg">
 
-    <div class="step-block" id="block-format">
-      <div class="step-row">
-        <div class="step-dot" id="dot-format"></div>
-        <div>
-          <div class="step-title">Event format</div>
-          <div class="step-sub">What kind of event are you planning?</div>
-        </div>
+    <!-- 1. Event details -->
+    <div class="step-row">
+      <div class="step-dot" id="dot-guests"></div>
+      <div>
+        <div class="step-title">Event details</div>
+        <div class="step-sub">Date, time, and guest count</div>
       </div>
-      <div class="format-grid" id="format-grid"></div>
     </div>
-
-    <hr class="divider">
-
-    <div class="step-block locked" id="block-size">
-      <div class="step-row">
-        <div class="step-dot" id="dot-size"></div>
-        <div>
-          <div class="step-title">Group size</div>
-          <div class="step-sub">How many guests are you expecting?</div>
-        </div>
+    <div class="info-grid">
+      <div class="fg"><label>Date</label><input type="date" id="s-date" oninput="S.date=this.value"></div>
+      <div class="fg"><label>Time</label><input type="time" id="s-time" oninput="S.time=this.value"></div>
+    </div>
+    <div class="size-grid">
+      <div class="size-card" id="sz50" onclick="selectGuests(50)">
+        <div class="size-label">50 guests</div>
+        <div class="size-hint">Intimate event</div>
       </div>
-      <div class="size-grid">
-        <div class="size-card" onclick="selectSize(50)" id="sz50">
-          <div class="size-label">50 people</div>
-          <div class="size-hint">Intimate event</div>
-        </div>
-        <div class="size-card" onclick="selectSize(100)" id="sz100">
-          <div class="size-label">100 people</div>
-          <div class="size-hint">Large event</div>
-        </div>
+      <div class="size-card" id="sz100" onclick="selectGuests(100)">
+        <div class="size-label">100 guests</div>
+        <div class="size-hint">Large event</div>
       </div>
     </div>
 
     <hr class="divider">
 
-    <div class="step-block locked" id="block-type">
-      <div class="step-row">
-        <div class="step-dot" id="dot-type"></div>
-        <div>
-          <div class="step-title">Event type</div>
-          <div class="step-sub">Choose your participation level</div>
-        </div>
-      </div>
-      <div class="type-grid" id="type-grid"></div>
-      <div class="custom-type-card" id="custom-type-card" onclick="selectType('custom')">
-        <div class="type-name">Custom package</div>
-        <div class="type-tagline">Tell us what you need — we'll build it around you</div>
+    <!-- 2. Venue Spaces -->
+    <div class="step-row">
+      <div class="step-dot" id="dot-venue"></div>
+      <div>
+        <div class="step-title">Venue Spaces</div>
+        <div class="step-sub">Select spaces for your event</div>
       </div>
     </div>
+    <div class="item-list" id="venue-list"></div>
 
-    <div id="options-section" style="display:none;">
-      <hr class="divider">
-      <div class="step-block locked" id="block-catering">
-        <div class="step-row">
-          <div class="step-dot" id="dot-catering"></div>
-          <div>
-            <div class="step-title">Catering</div>
-            <div class="step-sub">Prices for <span id="size-label-catering">—</span> people</div>
-          </div>
-        </div>
-        <div class="pkg-grid" id="catering-grid"></div>
-      </div>
+    <hr class="divider">
 
-      <hr class="divider">
-      <div class="step-block locked" id="block-drinks">
-        <div class="step-row">
-          <div class="step-dot" id="dot-drinks"></div>
-          <div>
-            <div class="step-title">Drinks</div>
-            <div class="step-sub">Prices for <span id="size-label-drinks">—</span> people</div>
-          </div>
-        </div>
-        <div class="pkg-grid" id="drinks-grid"></div>
-      </div>
-
-      <hr class="divider">
-      <div class="step-block locked" id="block-hostess">
-        <div class="step-row">
-          <div class="step-dot" id="dot-hostess"></div>
-          <div>
-            <div class="step-title">Hostess</div>
-            <div class="step-sub">Prices for <span id="size-label-hostess">—</span> people</div>
-          </div>
-        </div>
-        <div class="pkg-grid" id="hostess-grid"></div>
+    <!-- 3. Catering -->
+    <div class="step-row">
+      <div class="step-dot" id="dot-catering"></div>
+      <div>
+        <div class="step-title">Catering</div>
+        <div class="step-sub" id="catering-sub">Select guest count to see prices</div>
       </div>
     </div>
+    <div class="pkg-grid" id="catering-grid"></div>
+
+    <hr class="divider">
+
+    <!-- 4. Beverages -->
+    <div class="step-row">
+      <div class="step-dot" id="dot-beverages"></div>
+      <div>
+        <div class="step-title">Beverages</div>
+        <div class="step-sub" id="beverages-sub">Select guest count to see prices</div>
+      </div>
+    </div>
+    <div class="pkg-grid" id="beverages-grid"></div>
+
+    <hr class="divider">
+
+    <!-- 5. Event Media Coverage -->
+    <div class="step-row">
+      <div class="step-dot" id="dot-media"></div>
+      <div>
+        <div class="step-title">Event Media Coverage</div>
+        <div class="step-sub">Photography, video, and broadcast</div>
+      </div>
+    </div>
+    <div class="item-list" id="media-list"></div>
+
+    <hr class="divider">
+
+    <!-- 6. Event Promo Services -->
+    <div class="step-row">
+      <div class="step-dot" id="dot-promo"></div>
+      <div>
+        <div class="step-title">Event Promo Services</div>
+        <div class="step-sub">Promotion and outreach</div>
+      </div>
+    </div>
+    <div class="item-list" id="promo-list"></div>
+
+    <hr class="divider">
+
+    <!-- 7. Branding & Entertainment -->
+    <div class="step-row">
+      <div class="step-dot" id="dot-branding"></div>
+      <div>
+        <div class="step-title">Branding & Entertainment</div>
+        <div class="step-sub">Visual identity and atmosphere</div>
+      </div>
+    </div>
+    <div class="item-list" id="branding-list"></div>
+
+    <hr class="divider">
+
+    <!-- 8. Printed Materials -->
+    <div class="step-row">
+      <div class="step-dot" id="dot-printed"></div>
+      <div>
+        <div class="step-title">Printed Materials</div>
+        <div class="step-sub">Physical branding for your event</div>
+      </div>
+    </div>
+    <div class="item-list" id="printed-list"></div>
+
+    <hr class="divider">
+
+    <!-- 9. Operations & Hospitality -->
+    <div class="step-row">
+      <div class="step-dot" id="dot-ops"></div>
+      <div>
+        <div class="step-title">Event Operations & Hospitality</div>
+        <div class="step-sub">Staff and on-site support</div>
+      </div>
+    </div>
+    <div class="item-list" id="ops-list"></div>
 
     <!-- Total bar -->
-    <div class="step-block locked" id="block-total">
-      <hr class="divider">
-      <div class="total-bar">
-        <div>
-          <div class="total-bar-label">Estimated total</div>
-          <div class="total-bar-note" id="p1-note"></div>
-        </div>
-        <div class="total-bar-right">
-          <div class="total-bar-val" id="p1-total">—</div>
-          <button class="btn-submit" style="margin-top:0.75rem;" onclick="goToPage2()">Continue →</button>
-        </div>
+    <hr class="divider">
+    <div class="total-bar">
+      <div>
+        <div class="total-bar-label">Estimated total</div>
+      </div>
+      <div class="total-bar-right">
+        <div class="total-bar-val" id="p1-total">—</div>
+        <button class="btn-submit" id="btn-continue" style="margin-top:0.75rem;" onclick="goToPage2()">Continue →</button>
       </div>
     </div>
 
@@ -125,18 +153,10 @@
     <button class="btn-back" onclick="goToPage1()">← Back</button>
 
     <div class="checkout-summary">
-      <div class="checkout-row"><span class="lbl">Group size</span><span class="val" id="co-size">—</span></div>
-      <div class="checkout-row"><span class="lbl">Event format</span><span class="val" id="co-format">—</span></div>
-      <div class="checkout-row"><span class="lbl">Event type</span><span class="val" id="co-type">—</span></div>
-      <div class="checkout-row" id="co-row-catering"><span class="lbl">Catering</span><span class="val" id="co-catering">—</span></div>
-      <div class="checkout-row" id="co-row-drinks"><span class="lbl">Drinks</span><span class="val" id="co-drinks">—</span></div>
-      <div class="checkout-row" id="co-row-hostess"><span class="lbl">Hostess</span><span class="val" id="co-hostess">—</span></div>
+      <div id="co-summary"></div>
       <div class="checkout-total">
         <span class="total-lbl">Estimated total</span>
-        <div style="text-align:right;">
-          <div class="total-val" id="co-total">—</div>
-          <div class="total-note" id="co-note"></div>
-        </div>
+        <div class="total-val" id="co-total">—</div>
       </div>
     </div>
 
@@ -154,9 +174,8 @@
       <div class="form-grid">
         <div class="fg"><label>Name</label><input type="text" id="f-name" placeholder="Your name"></div>
         <div class="fg"><label>Email</label><input type="email" id="f-email" placeholder="your@email.com"></div>
-        <div class="fg"><label>Event date</label><input type="date" id="f-date"></div>
         <div class="fg"><label>Phone (optional)</label><input type="tel" id="f-phone" placeholder="+1 000 000 0000"></div>
-        <div class="fg full"><label>Additional notes</label><textarea id="f-notes" placeholder="Dietary requirements, special requests…"></textarea></div>
+        <div class="fg full"><label>Additional notes</label><textarea id="f-notes" placeholder="Special requests, questions…"></textarea></div>
       </div>
       <button class="btn-submit" onclick="submitEnquiry()">Submit enquiry</button>
     </div>
