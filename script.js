@@ -16,8 +16,8 @@ const VENUE = [
 
 const CATERING = [
   { id: 'basic',     name: 'Basic Sharing Platters',     desc: 'Light, elegant bites · relaxed networking atmosphere',           price: { 50: 500,  100: 950  } },
-  { id: 'classic',   name: 'Classic Canapés Selection',  desc: '5 items per person · elegant assortment of cold canapés',        price: { 50: 1120, 100: 2150 } },
-  { id: 'extended',  name: 'Extended Canapés Selection', desc: '6 items per person · warm and cold bites',                       price: { 50: 2000, 100: 3950 } },
+  { id: 'classic',   name: 'Classic Canapés',  desc: '5 items per person · elegant assortment of cold canapés',        price: { 50: 1120, 100: 2150 } },
+  { id: 'extended',  name: 'Extended Canapés', desc: '6 items per person · warm and cold bites',                       price: { 50: 2000, 100: 3950 } },
   { id: 'signature', name: 'Signature Catering',         desc: '7–8 pieces per person · pass around premium service',            price: { 50: 3900, 100: 7500 } },
 ];
 
@@ -171,16 +171,13 @@ function renderItemList(container, items, stateObj, section) {
 function renderCateringBev(containerId, items, selectedId, subId) {
   const sub = S.guests ? `Prices for ${S.guests} people` : 'Select guest count to see prices';
   $(subId).textContent = sub;
-  const container = $(containerId);
-  if (!S.guests) {
-    container.innerHTML = '';
-    return;
-  }
-  container.innerHTML = items.map(item => {
+  const section = containerId === 'catering-grid' ? 'catering' : 'beverages';
+  $(containerId).innerHTML = items.map(item => {
     const sel = selectedId === item.id;
-    return `<div class="pkg-card${sel ? ' selected' : ''}" onclick="selectSingle('${containerId === 'catering-grid' ? 'catering' : 'beverages'}','${item.id}')">
+    const price = S.guests ? fmtMoney(item.price[S.guests]) : '—';
+    return `<div class="pkg-card${sel ? ' selected' : ''}" onclick="selectSingle('${section}','${item.id}')">
+      <div class="pkg-price">${price}</div>
       <div class="pkg-name">${item.name}</div>
-      <div class="pkg-price">${fmtMoney(item.price[S.guests])}</div>
       <div class="pkg-includes">${item.desc}</div>
     </div>`;
   }).join('');
@@ -251,6 +248,7 @@ function updateTotal() {
   btn.style.opacity       = S.guests ? '1' : '0.35';
   btn.style.pointerEvents = S.guests ? ''  : 'none';
 
+  $('rest').classList.toggle('locked', !S.guests);
   $('dot-guests').classList.toggle('done', !!S.guests);
   $('dot-venue').classList.toggle('done',    Object.keys(S.venue).length    > 0);
   $('dot-catering').classList.toggle('done', !!S.catering);
