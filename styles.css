@@ -28,7 +28,8 @@
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Roobert PRO', sans-serif; background: #fff; color: #111; padding: 2rem; }
+body { font-family: 'Roobert PRO', sans-serif; background: #fff; color: #111; padding: 2rem; position: relative; }
+body::before { content: ''; position: fixed; inset: 0; background: url('images/background.png') no-repeat center center; background-size: cover; opacity: 0.3; z-index: -1; }
 .cfg { max-width: 740px; margin: 0 auto; padding: 1.5rem 0; }
 .divider { display: none; }
 
@@ -39,14 +40,14 @@ body { font-family: 'Roobert PRO', sans-serif; background: #fff; color: #111; pa
 /* Section headers */
 .step-row { display: flex; align-items: center; gap: 10px; margin-top: 60px; margin-bottom: 1rem; }
 .cfg > .step-row:first-child { margin-top: 0; }
-.step-dot { width: 8px; height: 8px; border-radius: 50%; background: #ccc; flex-shrink: 0; transition: background 0.2s; }
+.step-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(150, 156, 166, 0.5); flex-shrink: 0; transition: background 0.2s; }
 .step-dot.done { background: #111; }
 .step-title { font-size: 15px; font-weight: 500; color: #111; }
 .step-sub { font-size: 13px; color: #969CA6; margin-top: 2px; }
 
 /* Guest count cards */
 .size-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.size-card { background: rgba(150, 156, 166, 0.05); backdrop-filter: blur(4px); border: 1px solid transparent; border-radius: 20px; padding: 1rem 1.25rem; cursor: pointer; transition: border-color 0.15s; }
+.size-card { background: rgba(150, 156, 166, 0.08); backdrop-filter: blur(4px); border: 1px solid transparent; border-radius: 20px; padding: 1rem 1.25rem; cursor: pointer; transition: border-color 0.15s; }
 .size-card:hover { border-color: #e5e8ea; }
 .size-card.selected { border-color: #333; }
 .size-label { font-size: 16px; font-weight: 500; }
@@ -54,7 +55,7 @@ body { font-family: 'Roobert PRO', sans-serif; background: #fff; color: #111; pa
 
 /* Item list (multi-select toggle cards) */
 .item-list { display: flex; flex-direction: column; gap: 8px; }
-.item-card { background: rgba(150, 156, 166, 0.05); backdrop-filter: blur(4px); border: 1px solid transparent; border-radius: 20px; padding: 0.875rem 1.25rem; cursor: pointer; transition: border-color 0.15s; }
+.item-card { background: rgba(150, 156, 166, 0.08); backdrop-filter: blur(4px); border: 1px solid transparent; border-radius: 20px; padding: 0.875rem 1.25rem; cursor: pointer; transition: border-color 0.15s; }
 .item-card:hover { border-color: #e5e8ea; }
 .item-card.selected { border-color: #333; }
 .item-main { display: flex; align-items: center; gap: 12px; }
@@ -70,16 +71,16 @@ body { font-family: 'Roobert PRO', sans-serif; background: #fff; color: #111; pa
 .item-included { font-size: 12px; color: #999; font-style: italic; font-weight: 400; }
 
 /* Hours stepper */
-.hrs-row { display: flex; align-items: center; gap: 8px; margin-top: 10px; padding-top: 10px; border-top: 1px solid #f0f0f0; }
+.hrs-row { display: flex; align-items: center; gap: 8px; margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(150, 156, 166, 0.1); }
 .hrs-label { font-size: 13px; color: #969CA6; }
-.hrs-btn { width: 26px; height: 26px; border-radius: 50%; border: 1px solid transparent; background: rgba(150, 156, 166, 0.05); backdrop-filter: blur(4px); cursor: pointer; font-size: 15px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: border-color 0.15s; outline: none; }
+.hrs-btn { width: 26px; height: 26px; border-radius: 50%; border: 1px solid transparent; background: rgba(150, 156, 166, 0.08); backdrop-filter: blur(4px); cursor: pointer; font-size: 15px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: border-color 0.15s; outline: none; }
 .hrs-btn:hover { border-color: #e5e8ea; }
 .hrs-val { font-size: 14px; font-weight: 500; color: #111; min-width: 16px; text-align: center; }
 .hrs-total { margin-left: auto; font-size: 14px; font-weight: 500; color: #111; }
 
 /* Catering / Beverages cards (single-select) */
 .pkg-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
-.pkg-card { background: rgba(150, 156, 166, 0.05); backdrop-filter: blur(4px); border: 1px solid transparent; border-radius: 20px; padding: 1rem; cursor: pointer; transition: border-color 0.15s; }
+.pkg-card { background: rgba(150, 156, 166, 0.08); backdrop-filter: blur(4px); border: 1px solid transparent; border-radius: 20px; padding: 1rem; cursor: pointer; transition: border-color 0.15s; }
 .pkg-card:hover { border-color: #e5e8ea; }
 .pkg-card.selected { border-color: #333; }
 .pkg-name { font-size: 14px; font-weight: 500; line-height: 1.4; min-height: 1.4em; margin-bottom: 6px; }
@@ -96,7 +97,7 @@ body { font-family: 'Roobert PRO', sans-serif; background: #fff; color: #111; pa
 .total-bar-val { font-size: 26px; font-weight: 500; }
 
 /* Checkout page */
-.checkout-summary { background: rgba(150, 156, 166, 0.05); backdrop-filter: blur(4px); border: 1px solid transparent; border-radius: 20px; padding: 1.25rem; }
+.checkout-summary { background: rgba(150, 156, 166, 0.08); backdrop-filter: blur(4px); border: 1px solid transparent; border-radius: 20px; padding: 1.25rem; }
 .co-section-header { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; color: #aaa; padding-top: 14px; padding-bottom: 2px; }
 .co-section-header:first-child { padding-top: 0; }
 .checkout-row { display: flex; justify-content: space-between; align-items: baseline; padding: 5px 0; font-size: 14px; }
@@ -117,7 +118,7 @@ body { font-family: 'Roobert PRO', sans-serif; background: #fff; color: #111; pa
 .fg { display: flex; flex-direction: column; gap: 6px; }
 .fg.full { grid-column: 1 / -1; }
 .fg label { font-size: 13px; color: #969CA6; }
-.fg input, .fg textarea { font-family: inherit; font-size: 14px; padding: 8px 12px; background: rgba(150, 156, 166, 0.05); backdrop-filter: blur(4px); border: 1px solid transparent; border-radius: 20px; transition: border-color 0.15s; outline: none; }
+.fg input, .fg textarea { font-family: inherit; font-size: 14px; padding: 8px 12px; background: rgba(150, 156, 166, 0.08); backdrop-filter: blur(4px); border: 1px solid transparent; border-radius: 20px; transition: border-color 0.15s; outline: none; }
 .fg input:hover, .fg textarea:hover { border-color: #e5e8ea; }
 .fg input:focus, .fg textarea:focus { border-color: #333; }
 .fg textarea { min-height: 72px; resize: vertical; }
