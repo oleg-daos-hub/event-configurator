@@ -80,7 +80,7 @@ body::before { content: ''; position: fixed; inset: 0; background: url('images/b
 /* Hours stepper */
 .hrs-row { display: flex; align-items: center; gap: 8px; margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(150, 156, 166, 0.1); }
 .hrs-label { font-size: 13px; color: #969CA6; }
-.hrs-btn { width: 26px; height: 26px; border-radius: 50%; border: 1px solid transparent; background: rgba(150, 156, 166, 0.08); backdrop-filter: blur(4px); cursor: pointer; font-size: 15px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: border-color 0.15s; outline: none; }
+.hrs-btn { width: 26px; height: 26px; border-radius: 50%; border: 1px solid transparent; background: rgba(150, 156, 166, 0.08); backdrop-filter: blur(4px); cursor: pointer; font-size: 15px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: border-color 0.15s; outline: none; color: #333; }
 .hrs-btn:hover { border-color: #e5e8ea; }
 .hrs-val { font-size: 14px; font-weight: 500; color: #111; min-width: 16px; text-align: center; }
 .hrs-total { margin-left: auto; font-size: 14px; font-weight: 500; color: #111; }
