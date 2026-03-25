@@ -108,10 +108,10 @@ body::before { content: ''; position: fixed; inset: 0; background: url('images/b
 
 /* Checkout page */
 .checkout-summary { background: rgba(150, 156, 166, 0.08); backdrop-filter: blur(4px); border: 1px solid transparent; border-radius: 20px; padding: 1.25rem; }
-.co-section-header { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; color: #aaa; padding-top: 14px; padding-bottom: 2px; }
+.co-section-header { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; color: rgba(150, 156, 166, 0.5); padding-top: 14px; padding-bottom: 2px; }
 .co-section-header:first-child { padding-top: 0; }
 .checkout-row { display: flex; justify-content: space-between; align-items: baseline; padding: 5px 0; font-size: 14px; }
-.checkout-row .lbl { color: #969CA6; }
+.checkout-row .lbl { color: rgba(150, 156, 166, 1); }
 .checkout-row .val { color: #111; font-weight: 500; }
 .checkout-total { display: flex; justify-content: space-between; align-items: flex-start; padding-top: 10px; margin-top: 8px; border-top: 1px solid rgba(150, 156, 166, 0.1); }
 .total-lbl { font-size: 15px; font-weight: 500; }
@@ -135,6 +135,7 @@ input[type="time"]::-webkit-calendar-picker-indicator { display: none; }
 
 .fg input, .fg textarea { font-family: inherit; font-size: 14px; padding: 8px 12px; background: rgba(150, 156, 166, 0.08); backdrop-filter: blur(4px); border: 1px solid transparent; border-radius: 20px; transition: border-color 0.15s; outline: none; box-sizing: border-box; height: 38px; }
 .fg textarea { height: auto; }
+.fg input::placeholder, .fg textarea::placeholder { color: #969CA6; }
 .fg input:hover, .fg textarea:hover { border-color: #e5e8ea; }
 .fg input:focus, .fg textarea:focus { border-color: #333; }
 .fg textarea { min-height: 72px; resize: vertical; }
