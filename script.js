@@ -87,7 +87,7 @@ const S = {
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 const $ = id => document.getElementById(id);
-const fmtMoney = n => '$' + n.toLocaleString();
+const fmtMoney = n => '$' + new Intl.NumberFormat('en-US').format(n);
 
 function itemPrice(item, val) {
   if (item.included) return 0;
@@ -224,7 +224,7 @@ function changeHrs(section, id, delta) {
   const item = MAP[section].find(i => i.id === id);
   const obj = S[section];
   const cur = typeof obj[id] === 'number' ? obj[id] : 1;
-  const next = Math.max(1, cur + delta);
+  const next = Math.max(1, Math.min(24, cur + delta));
   obj[id] = next;
   $(`hrs-${id}`).textContent = next;
   $(`hrs-total-${id}`).textContent = fmtMoney(item.price * next);
@@ -273,6 +273,13 @@ function updateTotal() {
 // ─── Page navigation ──────────────────────────────────────────────────────────
 
 function goToPage2() {
+  const dtErr = $('datetime-error');
+  if (!S.date || !S.time) {
+    dtErr.classList.add('visible');
+    dtErr.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
+  dtErr.classList.remove('visible');
   const total = calcTotal();
   const lines = [];
 
@@ -334,12 +341,44 @@ function goToPage1() {
 
 // ─── Form submit ──────────────────────────────────────────────────────────────
 
+function clearFieldErr(el) {
+  el.parentElement.classList.remove('has-error');
+}
+
 function submitEnquiry() {
+  let valid = true;
+  function fieldErr(id, condition) {
+    const fg = $(id).parentElement;
+    if (condition) { fg.classList.add('has-error'); valid = false; }
+    else             fg.classList.remove('has-error');
+  }
   const name  = $('f-name').value.trim();
   const email = $('f-email').value.trim();
-  if (!name || !email) { alert('Please enter your name and email.'); return; }
+  const phone = $('f-phone').value.trim();
+  fieldErr('f-name',  !name);
+  fieldErr('f-email', !email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email));
+  fieldErr('f-phone', !!phone && !/^[+\d][\d\s\-()+]{6,}$/.test(phone));
+  if (!valid) {
+    document.querySelector('#enquiry-form .has-error').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
   $('enquiry-form').style.display = 'none';
   $('success-view').style.display = 'block';
+}
+
+function startOver() {
+  S.guests = null; S.date = ''; S.time = '';
+  S.venue = {}; S.catering = null; S.beverages = {};
+  S.media = {}; S.promo = {}; S.branding = {}; S.printed = {}; S.ops = {};
+  $('s-date').value = '';
+  $('s-time').value = '';
+  document.querySelectorAll('.size-card').forEach(c => c.classList.remove('selected'));
+  ['f-name','f-email','f-phone','f-notes'].forEach(id => $(id).value = '');
+  document.querySelectorAll('#enquiry-form .has-error').forEach(el => el.classList.remove('has-error'));
+  $('enquiry-form').style.display = '';
+  $('success-view').style.display = 'none';
+  renderAll();
+  goToPage1();
 }
 
 // ─── Date picker ──────────────────────────────────────────────────────────────
@@ -399,6 +438,7 @@ function pickDate(iso) {
   const [y, m, d] = iso.split('-');
   $('s-date').value = `${parseInt(d)} ${DP_MONTHS[parseInt(m)-1]} ${y}`;
   $('date-picker').style.display = 'none';
+  if (S.time) $('datetime-error').classList.remove('visible');
   updateTotal();
 }
 

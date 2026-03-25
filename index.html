@@ -24,8 +24,9 @@
     </div>
     <div class="info-grid">
       <div class="fg" id="date-picker-wrap"><label>Date</label><div class="input-wrap" onclick="toggleDatePicker(event)"><input type="text" id="s-date" placeholder="Select date" readonly><i data-lucide="calendar"></i></div><div class="date-picker" id="date-picker"></div></div>
-      <div class="fg"><label>Time</label><div class="input-wrap"><input type="time" id="s-time" oninput="S.time=this.value;updateTotal()"><i data-lucide="clock"></i></div></div>
+      <div class="fg"><label>Time</label><div class="input-wrap"><input type="time" id="s-time" oninput="S.time=this.value;updateTotal();if(S.date)$('datetime-error').classList.remove('visible')"><i data-lucide="clock"></i></div></div>
     </div>
+    <div id="datetime-error">Please select a date and time before continuing.</div>
     <div class="size-grid">
       <div class="size-card" id="sz50" onclick="selectGuests(50)">
         <div class="size-label">50 guests</div>
@@ -170,9 +171,9 @@
 
     <div id="enquiry-form">
       <div class="form-grid">
-        <div class="fg"><label>Name</label><input type="text" id="f-name" placeholder="Your name"></div>
-        <div class="fg"><label>Email</label><input type="email" id="f-email" placeholder="your@email.com"></div>
-        <div class="fg"><label>Phone (optional)</label><input type="tel" id="f-phone" placeholder="+1 000 000 0000"></div>
+        <div class="fg"><label>Name</label><input type="text" id="f-name" placeholder="Your name" oninput="clearFieldErr(this)"><span class="field-error">Please enter your name.</span></div>
+        <div class="fg"><label>Email</label><input type="email" id="f-email" placeholder="your@email.com" oninput="clearFieldErr(this)"><span class="field-error">Please enter a valid email.</span></div>
+        <div class="fg"><label>Phone (optional)</label><input type="tel" id="f-phone" placeholder="+1 000 000 0000" oninput="clearFieldErr(this)"><span class="field-error">Please enter a valid phone number.</span></div>
         <div class="fg full"><label>Additional notes</label><textarea id="f-notes" placeholder="Special requests, questions…"></textarea></div>
       </div>
       <button class="btn-submit" onclick="submitEnquiry()">Submit enquiry</button>
@@ -183,6 +184,7 @@
         <p style="font-size:28px;margin-bottom:12px;"><i data-lucide="circle-check-big" style="width:32px;height:32px;stroke:#111;"></i></p>
         <p style="font-size:16px;font-weight:500;margin-bottom:8px;">Enquiry sent!</p>
         <p style="font-size:14px;color:#666;">We'll be in touch within 24 hours.</p>
+        <button class="btn-start-over" onclick="startOver()">Start over</button>
       </div>
     </div>
 
