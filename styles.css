@@ -133,7 +133,8 @@ body::before { content: ''; position: fixed; inset: 0; background: url('images/b
 .input-wrap .lucide { position: absolute; right: 12px; width: 16px; height: 16px; stroke: #969CA6; pointer-events: none; }
 input[type="time"]::-webkit-calendar-picker-indicator { display: none; }
 
-.fg input, .fg textarea { font-family: inherit; font-size: 14px; padding: 8px 12px; background: rgba(150, 156, 166, 0.08); backdrop-filter: blur(4px); border: 1px solid transparent; border-radius: 20px; transition: border-color 0.15s; outline: none; }
+.fg input { font-family: inherit; font-size: 14px; padding: 8px 12px; height: 40px; box-sizing: border-box; background: rgba(150, 156, 166, 0.08); backdrop-filter: blur(4px); border: 1px solid transparent; border-radius: 20px; transition: border-color 0.15s; outline: none; }
+.fg textarea { font-family: inherit; font-size: 14px; padding: 8px 12px; box-sizing: border-box; background: rgba(150, 156, 166, 0.08); backdrop-filter: blur(4px); border: 1px solid transparent; border-radius: 20px; transition: border-color 0.15s; outline: none; }
 .fg input:hover, .fg textarea:hover { border-color: #e5e8ea; }
 .fg input:focus, .fg textarea:focus { border-color: #333; }
 .fg textarea { min-height: 72px; resize: vertical; }
