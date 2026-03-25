@@ -12,6 +12,8 @@
 <div id="page-1">
   <div class="cfg">
 
+    <h1 class="cfg-title">Build Your Event</h1>
+
     <!-- 1. Event details -->
     <div class="step-row">
       <div class="step-dot" id="dot-guests"></div>
@@ -21,8 +23,8 @@
       </div>
     </div>
     <div class="info-grid">
-      <div class="fg"><label>Date</label><input type="date" id="s-date" oninput="S.date=this.value"></div>
-      <div class="fg"><label>Time</label><input type="time" id="s-time" oninput="S.time=this.value"></div>
+      <div class="fg" id="date-picker-wrap"><label>Date</label><div class="input-wrap" onclick="toggleDatePicker(event)"><input type="text" id="s-date" placeholder="Select date" readonly><i data-lucide="calendar"></i></div><div class="date-picker" id="date-picker"></div></div>
+      <div class="fg"><label>Time</label><div class="input-wrap"><input type="time" id="s-time" oninput="S.time=this.value;updateTotal()"><i data-lucide="clock"></i></div></div>
     </div>
     <div class="size-grid">
       <div class="size-card" id="sz50" onclick="selectGuests(50)">
@@ -128,12 +130,15 @@
 
     <!-- Total bar -->
     <div class="total-bar">
-      <div>
-        <div class="total-bar-label">Estimated total</div>
+      <div class="total-bar-left">
+        <div class="total-bar-meta" id="tbl-guests"></div>
+        <div class="total-bar-meta" id="tbl-date"></div>
+        <div class="total-bar-meta" id="tbl-time"></div>
       </div>
       <div class="total-bar-right">
+        <div class="total-bar-label">Estimated total</div>
         <div class="total-bar-val" id="p1-total">—</div>
-        <button class="btn-submit" id="btn-continue" style="margin-top:0.75rem;" onclick="goToPage2()">Continue →</button>
+        <button class="btn-submit" id="btn-continue" style="margin-top:calc(0.75rem + 10px);" onclick="goToPage2()">Continue <i data-lucide="arrow-right"></i></button>
       </div>
     </div>
 
@@ -144,7 +149,7 @@
 <div id="page-2" style="display:none;">
   <div class="cfg">
 
-    <button class="btn-back" onclick="goToPage1()">← Back</button>
+    <button class="btn-back" onclick="goToPage1()"><i data-lucide="arrow-left"></i> Back</button>
 
     <div class="checkout-summary">
       <div id="co-summary"></div>
@@ -175,7 +180,7 @@
 
     <div id="success-view" style="display:none;">
       <div class="success-box">
-        <p style="font-size:28px;margin-bottom:12px;">✓</p>
+        <p style="font-size:28px;margin-bottom:12px;"><i data-lucide="circle-check-big" style="width:32px;height:32px;stroke:#111;"></i></p>
         <p style="font-size:16px;font-weight:500;margin-bottom:8px;">Enquiry sent!</p>
         <p style="font-size:14px;color:#666;">We'll be in touch within 24 hours.</p>
       </div>
@@ -185,5 +190,7 @@
 </div>
 
 <script src="script.js"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script>lucide.createIcons();</script>
 </body>
 </html>

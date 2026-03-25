@@ -76,7 +76,7 @@ const S = {
   time:      '',
   venue:     {},
   catering:  null,
-  beverages: null,
+  beverages: {},
   media:     {},
   promo:     {},
   branding:  {},
@@ -113,9 +113,8 @@ function calcTotal() {
     const c = CATERING.find(i => i.id === S.catering);
     if (c) total += c.price[S.guests];
   }
-  if (S.beverages && S.guests) {
-    const b = BEVERAGES.find(i => i.id === S.beverages);
-    if (b) total += b.price[S.guests];
+  if (S.guests) {
+    BEVERAGES.forEach(b => { if (b.id in S.beverages) total += b.price[S.guests]; });
   }
   return total;
 }
@@ -123,11 +122,12 @@ function calcTotal() {
 // ─── Render ───────────────────────────────────────────────────────────────────
 
 function renderItemList(container, items, stateObj, section) {
+  container.innerHTML = '';
   container.innerHTML = items.map(item => {
     if (item.included) {
       return `<div class="item-card selected" style="cursor:default">
         <div class="item-main">
-          <div class="item-chk" style="background:#111;border-color:#111"><span class="item-chk-tick" style="opacity:1">✓</span></div>
+          <div class="item-chk" style="background:#111;border-color:#111"><i data-lucide="check" class="item-chk-tick" style="opacity:1"></i></div>
           <div class="item-info">
             <div class="item-name">${item.name}</div>
             <div class="item-desc">${item.desc}</div>
@@ -148,15 +148,15 @@ function renderItemList(container, items, stateObj, section) {
     const hrsHtml = (sel && item.perHour) ? `
       <div class="hrs-row" onclick="event.stopPropagation()">
         <span class="hrs-label">Hours:</span>
-        <button class="hrs-btn" onclick="changeHrs('${section}','${item.id}',-1)">−</button>
+        <button class="hrs-btn" onclick="changeHrs('${section}','${item.id}',-1)"><i data-lucide="minus"></i></button>
         <span class="hrs-val" id="hrs-${item.id}">${hours}</span>
-        <button class="hrs-btn" onclick="changeHrs('${section}','${item.id}',+1)">+</button>
+        <button class="hrs-btn" onclick="changeHrs('${section}','${item.id}',+1)"><i data-lucide="plus"></i></button>
         <span class="hrs-total" id="hrs-total-${item.id}">${fmtMoney(item.price * hours)}</span>
       </div>` : '';
 
     return `<div class="item-card${sel ? ' selected' : ''}" onclick="toggleItem('${section}','${item.id}')">
       <div class="item-main">
-        <div class="item-chk"><span class="item-chk-tick">✓</span></div>
+        <div class="item-chk"><i data-lucide="check" class="item-chk-tick"></i></div>
         <div class="item-info">
           <div class="item-name">${item.name}</div>
           <div class="item-desc">${item.desc}</div>
@@ -166,6 +166,7 @@ function renderItemList(container, items, stateObj, section) {
       ${hrsHtml}
     </div>`;
   }).join('');
+  if (typeof lucide !== 'undefined') lucide.createIcons();
 }
 
 function renderCateringBev(containerId, items, selectedId, subId) {
@@ -173,7 +174,7 @@ function renderCateringBev(containerId, items, selectedId, subId) {
   $(subId).textContent = sub;
   const section = containerId === 'catering-grid' ? 'catering' : 'beverages';
   $(containerId).innerHTML = items.map(item => {
-    const sel = selectedId === item.id;
+    const sel = section === 'beverages' ? item.id in selectedId : selectedId === item.id;
     const price = S.guests ? fmtMoney(item.price[S.guests]) : '—';
     return `<div class="pkg-card${sel ? ' selected' : ''}" onclick="selectSingle('${section}','${item.id}')">
       <div class="pkg-price">${price}</div>
@@ -181,6 +182,7 @@ function renderCateringBev(containerId, items, selectedId, subId) {
       <div class="pkg-includes">${item.desc}</div>
     </div>`;
   }).join('');
+  if (typeof lucide !== 'undefined') lucide.createIcons();
 }
 
 function renderAll() {
@@ -230,11 +232,13 @@ function changeHrs(section, id, delta) {
 }
 
 function selectSingle(section, id) {
-  S[section] = S[section] === id ? null : id;
-  const [items, gridId, subId] = section === 'catering'
-    ? [CATERING,  'catering-grid',  'catering-sub']
-    : [BEVERAGES, 'beverages-grid', 'beverages-sub'];
-  renderCateringBev(gridId, items, S[section], subId);
+  if (section === 'beverages') {
+    if (id in S.beverages) { delete S.beverages[id]; } else { S.beverages[id] = true; }
+    renderCateringBev('beverages-grid', BEVERAGES, S.beverages, 'beverages-sub');
+  } else {
+    S.catering = S.catering === id ? null : id;
+    renderCateringBev('catering-grid', CATERING, S.catering, 'catering-sub');
+  }
   updateTotal();
 }
 
@@ -242,7 +246,13 @@ function selectSingle(section, id) {
 
 function updateTotal() {
   const total = calcTotal();
-  $('p1-total').textContent = total > 0 ? fmtMoney(total) : '—';
+  $('p1-total').textContent = total > 0 ? fmtMoney(total) : 'No options selected';
+  $('p1-total').style.color = total > 0 ? '' : '#969CA6';
+  $('p1-total').style.fontSize = total > 0 ? '' : '14px';
+
+  $('tbl-guests').textContent = S.guests ? `${S.guests} guests` : '';
+  $('tbl-date').textContent   = S.date   ? (() => { const [y,m,d] = S.date.split('-'); return `${parseInt(d)} ${DP_MONTHS[parseInt(m)-1]} ${y}`; })() : '';
+  $('tbl-time').textContent   = S.time   ? S.time : '';
 
   const btn = $('btn-continue');
   btn.style.opacity       = S.guests ? '1' : '0.35';
@@ -252,7 +262,7 @@ function updateTotal() {
   $('dot-guests').classList.toggle('done', !!S.guests);
   $('dot-venue').classList.toggle('done',    Object.keys(S.venue).length    > 0);
   $('dot-catering').classList.toggle('done', !!S.catering);
-  $('dot-beverages').classList.toggle('done', !!S.beverages);
+  $('dot-beverages').classList.toggle('done', Object.keys(S.beverages).length > 0);
   $('dot-media').classList.toggle('done',    Object.keys(S.media).length    > 0);
   $('dot-promo').classList.toggle('done',    Object.keys(S.promo).length    > 0);
   $('dot-branding').classList.toggle('done', Object.keys(S.branding).length > 0);
@@ -292,7 +302,12 @@ function goToPage2() {
 
   addSection('Venue',       VENUE,    S.venue);
   addSingle('Catering',     CATERING, S.catering);
-  addSingle('Beverages',    BEVERAGES, S.beverages);
+  if (Object.keys(S.beverages).length && S.guests) {
+    lines.push({ header: 'Beverages' });
+    BEVERAGES.filter(b => b.id in S.beverages).forEach(b => {
+      lines.push([b.name, fmtMoney(b.price[S.guests])]);
+    });
+  }
   addSection('Media',       MEDIA,    S.media);
   addSection('Promo',       PROMO,    S.promo);
   addSection('Branding',    BRANDING, S.branding);
@@ -326,6 +341,71 @@ function submitEnquiry() {
   $('enquiry-form').style.display = 'none';
   $('success-view').style.display = 'block';
 }
+
+// ─── Date picker ──────────────────────────────────────────────────────────────
+
+const DP_MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const DP_DAYS   = ['Mo','Tu','We','Th','Fr','Sa','Su'];
+let dpMonth = new Date(); dpMonth.setDate(1);
+
+function toggleDatePicker(e) {
+  e.stopPropagation();
+  const dp = $('date-picker');
+  if (dp.style.display === 'block') { dp.style.display = 'none'; return; }
+  renderDatePicker();
+  dp.style.display = 'block';
+}
+
+function renderDatePicker() {
+  const year = dpMonth.getFullYear(), month = dpMonth.getMonth();
+  const firstDow = (new Date(year, month, 1).getDay() + 6) % 7; // Mon=0
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const today = new Date(); today.setHours(0,0,0,0);
+  const selIso = S.date;
+
+  let cells = '';
+  for (let i = 0; i < firstDow; i++) cells += `<div class="dp-day dp-empty"></div>`;
+  for (let d = 1; d <= daysInMonth; d++) {
+    const iso = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const date = new Date(year, month, d);
+    let cls = 'dp-day';
+    if (iso === selIso)        cls += ' dp-selected';
+    else if (date.getTime() === today.getTime()) cls += ' dp-today';
+    if (date < today)          cls += ' dp-past';
+    const click = date >= today ? `onclick="pickDate('${iso}')"` : '';
+    cells += `<div class="${cls}" ${click}>${d}</div>`;
+  }
+
+  $('date-picker').innerHTML = `
+    <div class="dp-header">
+      <button class="dp-nav" onclick="event.stopPropagation();dpNav(-1)"><i data-lucide="chevron-left"></i></button>
+      <span class="dp-month-label">${DP_MONTHS[month]} ${year}</span>
+      <button class="dp-nav" onclick="event.stopPropagation();dpNav(1)"><i data-lucide="chevron-right"></i></button>
+    </div>
+    <div class="dp-grid">
+      ${DP_DAYS.map(d => `<div class="dp-dow">${d}</div>`).join('')}
+      ${cells}
+    </div>`;
+  if (typeof lucide !== 'undefined') lucide.createIcons();
+}
+
+function dpNav(dir) {
+  dpMonth.setMonth(dpMonth.getMonth() + dir);
+  renderDatePicker();
+}
+
+function pickDate(iso) {
+  S.date = iso;
+  const [y, m, d] = iso.split('-');
+  $('s-date').value = `${parseInt(d)} ${DP_MONTHS[parseInt(m)-1]} ${y}`;
+  $('date-picker').style.display = 'none';
+  updateTotal();
+}
+
+document.addEventListener('click', e => {
+  const wrap = $('date-picker-wrap');
+  if (wrap && !wrap.contains(e.target)) $('date-picker').style.display = 'none';
+});
 
 // ─── Init ─────────────────────────────────────────────────────────────────────
 
