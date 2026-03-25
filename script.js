@@ -249,10 +249,13 @@ function updateTotal() {
   $('p1-total').textContent = total > 0 ? fmtMoney(total) : 'No options selected';
   $('p1-total').style.color = total > 0 ? '' : '#969CA6';
   $('p1-total').style.fontSize = total > 0 ? '' : '14px';
+  document.querySelector('.total-bar').classList.toggle('visible', total > 0);
 
   $('tbl-guests').textContent = S.guests ? `${S.guests} guests` : '';
-  $('tbl-date').textContent   = S.date   ? (() => { const [y,m,d] = S.date.split('-'); return `${parseInt(d)} ${DP_MONTHS[parseInt(m)-1]} ${y}`; })() : '';
-  $('tbl-time').textContent   = S.time   ? S.time : '';
+  const dtParts = [];
+  if (S.date) { const [y,m,d] = S.date.split('-'); dtParts.push(`${parseInt(d)} ${DP_MONTHS[parseInt(m)-1]} ${y}`); }
+  if (S.time) dtParts.push(S.time);
+  $('tbl-datetime').textContent = dtParts.join(', ');
 
   const btn = $('btn-continue');
   btn.style.opacity       = S.guests ? '1' : '0.35';
