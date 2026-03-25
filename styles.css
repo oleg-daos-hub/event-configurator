@@ -166,7 +166,7 @@ input[type="time"]::-webkit-calendar-picker-indicator { display: none; }
   .form-grid { grid-template-columns: 1fr; }
   .fg.full { grid-column: 1; }
   .total-bar { flex-direction: column; gap: 0.75rem; }
-  .total-bar-right { text-align: left; }
+  .total-bar-right { align-self: flex-end; }
   .total-bar-val { font-size: 22px; }
   .size-card { padding: 0.875rem 1rem; }
   .fg input, .fg textarea { font-size: 16px; }
