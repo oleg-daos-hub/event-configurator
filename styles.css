@@ -113,7 +113,7 @@ body::before { content: ''; position: fixed; inset: 0; background: url('images/b
 .checkout-row { display: flex; justify-content: space-between; align-items: baseline; padding: 5px 0; font-size: 14px; }
 .checkout-row .lbl { color: #969CA6; }
 .checkout-row .val { color: #111; font-weight: 500; }
-.checkout-total { display: flex; justify-content: space-between; align-items: flex-start; padding-top: 10px; margin-top: 8px; border-top: 1px solid #ddd; }
+.checkout-total { display: flex; justify-content: space-between; align-items: flex-start; padding-top: 10px; margin-top: 8px; border-top: 1px solid rgba(150, 156, 166, 0.2); }
 .total-lbl { font-size: 15px; font-weight: 500; }
 .total-val { font-size: 22px; font-weight: 500; text-align: right; }
 
