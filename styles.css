@@ -57,7 +57,7 @@ body::before { content: ''; position: fixed; inset: 0; background: url('images/b
 /* Guest count cards */
 .size-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .size-card { background: rgba(150, 156, 166, 0.08); backdrop-filter: blur(4px); border: 1px solid transparent; border-radius: 20px; padding: 1rem 1.25rem; cursor: pointer; transition: border-color 0.15s; }
-.size-card:hover { border-color: #e5e8ea; }
+.size-card:hover { border-color: rgba(51, 51, 51, 0.1); }
 .size-card.selected { border-color: #333; }
 .size-label { font-size: 16px; font-weight: 500; }
 .size-hint { font-size: 13px; color: #969CA6; margin-top: 4px; }
@@ -65,7 +65,7 @@ body::before { content: ''; position: fixed; inset: 0; background: url('images/b
 /* Item list (multi-select toggle cards) */
 .item-list { display: flex; flex-direction: column; gap: 8px; }
 .item-card { background: rgba(150, 156, 166, 0.08); backdrop-filter: blur(4px); border: 1px solid transparent; border-radius: 20px; padding: 0.875rem 1.25rem; cursor: pointer; transition: border-color 0.15s; }
-.item-card:hover { border-color: #e5e8ea; }
+.item-card:hover { border-color: rgba(51, 51, 51, 0.1); }
 .item-card.selected { border-color: #333; }
 .item-main { display: flex; align-items: center; gap: 12px; }
 .item-chk { width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid rgba(150, 156, 166, 0.5); flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: background 0.15s, border-color 0.15s; }
@@ -81,14 +81,14 @@ body::before { content: ''; position: fixed; inset: 0; background: url('images/b
 .hrs-row { display: flex; align-items: center; gap: 8px; margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(150, 156, 166, 0.1); }
 .hrs-label { font-size: 13px; color: #969CA6; }
 .hrs-btn { width: 26px; height: 26px; border-radius: 50%; border: 1px solid transparent; background: rgba(150, 156, 166, 0.08); backdrop-filter: blur(4px); cursor: pointer; font-size: 15px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: border-color 0.15s; outline: none; color: #333; }
-.hrs-btn:hover { border-color: #e5e8ea; }
+.hrs-btn:hover { border-color: rgba(51, 51, 51, 0.1); }
 .hrs-val { font-size: 14px; font-weight: 500; color: #111; min-width: 16px; text-align: center; }
 .hrs-total { margin-left: auto; font-size: 14px; font-weight: 500; color: #111; }
 
 /* Catering / Beverages cards (single-select) */
 .pkg-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
 .pkg-card { background: rgba(150, 156, 166, 0.08); backdrop-filter: blur(4px); border: 1px solid transparent; border-radius: 20px; padding: 1rem; cursor: pointer; transition: border-color 0.15s; }
-.pkg-card:hover { border-color: #e5e8ea; }
+.pkg-card:hover { border-color: rgba(51, 51, 51, 0.1); }
 .pkg-card.selected { border-color: #333; }
 .pkg-name { font-size: 14px; font-weight: 500; line-height: 1.4; min-height: 1.4em; margin-bottom: 6px; }
 .pkg-price { font-size: 18px; font-weight: 500; margin-bottom: 8px; }
@@ -139,7 +139,7 @@ input[type="time"]::-webkit-date-and-time-value { text-align: left; margin: 0; }
 .fg input, .fg textarea { font-family: inherit; font-size: 14px; padding: 8px 12px; background: rgba(150, 156, 166, 0.08); backdrop-filter: blur(4px); border: 1px solid transparent; border-radius: 20px; transition: border-color 0.15s; outline: none; box-sizing: border-box; height: 38px; -webkit-appearance: none; appearance: none; }
 .fg textarea { height: auto; }
 .fg input::placeholder, .fg textarea::placeholder { color: #969CA6; }
-.fg input:hover, .fg textarea:hover { border-color: #e5e8ea; }
+.fg input:hover, .fg textarea:hover { border-color: rgba(51, 51, 51, 0.1); }
 .fg input:focus, .fg textarea:focus { border-color: #333; }
 .fg textarea { min-height: 72px; resize: vertical; }
 

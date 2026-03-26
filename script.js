@@ -279,7 +279,7 @@ function goToPage2() {
   const total = calcTotal();
   const lines = [];
 
-  if (S.date)   lines.push(['Date',   S.date]);
+  if (S.date)   { const [y,m,d] = S.date.split('-'); lines.push(['Date', `${parseInt(d)} ${DP_MONTHS[parseInt(m)-1]} ${y}`]); }
   if (S.time)   lines.push(['Time',   S.time]);
   if (S.guests) lines.push(['Guests', S.guests + ' people']);
 
