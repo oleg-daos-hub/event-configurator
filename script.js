@@ -275,8 +275,7 @@ function updateTotal() {
 
 // ─── Page navigation ──────────────────────────────────────────────────────────
 
-function goToPage2() {
-  const total = calcTotal();
+function buildSummary() {
   const lines = [];
 
   if (S.date)   { const [y,m,d] = S.date.split('-'); lines.push(['Date', `${parseInt(d)} ${DP_MONTHS[parseInt(m)-1]} ${y}`]); }
@@ -317,6 +316,13 @@ function goToPage2() {
   addSection('Printed',     PRINTED,  S.printed);
   addSection('Operations',  OPS,      S.ops);
 
+  return lines;
+}
+
+function goToPage2() {
+  const total = calcTotal();
+  const lines = buildSummary();
+
   $('co-summary').innerHTML = lines.map(line => {
     if (line.header) return `<div class="co-section-header">${line.header}</div>`;
     return `<div class="checkout-row"><span class="lbl">${line[0]}</span><span class="val">${line[1]}</span></div>`;
@@ -341,8 +347,45 @@ function submitEnquiry() {
   const name  = $('f-name').value.trim();
   const email = $('f-email').value.trim();
   if (!name || !email) { alert('Please enter your name and email.'); return; }
-  $('enquiry-form').style.display = 'none';
-  $('success-view').style.display = 'block';
+
+  const btn = document.querySelector('#enquiry-form .btn-submit');
+  btn.disabled = true;
+  btn.textContent = 'Sending…';
+  $('submit-error').style.display = 'none';
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 15000);
+
+  fetch('/api/enquiry', {
+    method:  'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body:    JSON.stringify({
+      name,
+      email,
+      phone:    $('f-phone').value.trim(),
+      notes:    $('f-notes').value.trim(),
+      honeypot: $('f-hp').value,
+      total:    fmtMoney(calcTotal()),
+      summary:  buildSummary(),
+    }),
+    signal: controller.signal,
+  })
+    .then(res => {
+      clearTimeout(timeout);
+      if (!res.ok) throw new Error('server_error');
+      $('enquiry-form').style.display = 'none';
+      $('success-view').style.display = 'block';
+    })
+    .catch(err => {
+      clearTimeout(timeout);
+      const msg = err.name === 'AbortError'
+        ? 'Request timed out — please try again.'
+        : 'Something went wrong — please try again.';
+      $('submit-error').innerHTML = msg + ' Or email us at <a href="mailto:oleg.k@daoshub.xyz">oleg.k@daoshub.xyz</a>';
+      $('submit-error').style.display = 'block';
+      btn.disabled = false;
+      btn.textContent = 'Submit enquiry';
+    });
 }
 
 // ─── Date picker ──────────────────────────────────────────────────────────────
