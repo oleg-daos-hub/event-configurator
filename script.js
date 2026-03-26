@@ -258,8 +258,9 @@ function updateTotal() {
   $('tbl-datetime').textContent = dtParts.join(', ');
 
   const btn = $('btn-continue');
-  btn.style.opacity       = S.guests ? '1' : '0.35';
-  btn.style.pointerEvents = S.guests ? ''  : 'none';
+  const canContinue = !!(S.guests && S.date && S.time);
+  btn.style.opacity       = canContinue ? '1' : '0.5';
+  btn.style.pointerEvents = canContinue ? ''  : 'none';
 
   $('rest').classList.toggle('locked', !S.guests);
   $('dot-guests').classList.toggle('done', !!S.guests);
