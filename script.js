@@ -341,12 +341,64 @@ function goToPage1() {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
+// ─── Form validation ──────────────────────────────────────────────────────────
+
+function clearFieldErrors() {
+  document.querySelectorAll('#enquiry-form .fg.error').forEach(el => {
+    el.classList.remove('error');
+    const err = el.querySelector('.field-error');
+    if (err) err.remove();
+  });
+}
+
+function setFieldError(inputId, msg) {
+  const input = $(inputId);
+  const fg = input.closest('.fg');
+  fg.classList.add('error');
+  const err = document.createElement('span');
+  err.className = 'field-error';
+  err.textContent = msg;
+  fg.appendChild(err);
+}
+
+function isValidEmail(email) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email);
+}
+
+function isValidPhone(phone) {
+  return /^[\+\d][\d\s\-\(\)]{5,}$/.test(phone);
+}
+
 // ─── Form submit ──────────────────────────────────────────────────────────────
 
 function submitEnquiry() {
+  clearFieldErrors();
+
   const name  = $('f-name').value.trim();
   const email = $('f-email').value.trim();
-  if (!name || !email) { alert('Please enter your name and email.'); return; }
+  const phone = $('f-phone').value.trim();
+
+  let valid = true;
+
+  if (!name) {
+    setFieldError('f-name', 'Please enter your name.');
+    valid = false;
+  }
+
+  if (!email) {
+    setFieldError('f-email', 'Please enter your email.');
+    valid = false;
+  } else if (!isValidEmail(email)) {
+    setFieldError('f-email', 'Please enter a valid email address (e.g. your@email.com).');
+    valid = false;
+  }
+
+  if (phone && !isValidPhone(phone)) {
+    setFieldError('f-phone', 'Please enter a valid phone number (e.g. +1 000 000 0000).');
+    valid = false;
+  }
+
+  if (!valid) return;
 
   const btn = document.querySelector('#enquiry-form .btn-submit');
   btn.disabled = true;
@@ -456,3 +508,15 @@ document.addEventListener('click', e => {
 // ─── Init ─────────────────────────────────────────────────────────────────────
 
 renderAll();
+
+// Clear field error as soon as the user starts correcting the field
+['f-name', 'f-email', 'f-phone'].forEach(id => {
+  $(id).addEventListener('input', () => {
+    const fg = $(id).closest('.fg');
+    if (fg.classList.contains('error')) {
+      fg.classList.remove('error');
+      const err = fg.querySelector('.field-error');
+      if (err) err.remove();
+    }
+  });
+});
