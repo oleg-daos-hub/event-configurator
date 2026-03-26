@@ -136,7 +136,7 @@ body::before { content: ''; position: fixed; inset: 0; background: url('images/b
 input[type="time"]::-webkit-calendar-picker-indicator { display: none; }
 input[type="time"]::-webkit-date-and-time-value { text-align: left; margin: 0; }
 
-.fg input, .fg textarea { font-family: inherit; font-size: 14px; padding: 8px 12px; background: rgba(150, 156, 166, 0.08); backdrop-filter: blur(4px); border: 1px solid transparent; border-radius: 20px; transition: border-color 0.15s; outline: none; box-sizing: border-box; height: 38px; }
+.fg input, .fg textarea { font-family: inherit; font-size: 14px; padding: 8px 12px; background: rgba(150, 156, 166, 0.08); backdrop-filter: blur(4px); border: 1px solid transparent; border-radius: 20px; transition: border-color 0.15s; outline: none; box-sizing: border-box; height: 38px; -webkit-appearance: none; appearance: none; }
 .fg textarea { height: auto; }
 .fg input::placeholder, .fg textarea::placeholder { color: #969CA6; }
 .fg input:hover, .fg textarea:hover { border-color: #e5e8ea; }
@@ -168,16 +168,12 @@ input[type="time"]::-webkit-date-and-time-value { text-align: left; margin: 0; }
   body { padding: 1rem; }
   .cfg { padding: 1rem 0; }
   .pkg-grid { grid-template-columns: 1fr 1fr; }
-  .form-grid { grid-template-columns: 1fr; }
-  .fg.full { grid-column: 1; }
+  .fg.full { grid-column: 1 / -1; }
   .total-bar-val { font-size: 22px; }
   .size-card { padding: 0.875rem 1rem; }
 
   /* Prevent iOS zoom on input focus (triggered when font-size < 16px) */
   .fg input, .fg textarea { font-size: 16px; }
-
-  /* Stack time below date on mobile */
-  .info-grid { grid-template-columns: 1fr; }
 
   /* Date picker: don't let it overflow viewport on small screens */
   .date-picker { width: calc(100vw - 2rem - 10px); max-width: 252px; }
