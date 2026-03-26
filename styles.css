@@ -134,6 +134,7 @@ body::before { content: ''; position: fixed; inset: 0; background: url('images/b
 .input-wrap input { width: 100%; padding-right: 36px; }
 .input-wrap .lucide { position: absolute; right: 12px; width: 16px; height: 16px; stroke: #969CA6; pointer-events: none; }
 input[type="time"]::-webkit-calendar-picker-indicator { display: none; }
+input[type="time"]::-webkit-date-and-time-value { text-align: left; margin: 0; }
 
 .fg input, .fg textarea { font-family: inherit; font-size: 14px; padding: 8px 12px; background: rgba(150, 156, 166, 0.08); backdrop-filter: blur(4px); border: 1px solid transparent; border-radius: 20px; transition: border-color 0.15s; outline: none; box-sizing: border-box; height: 38px; }
 .fg textarea { height: auto; }
@@ -171,4 +172,13 @@ input[type="time"]::-webkit-calendar-picker-indicator { display: none; }
   .fg.full { grid-column: 1; }
   .total-bar-val { font-size: 22px; }
   .size-card { padding: 0.875rem 1rem; }
+
+  /* Prevent iOS zoom on input focus (triggered when font-size < 16px) */
+  .fg input, .fg textarea { font-size: 16px; }
+
+  /* Stack time below date on mobile */
+  .info-grid { grid-template-columns: 1fr; }
+
+  /* Date picker: don't let it overflow viewport on small screens */
+  .date-picker { width: calc(100vw - 2rem - 10px); max-width: 252px; }
 }
