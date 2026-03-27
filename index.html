@@ -25,7 +25,7 @@
       <div class="fg" id="date-picker-wrap"><label>Date</label><div class="input-wrap" onclick="toggleDatePicker(event)"><input type="text" id="s-date" placeholder="Select date" readonly><i data-lucide="calendar"></i></div><div class="date-picker" id="date-picker"></div></div>
       <div class="fg"><label>Time</label><div class="input-wrap"><input type="time" id="s-time" oninput="S.time=this.value;updateTotal()"><i data-lucide="clock"></i></div></div>
     </div>
-    <div class="fg" style="margin-bottom:10px;"><label>Guests</label></div>
+    <div class="fg" id="guests-label" style="margin-bottom:10px;"><label>Guests</label></div>
     <div class="size-grid">
       <div class="size-card" id="sz50" onclick="selectGuests(50)">
         <div class="size-label">50 guests</div>

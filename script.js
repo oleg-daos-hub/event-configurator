@@ -264,6 +264,7 @@ function updateTotal() {
 
   const dateTimeReady = !!(S.date && S.time);
   document.querySelector('.size-grid').classList.toggle('locked', !dateTimeReady);
+  $('guests-label').classList.toggle('locked', !dateTimeReady);
   $('rest').classList.toggle('locked', !S.guests);
 }
 

@@ -38,6 +38,7 @@ body::before { content: ''; position: fixed; inset: 0; background: url('images/b
 #rest.locked { opacity: 0.35; pointer-events: none; user-select: none; }
 .size-grid { transition: opacity 0.2s; }
 .size-grid.locked { opacity: 0.35; pointer-events: none; user-select: none; }
+.fg.locked { opacity: 0.35; }
 
 /* Lucide icons */
 .lucide { width: 14px; height: 14px; stroke: currentColor; stroke-width: 1.5; vertical-align: middle; }
