@@ -440,21 +440,55 @@ function submitEnquiry() {
 const DP_MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 const DP_DAYS   = ['Mo','Tu','We','Th','Fr','Sa','Su'];
 let dpMonth = new Date(); dpMonth.setDate(1);
+let timeFormat = '24';
 
-function toggleDatePicker(e) {
-  e.stopPropagation();
-  const dp = $('date-picker');
-  if (dp.style.display === 'block') { dp.style.display = 'none'; return; }
-  renderDatePicker();
-  dp.style.display = 'block';
+function fmt(t) {
+  if (timeFormat === '24') return t;
+  const [h, m] = t.split(':').map(Number);
+  const period = h >= 12 ? 'PM' : 'AM';
+  const h12 = h % 12 || 12;
+  return `${h12}:${String(m).padStart(2,'0')} ${period}`;
 }
+
+function toggleTimeFormat(f) {
+  timeFormat = f;
+  renderSlotsHeader();
+  renderTimeSlots();
+}
+
+function renderSlotsHeader() {
+  const toggle = `<div class="ts-format-toggle">
+    <button class="ts-fmt-btn${timeFormat === '12' ? ' active' : ''}" onclick="toggleTimeFormat('12')">12h</button>
+    <button class="ts-fmt-btn${timeFormat === '24' ? ' active' : ''}" onclick="toggleTimeFormat('24')">24h</button>
+  </div>`;
+  let dayHtml = '';
+  if (S.date) {
+    const [y, m, d] = S.date.split('-');
+    const dow = ['Su','Mo','Tu','We','Th','Fr','Sa'][new Date(+y, +m-1, +d).getDay()];
+    dayHtml = `<span class="dt-slots-day"><span class="ts-dow">${dow}</span> <span class="ts-date">${parseInt(d)}</span></span>`;
+  }
+  $('dt-slots-header').innerHTML = dayHtml + toggle;
+}
+
 
 function renderDatePicker() {
   const year = dpMonth.getFullYear(), month = dpMonth.getMonth();
-  const firstDow = (new Date(year, month, 1).getDay() + 6) % 7; // Mon=0
+  const firstDow = (new Date(year, month, 1).getDay() + 6) % 7;
   const daysInMonth = new Date(year, month + 1, 0).getDate();
   const today = new Date(); today.setHours(0,0,0,0);
   const selIso = S.date;
+
+  // Render calendar header (above the box)
+  $('dt-cal-header').innerHTML = `
+    <div class="dt-cal-header-left">
+      <span class="dt-month">${DP_MONTHS[month]}</span> <span class="dt-year">${year}</span>
+    </div>
+    <div class="dt-cal-header-nav">
+      <button class="dp-nav" onclick="dpNav(-1)"><i data-lucide="chevron-left"></i></button>
+      <button class="dp-nav" onclick="dpNav(1)"><i data-lucide="chevron-right"></i></button>
+    </div>`;
+
+  renderSlotsHeader();
 
   let cells = '';
   for (let i = 0; i < firstDow; i++) cells += `<div class="dp-day dp-empty"></div>`;
@@ -462,19 +496,14 @@ function renderDatePicker() {
     const iso = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
     const date = new Date(year, month, d);
     let cls = 'dp-day';
-    if (iso === selIso)        cls += ' dp-selected';
+    if (iso === selIso)                          cls += ' dp-selected';
     else if (date.getTime() === today.getTime()) cls += ' dp-today';
-    if (date < today)          cls += ' dp-past';
+    if (date < today)                            cls += ' dp-past';
     const click = date >= today ? `onclick="pickDate('${iso}')"` : '';
     cells += `<div class="${cls}" ${click}>${d}</div>`;
   }
 
   $('date-picker').innerHTML = `
-    <div class="dp-header">
-      <button class="dp-nav" onclick="event.stopPropagation();dpNav(-1)"><i data-lucide="chevron-left"></i></button>
-      <span class="dp-month-label">${DP_MONTHS[month]} ${year}</span>
-      <button class="dp-nav" onclick="event.stopPropagation();dpNav(1)"><i data-lucide="chevron-right"></i></button>
-    </div>
     <div class="dp-grid">
       ${DP_DAYS.map(d => `<div class="dp-dow">${d}</div>`).join('')}
       ${cells}
@@ -489,20 +518,38 @@ function dpNav(dir) {
 
 function pickDate(iso) {
   S.date = iso;
-  const [y, m, d] = iso.split('-');
-  $('s-date').value = `${parseInt(d)} ${DP_MONTHS[parseInt(m)-1]} ${y}`;
-  $('date-picker').style.display = 'none';
+  S.time = '';
+  renderDatePicker(); // also updates dt-slots-header
+  renderTimeSlots();
   updateTotal();
 }
 
-document.addEventListener('click', e => {
-  const wrap = $('date-picker-wrap');
-  if (wrap && !wrap.contains(e.target)) $('date-picker').style.display = 'none';
-});
+function renderTimeSlots() {
+  const slots = [];
+  for (let h = 9; h <= 22; h++) {
+    slots.push(`${String(h).padStart(2,'0')}:00`);
+    if (h < 22) slots.push(`${String(h).padStart(2,'0')}:30`);
+  }
+  $('time-slots').innerHTML = slots.map(t =>
+    `<div class="time-slot${S.time === t ? ' selected' : ''}" onclick="selectTime('${t}')">${fmt(t)}</div>`
+  ).join('');
+}
+
+function selectTime(t) {
+  S.time = t;
+  renderTimeSlots();
+  updateTotal();
+}
 
 // ─── Init ─────────────────────────────────────────────────────────────────────
 
+const _today = new Date();
+S.date = `${_today.getFullYear()}-${String(_today.getMonth()+1).padStart(2,'0')}-${String(_today.getDate()).padStart(2,'0')}`;
+
 renderAll();
+renderDatePicker();
+renderSlotsHeader();
+renderTimeSlots();
 
 // Clear field error as soon as the user starts correcting the field
 ['f-name', 'f-email', 'f-phone'].forEach(id => {

@@ -21,11 +21,24 @@
         <div class="step-sub">Date, time, and guest count</div>
       </div>
     </div>
-    <div class="info-grid">
-      <div class="fg" id="date-picker-wrap"><label>Date</label><div class="input-wrap" onclick="toggleDatePicker(event)"><input type="text" id="s-date" placeholder="Select date" readonly><i data-lucide="calendar"></i></div><div class="date-picker" id="date-picker"></div></div>
-      <div class="fg"><label>Time</label><div class="input-wrap"><input type="time" id="s-time" oninput="S.time=this.value;updateTotal()"><i data-lucide="clock"></i></div></div>
+    <div class="datetime-block">
+      <div class="datetime-header">
+        <div class="dt-cal-header" id="dt-cal-header"></div>
+        <div class="dt-slots-header" id="dt-slots-header"></div>
+      </div>
+      <div class="datetime-body">
+        <div class="date-picker" id="date-picker"></div>
+        <div class="time-slots-wrap" id="time-slots-wrap">
+          <div class="time-slots" id="time-slots"></div>
+        </div>
+      </div>
     </div>
-    <div class="fg" id="guests-label" style="margin-bottom:10px;"><label>Guests</label></div>
+    <div class="step-row" id="guests-label">
+      <div>
+        <div class="step-title">Guests</div>
+        <div class="step-sub">Choose your expected number of attendees</div>
+      </div>
+    </div>
     <div class="size-grid">
       <div class="size-card" id="sz50" onclick="selectGuests(50)">
         <div class="size-label">50 guests</div>
