@@ -480,9 +480,7 @@ function renderDatePicker() {
 
   // Render calendar header (above the box)
   $('dt-cal-header').innerHTML = `
-    <div class="dt-cal-header-left">
-      <span class="dt-month">${DP_MONTHS[month]}</span> <span class="dt-year">${year}</span>
-    </div>
+    <span class="dt-cal-label"><span class="dt-month">${DP_MONTHS[month]}</span> <span class="dt-year">${year}</span></span>
     <div class="dt-cal-header-nav">
       <button class="dp-nav" onclick="dpNav(-1)"><i data-lucide="chevron-left"></i></button>
       <button class="dp-nav" onclick="dpNav(1)"><i data-lucide="chevron-right"></i></button>
