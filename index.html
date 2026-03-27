@@ -32,6 +32,13 @@
           <div class="time-slots" id="time-slots"></div>
         </div>
       </div>
+      <div class="time-mobile-wrap">
+        <div class="time-mobile-header" id="time-mobile-header"></div>
+        <div class="input-wrap time-mobile-input" onclick="document.getElementById('s-time-m').showPicker?.() ?? document.getElementById('s-time-m').click()">
+          <input type="time" id="s-time-m" oninput="selectTime(this.value)">
+          <i data-lucide="clock"></i>
+        </div>
+      </div>
     </div>
     <div class="step-row" id="guests-label">
       <div>

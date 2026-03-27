@@ -456,6 +456,20 @@ function toggleTimeFormat(f) {
   renderTimeSlots();
 }
 
+function renderMobileTimeHeader() {
+  const el = $('time-mobile-header');
+  if (!el) return;
+  if (S.date) {
+    const [y, m, d] = S.date.split('-');
+    const dow = ['Su','Mo','Tu','We','Th','Fr','Sa'][new Date(+y, +m-1, +d).getDay()];
+    el.innerHTML = `<span class="dt-slots-day"><span class="ts-dow">${dow}</span> <span class="ts-date">${parseInt(d)}</span></span>`;
+  } else {
+    el.innerHTML = '';
+  }
+  const input = $('s-time-m');
+  if (input && S.time) input.value = S.time;
+}
+
 function renderSlotsHeader() {
   const toggle = `<div class="ts-format-toggle">
     <button class="ts-fmt-btn${timeFormat === '12' ? ' active' : ''}" onclick="toggleTimeFormat('12')">12h</button>
@@ -487,6 +501,7 @@ function renderDatePicker() {
     </div>`;
 
   renderSlotsHeader();
+  renderMobileTimeHeader();
 
   let cells = '';
   for (let i = 0; i < firstDow; i++) cells += `<div class="dp-day dp-empty"></div>`;
@@ -536,6 +551,7 @@ function renderTimeSlots() {
 function selectTime(t) {
   S.time = t;
   renderTimeSlots();
+  renderMobileTimeHeader();
   updateTotal();
 }
 
