@@ -142,7 +142,7 @@ function renderItemList(container, items, stateObj, section) {
     const hours = typeof val === 'number' ? val : 1;
 
     const priceHtml = item.perHour
-      ? `<div class="item-price">${fmtMoney(item.price)}<div class="item-price-hint">per hour</div></div>`
+      ? `<div class="item-price">${fmtMoney(item.price)}<div class="item-price-hint">/hour</div></div>`
       : `<div class="item-price">${fmtMoney(item.price)}</div>`;
 
     const hrsHtml = (sel && item.perHour) ? `

@@ -30,7 +30,8 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: 'Roobert PRO', sans-serif; background: #fff; color: #111; padding: 2rem; position: relative; }
 body::before { content: ''; position: fixed; inset: 0; background: url('images/background.png') no-repeat center center; background-size: cover; opacity: 0.3; z-index: -1; }
-.cfg { max-width: 740px; margin: 0 auto; padding: 1.5rem 0; }
+.cfg { max-width: 100%; margin: 0 auto; padding: 1.5rem 0; }
+@media (min-width: 850px) { .cfg { max-width: 400px; } }
 .divider { display: none; }
 
 /* Locked state */
@@ -50,11 +51,11 @@ body::before { content: ''; position: fixed; inset: 0; background: url('images/b
 .cfg-title { font-size: 40px; font-weight: 500; margin-bottom: 60px; }
 
 /* Section headers */
-.step-row { display: flex; align-items: center; gap: 10px; margin-top: 60px; margin-bottom: 1rem; }
+.step-row { display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 60px; margin-bottom: calc(1rem + 10px); text-align: center; }
 .cfg > .step-row:first-child { margin-top: 0; }
 .step-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(150, 156, 166, 0.5); flex-shrink: 0; transition: background 0.2s; }
 .step-dot.done { background: #111; }
-.step-title { font-size: 15px; font-weight: 500; color: #111; }
+.step-title { font-size: 20px; font-weight: 500; color: #111; }
 .step-sub { font-size: 13px; color: #969CA6; margin-top: 2px; }
 
 /* Guest count cards */
