@@ -125,7 +125,7 @@ function renderItemList(container, items, stateObj, section) {
   container.innerHTML = '';
   container.innerHTML = items.map(item => {
     if (item.included) {
-      return `<div class="item-card selected" style="cursor:default">
+      return `<div class="item-card selected included" style="cursor:default">
         <div class="item-main">
           <div class="item-chk" style="background:#111;border-color:#111"><i data-lucide="check" class="item-chk-tick" style="opacity:1"></i></div>
           <div class="item-info">
@@ -262,16 +262,9 @@ function updateTotal() {
   btn.style.opacity       = canContinue ? '1' : '0.5';
   btn.style.pointerEvents = canContinue ? ''  : 'none';
 
+  const dateTimeReady = !!(S.date && S.time);
+  document.querySelector('.size-grid').classList.toggle('locked', !dateTimeReady);
   $('rest').classList.toggle('locked', !S.guests);
-  $('dot-guests').classList.toggle('done', !!S.guests);
-  $('dot-venue').classList.toggle('done',    Object.keys(S.venue).length    > 0);
-  $('dot-catering').classList.toggle('done', !!S.catering);
-  $('dot-beverages').classList.toggle('done', Object.keys(S.beverages).length > 0);
-  $('dot-media').classList.toggle('done',    Object.keys(S.media).length    > 0);
-  $('dot-promo').classList.toggle('done',    Object.keys(S.promo).length    > 0);
-  $('dot-branding').classList.toggle('done', Object.keys(S.branding).length > 0);
-  $('dot-printed').classList.toggle('done',  Object.keys(S.printed).length  > 0);
-  $('dot-ops').classList.toggle('done',      Object.keys(S.ops).length      > 0);
 }
 
 // ─── Page navigation ──────────────────────────────────────────────────────────
