@@ -82,6 +82,15 @@ const PREVIEW_IMAGES = {
   checkout:  'images/background.png',
 };
 
+// ─── Left panel label ────────────────────────────────────────────────────────
+
+function setLeftLabel(text) {
+  const el = document.getElementById('split-label');
+  if (!el) return;
+  el.style.opacity = '0';
+  setTimeout(() => { el.textContent = text; el.style.opacity = '1'; }, 150);
+}
+
 // ─── State ────────────────────────────────────────────────────────────────────
 // Multi-select perHour → value = hours (number)
 // Multi-select fixed   → value = true
@@ -231,7 +240,7 @@ function toggleItem(section, id) {
   const item = items.find(i => i.id === id);
   if (item.included) return;
   const obj = S[section];
-  if (id in obj) { delete obj[id]; } else { obj[id] = item.perHour ? 1 : true; }
+  if (id in obj) { delete obj[id]; } else { obj[id] = item.perHour ? 1 : true; setLeftLabel(item.name); }
   renderItemList($(`${section}-list`), items, obj, section);
   updateTotal();
 }
@@ -250,10 +259,14 @@ function changeHrs(section, id, delta) {
 
 function selectSingle(section, id) {
   if (section === 'beverages') {
-    if (id in S.beverages) { delete S.beverages[id]; } else { S.beverages[id] = true; }
+    const item = BEVERAGES.find(i => i.id === id);
+    if (id in S.beverages) { delete S.beverages[id]; } else { S.beverages[id] = true; if (item) setLeftLabel(item.name); }
     renderCateringBev('beverages-grid', BEVERAGES, S.beverages, 'beverages-sub');
   } else {
-    S.catering = S.catering === id ? null : id;
+    const item = CATERING.find(i => i.id === id);
+    const selecting = S.catering !== id;
+    S.catering = selecting ? id : null;
+    if (selecting && item) setLeftLabel(item.name);
     renderCateringBev('catering-grid', CATERING, S.catering, 'catering-sub');
   }
   updateTotal();
@@ -388,9 +401,12 @@ function isValidPhone(phone) {
 function submitEnquiry() {
   clearFieldErrors();
 
-  const name  = $('f-name').value.trim();
-  const email = $('f-email').value.trim();
-  const phone = $('f-phone').value.trim();
+  const name     = $('f-name').value.trim();
+  const email    = $('f-email').value.trim();
+  const dialCode = $('f-dial') ? $('f-dial').value : '';
+  const phone    = $('f-phone').value.trim() ? dialCode + ' ' + $('f-phone').value.trim() : '';
+  const telegram = $('f-telegram').value.trim();
+  const company  = $('f-company').value.trim();
 
   let valid = true;
 
@@ -428,7 +444,9 @@ function submitEnquiry() {
     body:    JSON.stringify({
       name,
       email,
-      phone:    $('f-phone').value.trim(),
+      phone:    phone,
+      telegram: telegram,
+      company:  company,
       notes:    $('f-notes').value.trim(),
       honeypot: $('f-hp').value,
       total:    fmtMoney(calcTotal()),

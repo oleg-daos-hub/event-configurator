@@ -129,12 +129,13 @@ body::before { content: ''; position: fixed; inset: 0; background: url('images/b
 
 /* Total bar */
 @keyframes total-bar-in { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
-.total-bar { display: none; justify-content: space-between; align-items: center; gap: 1rem; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(9px); border: 1px solid rgba(255, 255, 255, 0.1); color: #fff; border-radius: 20px; padding: 0.875rem 1.25rem; position: sticky; bottom: 1.5rem; margin-top: 1.5rem; }
+.total-bar { display: none; flex-direction: column; gap: 0.875rem; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(9px); border: 1px solid rgba(255, 255, 255, 0.1); color: #fff; border-radius: 20px; padding: 0.875rem 1.25rem; position: sticky; bottom: 1.5rem; margin-top: 1.5rem; }
 .total-bar.visible { display: flex; animation: total-bar-in 0.35s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.total-bar-top { display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
 .total-bar-left { display: flex; flex-direction: column; gap: 2px; }
 .total-bar-meta { font-size: 13px; color: rgba(255, 255, 255, 0.5); }
 .total-bar-datetime { font-size: 13px; color: #fff; }
-.total-bar-right { text-align: right; flex-shrink: 0; margin-left: auto; }
+.total-bar-right { text-align: right; flex-shrink: 0; }
 .total-bar-val { font-size: 26px; font-weight: 500; }
 
 /* Checkout page */
@@ -152,7 +153,7 @@ body::before { content: ''; position: fixed; inset: 0; background: url('images/b
 .btn-back { background: none; border: none; font-family: inherit; font-size: 13px; color: #969CA6; cursor: pointer; padding: 0; margin-bottom: 1.5rem; }
 .btn-back:hover { color: #333; }
 .btn-submit { width: 100%; margin-top: 1.25rem; padding: 12px; background: #111; color: #fff; border: none; border-radius: 20px; font-family: inherit; font-size: 15px; font-weight: 500; cursor: pointer; transition: opacity 0.15s; }
-.total-bar .btn-submit { width: auto; margin-top: 0; padding: 0; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; border-radius: 50%; background: #fff; color: #111; }
+.total-bar .btn-submit { margin-top: 0; background: #fff; color: #111; }
 .btn-submit:hover { opacity: 0.85; }
 
 /* Contact form */
@@ -167,6 +168,11 @@ input[type="time"]::-webkit-calendar-picker-indicator { display: none; }
 input[type="time"]::-webkit-date-and-time-value { text-align: left; margin: 0; }
 
 .fg input, .fg textarea { font-family: inherit; font-size: 14px; padding: 8px 12px; background: rgba(150, 156, 166, 0.08); backdrop-filter: blur(4px); border: 1px solid transparent; border-radius: 20px; transition: border-color 0.15s; outline: none; box-sizing: border-box; height: 38px; -webkit-appearance: none; appearance: none; }
+.phone-wrap { display: flex; gap: 8px; }
+.phone-wrap input { flex: 1; min-width: 0; }
+.dial-select { font-family: inherit; font-size: 14px; padding: 8px 10px; background: rgba(150, 156, 166, 0.08); backdrop-filter: blur(4px); border: 1px solid transparent; border-radius: 20px; outline: none; cursor: pointer; height: 38px; -webkit-appearance: none; appearance: none; flex-shrink: 0; transition: border-color 0.15s; color: #333; }
+.dial-select:hover { border-color: rgba(51, 51, 51, 0.1); }
+.dial-select:focus { border-color: #333; }
 .fg textarea { height: auto; }
 .fg input::placeholder, .fg textarea::placeholder { color: #969CA6; }
 .fg input:hover, .fg textarea:hover { border-color: rgba(51, 51, 51, 0.1); }
@@ -242,6 +248,8 @@ input[type="time"]::-webkit-date-and-time-value { text-align: left; margin: 0; }
   .split-img { width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; border-radius: 20px; transition: opacity 0.4s ease; }
   .split-img.fading { opacity: 0; }
   .split-img-overlay { position: absolute; inset: 0; border-radius: 20px; background: rgba(0,0,0,0.1); pointer-events: none; }
+
+  .split-label { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; padding: 2rem; text-align: center; font-size: 28px; font-weight: 500; color: #333; letter-spacing: -0.02em; line-height: 1.2; transition: opacity 0.2s ease; pointer-events: none; }
 
   .split-right { width: 400px; flex-shrink: 0; height: 100vh; overflow-y: auto; overflow-x: hidden; padding-bottom: 1.5rem; box-sizing: border-box; }
   .split-right .cfg { max-width: 400px; padding: 1.5rem; margin: 0; }
