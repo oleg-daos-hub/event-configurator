@@ -65,6 +65,23 @@ const OPS = [
   { id: 'waiters',     name: 'Waiters (Catering Service)',    desc: 'Smooth food and beverage service',                    price: 80,  perHour: true  },
 ];
 
+// ─── Preview images ───────────────────────────────────────────────────────────
+
+const PREVIEW_IMAGES = {
+  default:   'images/background.png',
+  details:   'images/background.png',
+  guests:    'images/background.png',
+  venue:     'images/background.png',
+  catering:  'images/background.png',
+  beverages: 'images/background.png',
+  media:     'images/background.png',
+  promo:     'images/background.png',
+  branding:  'images/background.png',
+  printed:   'images/background.png',
+  ops:       'images/background.png',
+  checkout:  'images/background.png',
+};
+
 // ─── State ────────────────────────────────────────────────────────────────────
 // Multi-select perHour → value = hours (number)
 // Multi-select fixed   → value = true
@@ -327,13 +344,15 @@ function goToPage2() {
 
   $('page-1').style.display = 'none';
   $('page-2').style.display = 'block';
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  setPreview('checkout');
+  (document.querySelector('.split-right') || window).scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function goToPage1() {
   $('page-2').style.display = 'none';
   $('page-1').style.display = 'block';
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  setPreview('default');
+  (document.querySelector('.split-right') || window).scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 // ─── Form validation ──────────────────────────────────────────────────────────
@@ -555,6 +574,46 @@ function selectTime(t) {
   updateTotal();
 }
 
+// ─── Preview ──────────────────────────────────────────────────────────────────
+
+let _currentPreview = 'default';
+
+function setPreview(key) {
+  if (_currentPreview === key) return;
+  _currentPreview = key;
+  const img = $('split-img');
+  if (!img) return;
+  const src = PREVIEW_IMAGES[key] || PREVIEW_IMAGES.default;
+  if (img.src.endsWith(src)) return;
+  img.classList.add('fading');
+  setTimeout(() => { img.src = src; img.classList.remove('fading'); }, 200);
+}
+
+function initPreviewObserver() {
+  if (window.innerWidth < 850) return;
+  const sectionMap = [
+    { el: document.querySelector('.datetime-block'), key: 'details'   },
+    { el: $('guests-label'),                         key: 'guests'    },
+    { el: $('venue-list'),                           key: 'venue'     },
+    { el: $('catering-grid'),                        key: 'catering'  },
+    { el: $('beverages-grid'),                       key: 'beverages' },
+    { el: $('media-list'),                           key: 'media'     },
+    { el: $('promo-list'),                           key: 'promo'     },
+    { el: $('branding-list'),                        key: 'branding'  },
+    { el: $('printed-list'),                         key: 'printed'   },
+    { el: $('ops-list'),                             key: 'ops'       },
+  ];
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const found = sectionMap.find(s => s.el === e.target);
+        if (found) setPreview(found.key);
+      }
+    });
+  }, { root: document.querySelector('.split-right'), rootMargin: '0px 0px -50% 0px', threshold: 0 });
+  sectionMap.forEach(s => { if (s.el) observer.observe(s.el); });
+}
+
 // ─── Init ─────────────────────────────────────────────────────────────────────
 
 const _today = new Date();
@@ -564,6 +623,7 @@ renderAll();
 renderDatePicker();
 renderSlotsHeader();
 renderTimeSlots();
+initPreviewObserver();
 
 // Clear field error as soon as the user starts correcting the field
 ['f-name', 'f-email', 'f-phone'].forEach(id => {
