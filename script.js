@@ -153,7 +153,7 @@ function renderItemList(container, items, stateObj, section) {
     if (item.included) {
       return `<div class="item-card selected included" style="cursor:default">
         <div class="item-main">
-          <div class="item-chk" style="background:#111;border-color:#111"><i data-lucide="check" class="item-chk-tick" style="opacity:1"></i></div>
+          <div class="item-chk" style="background:#333;border-color:#333"><i data-lucide="check" class="item-chk-tick" style="opacity:1"></i></div>
           <div class="item-info">
             <div class="item-name">${item.name}</div>
             <div class="item-desc">${item.desc}</div>
