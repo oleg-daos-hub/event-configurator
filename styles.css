@@ -30,13 +30,16 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: 'Roobert PRO', sans-serif; background: #fff; color: #333; padding: 2rem; position: relative; }
 body::before { content: ''; position: fixed; inset: 0; background: url('images/background.png') no-repeat center center; background-size: cover; opacity: 0.3; z-index: -1; }
-.cfg { max-width: 100%; margin: 0 auto; padding: 1.5rem 0; }
+.cfg { max-width: 100%; margin: 0 auto; padding: 1.5rem 0 6rem; }
 @media (min-width: 850px) { .cfg { max-width: 400px; } }
 .divider { display: none; }
 
 /* Locked state */
 #rest { transition: opacity 0.2s; }
 #rest.locked { opacity: 0.35; pointer-events: none; user-select: none; }
+#enquiry-section { transition: opacity 0.2s; margin-top: 60px; }
+#enquiry-section.locked { opacity: 0.35; pointer-events: none; user-select: none; }
+#enquiry-section .step-row { margin-top: 0; }
 .size-grid { transition: opacity 0.2s; }
 .size-grid.locked { opacity: 0.35; pointer-events: none; user-select: none; }
 .step-row.locked { opacity: 0.35; }
@@ -128,9 +131,14 @@ body::before { content: ''; position: fixed; inset: 0; background: url('images/b
 .time-slot.selected { border-color: #333; font-weight: 500; }
 
 /* Total bar */
-@keyframes total-bar-in { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
-.total-bar { display: none; flex-direction: column; gap: 0.875rem; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(9px); border: 1px solid rgba(255, 255, 255, 0.1); color: #fff; border-radius: 20px; padding: 0.875rem 1.25rem; position: sticky; bottom: 1.5rem; margin-top: 1.5rem; }
+@keyframes total-bar-in  { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes total-bar-out { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(16px); } }
+.total-bar { display: none; flex-direction: column; gap: 0.875rem; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(9px); border: 1px solid rgba(255, 255, 255, 0.1); color: #fff; border-radius: 20px; padding: 0.875rem 1.25rem; position: fixed; bottom: 1.5rem; left: 12px; right: 12px; z-index: 100; }
 .total-bar.visible { display: flex; animation: total-bar-in 0.35s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.total-bar.hiding { display: flex; animation: total-bar-out 0.3s cubic-bezier(0.4, 0, 1, 1) both; }
+@media (min-width: 850px) {
+  .total-bar { right: 1.5rem; left: auto; width: calc(400px - 3rem); }
+}
 .total-bar-top { display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
 .total-bar-left { display: flex; flex-direction: column; gap: 2px; }
 .total-bar-meta { font-size: 13px; color: rgba(255, 255, 255, 0.5); }

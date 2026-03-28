@@ -279,7 +279,16 @@ function updateTotal() {
   $('p1-total').textContent = total > 0 ? fmtMoney(total) : 'No options selected';
   $('p1-total').style.color = total > 0 ? '' : '#969CA6';
   $('p1-total').style.fontSize = total > 0 ? '' : '14px';
-  document.querySelector('.total-bar').classList.toggle('visible', total > 0);
+  const bar = document.querySelector('.total-bar');
+  const shouldShow = total > 0 && !formInView;
+  if (shouldShow) {
+    bar.classList.remove('hiding');
+    bar.classList.add('visible');
+  } else if (bar.classList.contains('visible') && !bar.classList.contains('hiding')) {
+    bar.classList.add('hiding');
+    bar.addEventListener('animationend', () => { bar.classList.remove('visible', 'hiding'); }, { once: true });
+  }
+  $('enquiry-section').classList.toggle('locked', total === 0);
 
   $('tbl-guests').textContent = S.guests ? `${S.guests} guests` : '';
   const dtParts = [];
@@ -344,28 +353,28 @@ function buildSummary() {
   return lines;
 }
 
-function goToPage2() {
-  const total = calcTotal();
-  const lines = buildSummary();
+let formInView = false;
 
-  $('co-summary').innerHTML = lines.map(line => {
-    if (line.header) return `<div class="co-section-header">${line.header}</div>`;
-    return `<div class="checkout-row"><span class="lbl">${line[0]}</span><span class="val">${line[1]}</span></div>`;
-  }).join('');
-
-  $('co-total').textContent = total > 0 ? fmtMoney(total) : '—';
-
-  $('page-1').style.display = 'none';
-  $('page-2').style.display = 'block';
-  setPreview('checkout');
-  (document.querySelector('.split-right') || window).scrollTo({ top: 0, behavior: 'smooth' });
+function scrollToForm() {
+  const section = $('enquiry-section');
+  if (!section) return;
+  const panel = document.querySelector('.split-right');
+  if (panel) {
+    panel.scrollTo({ top: section.offsetTop - 16, behavior: 'smooth' });
+  } else {
+    section.scrollIntoView({ behavior: 'smooth' });
+  }
 }
 
-function goToPage1() {
-  $('page-2').style.display = 'none';
-  $('page-1').style.display = 'block';
-  setPreview('default');
-  (document.querySelector('.split-right') || window).scrollTo({ top: 0, behavior: 'smooth' });
+function initFormObserver() {
+  const section = $('enquiry-section');
+  if (!section) return;
+  const root = document.querySelector('.split-right') || null;
+  const observer = new IntersectionObserver(entries => {
+    formInView = entries[0].isIntersecting;
+    updateTotal();
+  }, { root, threshold: 0.05 });
+  observer.observe(section);
 }
 
 // ─── Form validation ──────────────────────────────────────────────────────────
@@ -642,6 +651,7 @@ renderDatePicker();
 renderSlotsHeader();
 renderTimeSlots();
 initPreviewObserver();
+initFormObserver();
 
 // Clear field error as soon as the user starts correcting the field
 ['f-name', 'f-email', 'f-phone'].forEach(id => {
