@@ -203,6 +203,7 @@ function renderCateringBev(containerId, items, selectedId, subId) {
     const sel = section === 'beverages' ? item.id in selectedId : selectedId === item.id;
     const price = S.guests ? fmtMoney(item.price[S.guests]) : '—';
     return `<div class="pkg-card${sel ? ' selected' : ''}" onclick="selectSingle('${section}','${item.id}')">
+      <div class="pkg-img"></div>
       <div class="pkg-price">${price}</div>
       <div class="pkg-name">${item.name}</div>
       <div class="pkg-includes">${item.desc}</div>

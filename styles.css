@@ -96,7 +96,11 @@ body::before { content: ''; position: fixed; inset: 0; background: url('images/b
 
 /* Catering / Beverages cards (single-select) */
 .pkg-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
-.pkg-card { background: rgba(150, 156, 166, 0.08); backdrop-filter: blur(4px); border: 1px solid transparent; border-radius: 20px; padding: 1rem; cursor: pointer; transition: border-color 0.15s; }
+.pkg-card { background: rgba(150, 156, 166, 0.08); backdrop-filter: blur(4px); border: 1px solid transparent; border-radius: 20px; padding: 0; cursor: pointer; transition: border-color 0.15s; overflow: hidden; }
+.pkg-img { width: 100%; aspect-ratio: 1 / 0.8; background: rgba(150, 156, 166, 0.08); display: block; }
+.pkg-card .pkg-price, .pkg-card .pkg-name, .pkg-card .pkg-includes { padding-left: 1rem; padding-right: 1rem; }
+.pkg-card .pkg-price { padding-top: 1rem; }
+.pkg-card .pkg-includes { padding-bottom: 1rem; }
 .pkg-card:hover { border-color: rgba(51, 51, 51, 0.1); }
 .pkg-card.selected { border-color: #333; }
 .pkg-name { font-size: 14px; font-weight: 500; line-height: 1.4; min-height: 1.4em; margin-bottom: 6px; }
