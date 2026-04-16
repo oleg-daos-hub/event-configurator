@@ -28,13 +28,14 @@
         <path fill-rule="evenodd" clip-rule="evenodd" d="M8.02148 9.99919C8.02148 8.9603 8.85292 8.11719 9.88133 8.11719C10.9097 8.11719 11.7412 8.95853 11.7412 9.99919C11.7412 11.0398 10.9097 11.8812 9.88133 11.8812C8.85292 11.8812 8.02148 11.0398 8.02148 9.99919Z" fill="#333333"/>
       </svg>
     </div>
-    <h1 class="cfg-title">Daos Event Lab</h1>
+    <h1 class="cfg-title">Build your own event</h1>
+    <p class="cfg-desc">Just define the content — we'll handle the rest.</p>
 
     <!-- 1. Event details -->
     <div class="step-row">
 <div>
-        <div class="step-title">Event details</div>
-        <div class="step-sub">Date, time, and guest count</div>
+        <div class="step-title">Event Date & Time</div>
+        <div class="step-sub">Choose event date & time</div>
       </div>
     </div>
     <div class="datetime-block">
@@ -56,21 +57,16 @@
         </div>
       </div>
     </div>
-    <div class="step-row" id="guests-label">
-      <div>
-        <div class="step-title">Guests</div>
-        <div class="step-sub">Choose your expected number of attendees</div>
+    <div class="guest-slider-wrap">
+      <div class="guest-slider-val" id="guest-slider-val">50 guests</div>
+      <div class="guest-slider-hint">We'll automatically calculate food and drinks for this count</div>
+      <input type="range" id="guest-slider" class="guest-slider" min="50" max="150" step="10" value="50" oninput="selectGuests(+this.value)">
+      <div class="guest-slider-ticks">
+        <span></span><span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span><span></span>
+        <span></span>
       </div>
-    </div>
-    <div class="size-grid">
-      <div class="size-card" id="sz50" onclick="selectGuests(50)">
-        <div class="size-label">50 guests</div>
-        <div class="size-hint">Intimate event</div>
-      </div>
-      <div class="size-card" id="sz100" onclick="selectGuests(100)">
-        <div class="size-label">100 guests</div>
-        <div class="size-hint">Large event</div>
-      </div>
+      <div class="guest-slider-range"><span>50</span><span>150</span></div>
     </div>
 
     <div id="rest">

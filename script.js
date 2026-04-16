@@ -1,9 +1,9 @@
 // ─── Data ─────────────────────────────────────────────────────────────────────
 
 const VENUE = [
-  { id: 'event-hall',     name: 'Event hall',                         desc: '100 people · stunning Palm views and bar atmosphere',    price: 5000, perHour: true  },
-  { id: 'stage-av',       name: 'Main Stage & AV Setup + Technician', desc: 'LED screen, professional sound, stage lighting',         price: 1000, perHour: false },
-  { id: 'networking',     name: 'Networking area',                    desc: '70 people · stylish lounge and bar setting',             price: 3000, perHour: true  },
+  { id: 'event-hall',     name: 'Event hall',                         desc: '100 people · stunning Palm views and bar atmosphere',    price: 3000, perHour: true  },
+  { id: 'stage-av',       name: 'Main Stage & AV Setup',              desc: 'LED screen, professional sound, stage lighting',         price: 0,    perHour: false, priceIncluded: true },
+  { id: 'networking',     name: 'Networking area',                    desc: '70 people · stylish lounge and bar setting',             price: 2000, perHour: true  },
   { id: 'room-dune',      name: 'Meeting room Dune',                  desc: '20 people · workshops and focused discussions',          price: 300,  perHour: true  },
   { id: 'room-matrix',    name: 'Meeting room Matrix',                desc: '6 people · panoramic windows, skyline views',            price: 200,  perHour: true  },
   { id: 'room-herous',    name: 'Meeting room Herous',                desc: '6 people · private space for strategic discussions',     price: 200,  perHour: true  },
@@ -97,7 +97,7 @@ function setLeftLabel(text) {
 // Single-select        → id string or null
 
 const S = {
-  guests:    null,
+  guests:    50,
   date:      '',
   time:      '',
   venue:     {},
@@ -113,7 +113,13 @@ const S = {
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 const $ = id => document.getElementById(id);
-const fmtMoney = n => '$' + n.toLocaleString();
+const fmtMoney = n => '$' + Math.round(n).toLocaleString();
+
+// Linear interpolation/extrapolation between the 50 and 100 guest price tiers
+function guestPrice(priceObj, guests) {
+  const p50 = priceObj[50], p100 = priceObj[100];
+  return p50 + (guests - 50) * (p100 - p50) / 50;
+}
 
 function itemPrice(item, val) {
   if (item.included) return 0;
@@ -137,10 +143,10 @@ function calcTotal() {
   addMulti(OPS, S.ops);
   if (S.catering && S.guests) {
     const c = CATERING.find(i => i.id === S.catering);
-    if (c) total += c.price[S.guests];
+    if (c) total += guestPrice(c.price, S.guests);
   }
   if (S.guests) {
-    BEVERAGES.forEach(b => { if (b.id in S.beverages) total += b.price[S.guests]; });
+    BEVERAGES.forEach(b => { if (b.id in S.beverages) total += guestPrice(b.price, S.guests); });
   }
   return total;
 }
@@ -167,9 +173,11 @@ function renderItemList(container, items, stateObj, section) {
     const val = stateObj[item.id];
     const hours = typeof val === 'number' ? val : 1;
 
-    const priceHtml = item.perHour
-      ? `<div class="item-price">${fmtMoney(item.price)}<div class="item-price-hint">/hour</div></div>`
-      : `<div class="item-price">${fmtMoney(item.price)}</div>`;
+    const priceHtml = item.priceIncluded
+      ? `<div class="item-price"><span class="item-included">Included</span></div>`
+      : item.perHour
+        ? `<div class="item-price">${fmtMoney(item.price)}<div class="item-price-hint">/hour</div></div>`
+        : `<div class="item-price">${fmtMoney(item.price)}</div>`;
 
     const hrsHtml = (sel && item.perHour) ? `
       <div class="hrs-row" onclick="event.stopPropagation()">
@@ -201,7 +209,7 @@ function renderCateringBev(containerId, items, selectedId, subId) {
   const section = containerId === 'catering-grid' ? 'catering' : 'beverages';
   $(containerId).innerHTML = items.map(item => {
     const sel = section === 'beverages' ? item.id in selectedId : selectedId === item.id;
-    const price = S.guests ? fmtMoney(item.price[S.guests]) : '—';
+    const price = S.guests ? fmtMoney(guestPrice(item.price, S.guests)) : '—';
     return `<div class="pkg-card${sel ? ' selected' : ''}" onclick="selectSingle('${section}','${item.id}')">
       <div class="pkg-img"></div>
       <div class="pkg-price">${price}</div>
@@ -228,8 +236,8 @@ function renderAll() {
 
 function selectGuests(n) {
   S.guests = n;
-  document.querySelectorAll('.size-card').forEach(c => c.classList.remove('selected'));
-  $('sz' + n).classList.add('selected');
+  const lbl = $('guest-slider-val');
+  if (lbl) lbl.textContent = n + ' guests';
   renderCateringBev('catering-grid',  CATERING,  S.catering,  'catering-sub');
   renderCateringBev('beverages-grid', BEVERAGES, S.beverages, 'beverages-sub');
   updateTotal();
@@ -303,8 +311,7 @@ function updateTotal() {
   btn.style.pointerEvents = canContinue ? ''  : 'none';
 
   const dateTimeReady = !!(S.date && S.time);
-  document.querySelector('.size-grid').classList.toggle('locked', !dateTimeReady);
-  $('guests-label').classList.toggle('locked', !dateTimeReady);
+  document.querySelector('.guest-slider-wrap').classList.toggle('locked', !dateTimeReady);
   $('rest').classList.toggle('locked', !S.guests);
 }
 
@@ -323,7 +330,7 @@ function buildSummary() {
     lines.push({ header: title });
     sel.forEach(item => {
       const val = stateObj[item.id];
-      if (item.included) { lines.push([item.name, 'Included']); return; }
+      if (item.included || item.priceIncluded) { lines.push([item.name, 'Included']); return; }
       const hrs = typeof val === 'number' ? val : null;
       lines.push([item.name, hrs ? `${hrs}h · ${fmtMoney(item.price * hrs)}` : fmtMoney(item.price)]);
     });
@@ -508,7 +515,7 @@ function renderMobileTimeHeader() {
   if (!el) return;
   if (S.date) {
     const [y, m, d] = S.date.split('-');
-    const dow = ['Su','Mo','Tu','We','Th','Fr','Sa'][new Date(+y, +m-1, +d).getDay()];
+    const dow = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][new Date(+y, +m-1, +d).getDay()];
     el.innerHTML = `<span class="dt-slots-day"><span class="ts-dow">${dow}</span> <span class="ts-date">${parseInt(d)}</span></span>`;
   } else {
     el.innerHTML = '';
@@ -518,14 +525,11 @@ function renderMobileTimeHeader() {
 }
 
 function renderSlotsHeader() {
-  const toggle = `<div class="ts-format-toggle">
-    <button class="ts-fmt-btn${timeFormat === '12' ? ' active' : ''}" onclick="toggleTimeFormat('12')">12h</button>
-    <button class="ts-fmt-btn${timeFormat === '24' ? ' active' : ''}" onclick="toggleTimeFormat('24')">24h</button>
-  </div>`;
+  const toggle = '';
   let dayHtml = '';
   if (S.date) {
     const [y, m, d] = S.date.split('-');
-    const dow = ['Su','Mo','Tu','We','Th','Fr','Sa'][new Date(+y, +m-1, +d).getDay()];
+    const dow = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][new Date(+y, +m-1, +d).getDay()];
     dayHtml = `<span class="dt-slots-day"><span class="ts-dow">${dow}</span> <span class="ts-date">${parseInt(d)}</span></span>`;
   }
   $('dt-slots-header').innerHTML = dayHtml + toggle;
@@ -621,7 +625,7 @@ function initPreviewObserver() {
   if (window.innerWidth < 850) return;
   const sectionMap = [
     { el: document.querySelector('.datetime-block'), key: 'details'   },
-    { el: $('guests-label'),                         key: 'guests'    },
+    { el: document.querySelector('.guest-slider-wrap'), key: 'guests'  },
     { el: $('venue-list'),                           key: 'venue'     },
     { el: $('catering-grid'),                        key: 'catering'  },
     { el: $('beverages-grid'),                       key: 'beverages' },

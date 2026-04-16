@@ -31,7 +31,7 @@
 body { font-family: 'Roobert PRO', sans-serif; background: #fff; color: #333; padding: 2rem; position: relative; }
 body::before { content: ''; position: fixed; inset: 0; background: url('images/background.png') no-repeat center center; background-size: cover; opacity: 0.3; z-index: -1; }
 .cfg { max-width: 100%; margin: 0 auto; padding: 1.5rem 0 6rem; }
-@media (min-width: 850px) { .cfg { max-width: 400px; } }
+@media (min-width: 850px) { .cfg { max-width: 500px; } }
 .divider { display: none; }
 
 /* Locked state */
@@ -40,8 +40,8 @@ body::before { content: ''; position: fixed; inset: 0; background: url('images/b
 #enquiry-section { transition: opacity 0.2s; margin-top: 60px; }
 #enquiry-section.locked { opacity: 0.35; pointer-events: none; user-select: none; }
 #enquiry-section .step-row { margin-top: 0; }
-.size-grid { transition: opacity 0.2s; }
-.size-grid.locked { opacity: 0.35; pointer-events: none; user-select: none; }
+.guest-slider-wrap { transition: opacity 0.2s; }
+.guest-slider-wrap.locked { opacity: 0.35; pointer-events: none; user-select: none; }
 .step-row.locked { opacity: 0.35; }
 
 /* Lucide icons */
@@ -52,7 +52,8 @@ body::before { content: ''; position: fixed; inset: 0; background: url('images/b
 
 /* Page title */
 .cfg-logo { text-align: center; margin-bottom: 12px; }
-.cfg-title { font-size: 40px; font-weight: 500; margin-bottom: 0; text-align: center; }
+.cfg-title { font-size: 40px; font-weight: 500; margin-bottom: 6px; text-align: center; }
+.cfg-desc { font-size: 14px; color: #969CA6; text-align: center; margin-bottom: 0; }
 
 /* Section headers */
 .step-row { display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 60px; margin-bottom: calc(1rem + 10px); text-align: center; }
@@ -62,10 +63,17 @@ body::before { content: ''; position: fixed; inset: 0; background: url('images/b
 .step-title { font-size: 20px; font-weight: 500; color: #333; }
 .step-sub { font-size: 13px; color: #969CA6; margin-top: 2px; }
 
-/* Guest count cards */
-.size-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.size-card { background: rgba(150, 156, 166, 0.08); backdrop-filter: blur(4px); border: 1px solid transparent; border-radius: 20px; padding: 1rem 1.25rem; cursor: pointer; transition: border-color 0.15s; }
-.size-card:hover { border-color: rgba(51, 51, 51, 0.1); }
+/* Guest count slider */
+.guest-slider-wrap { padding: 0.25rem 0 0.5rem; }
+.guest-slider-val { font-size: 20px; font-weight: 500; color: #333; text-align: center; margin-bottom: 14px; }
+.guest-slider { -webkit-appearance: none; appearance: none; width: 100%; height: 4px; border-radius: 2px; background: rgba(150,156,166,0.25); outline: none; cursor: pointer; display: block; }
+.guest-slider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 16px; height: 16px; border-radius: 50%; background: #333; cursor: pointer; transition: transform 0.1s; }
+.guest-slider::-webkit-slider-thumb:active { transform: scale(1.2); }
+.guest-slider::-moz-range-thumb { width: 16px; height: 16px; border-radius: 50%; background: #333; border: none; cursor: pointer; }
+.guest-slider-hint { font-size: 13px; color: #969CA6; text-align: center; margin-bottom: 14px; }
+.guest-slider-ticks { display: flex; justify-content: space-between; margin-top: 5px; padding: 0 8px; }
+.guest-slider-ticks span { width: 1px; height: 6px; background: rgba(150,156,166,0.5); display: block; }
+.guest-slider-range { display: flex; justify-content: space-between; font-size: 12px; color: #969CA6; margin-top: 3px; }
 .size-card.selected { border-color: #333; }
 .size-label { font-size: 16px; font-weight: 500; }
 .size-hint { font-size: 13px; color: #969CA6; margin-top: 4px; }
@@ -95,7 +103,7 @@ body::before { content: ''; position: fixed; inset: 0; background: url('images/b
 .hrs-total { margin-left: auto; font-size: 14px; font-weight: 500; color: #333; }
 
 /* Catering / Beverages cards (single-select) */
-.pkg-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
+.pkg-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .pkg-card { background: rgba(150, 156, 166, 0.08); backdrop-filter: blur(4px); border: 1px solid transparent; border-radius: 20px; padding: 0; cursor: pointer; transition: border-color 0.15s; overflow: hidden; }
 .pkg-img { width: 100%; aspect-ratio: 1 / 0.8; background: rgba(150, 156, 166, 0.08); display: block; }
 .pkg-card .pkg-price, .pkg-card .pkg-name, .pkg-card .pkg-includes { padding-left: 1rem; padding-right: 1rem; }
@@ -116,8 +124,8 @@ body::before { content: ''; position: fixed; inset: 0; background: url('images/b
 .dt-month { font-weight: 600; color: #333; }
 .dt-year { color: #333; }
 .dt-cal-header-nav { display: flex; gap: 2px; background: rgba(150, 156, 166, 0.08); backdrop-filter: blur(4px); border-radius: 10px; padding: 3px; }
-.dt-slots-header { width: 145px; flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; }
-.dt-slots-day { font-size: 13px; padding-left: 8px; }
+.dt-slots-header { width: 145px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+.dt-slots-day { font-size: 13px; text-align: center; }
 .dt-slots-day .ts-dow { font-weight: 600; color: #333; }
 .dt-slots-day .ts-date { color: #333; }
 .ts-format-toggle { display: flex; gap: 2px; background: rgba(150, 156, 166, 0.08); backdrop-filter: blur(4px); border-radius: 10px; padding: 3px; }
@@ -263,8 +271,8 @@ input[type="time"]::-webkit-date-and-time-value { text-align: left; margin: 0; }
 
   .split-label { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; padding: 2rem; text-align: center; font-size: 28px; font-weight: 500; color: #333; letter-spacing: -0.02em; line-height: 1.2; transition: opacity 0.2s ease; pointer-events: none; }
 
-  .split-right { width: 400px; flex-shrink: 0; height: 100vh; overflow-y: auto; overflow-x: hidden; padding-bottom: 1.5rem; box-sizing: border-box; }
-  .split-right .cfg { max-width: 400px; padding: 1.5rem; margin: 0; }
+  .split-right { width: 500px; flex-shrink: 0; height: 100vh; overflow-y: auto; overflow-x: hidden; padding-bottom: 1.5rem; box-sizing: border-box; }
+  .split-right .cfg { max-width: 500px; padding: 1.5rem; margin: 0; }
 }
 
 @media (max-width: 849px) {
