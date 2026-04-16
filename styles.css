@@ -181,6 +181,7 @@ body::before { content: ''; position: fixed; inset: 0; background: url('images/b
 .fg { display: flex; flex-direction: column; gap: 6px; }
 .fg.full { grid-column: 1 / -1; }
 .fg label { font-size: 13px; color: #969CA6; }
+.fg label .req { color: #FF3B30; }
 .input-wrap { position: relative; display: flex; align-items: center; }
 .input-wrap input { width: 100%; padding-right: 36px; }
 .input-wrap .lucide { position: absolute; right: 12px; width: 16px; height: 16px; stroke: #969CA6; pointer-events: none; }
