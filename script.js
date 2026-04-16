@@ -2,7 +2,7 @@
 
 const VENUE = [
   { id: 'event-hall',     name: 'Event hall',                         desc: '100 people · stunning Palm views and bar atmosphere',    price: 3000, perHour: true  },
-  { id: 'stage-av',       name: 'Main Stage & AV Setup',              desc: 'LED screen, professional sound, stage lighting',         price: 0,    perHour: false, priceIncluded: true },
+  { id: 'stage-av',       name: 'Main Stage & AV Setup',              desc: 'LED screen, professional sound, stage lighting',         price: 0,    perHour: false, included: true },
   { id: 'networking',     name: 'Networking area',                    desc: '70 people · stylish lounge and bar setting',             price: 2000, perHour: true  },
   { id: 'conference',     name: 'Conference Room',                    desc: 'Up to 30 people · boardroom style',                     price: 1500, perHour: true  },
 ];
@@ -31,23 +31,20 @@ const BEVERAGES = [
 const MEDIA = [
   { id: 'photo',     name: 'On-site photographer',              desc: 'High-quality visuals for marketing and social proof',        price: 300,  perHour: true  },
   { id: 'video',     name: 'On-site videographer',              desc: 'Cinematic video content for post-event promotion',          price: 350,  perHour: true  },
-  { id: 'live',      name: 'Live Broadcast — Social Media',     desc: 'Professional live broadcast across major platforms',        price: 1990, perHour: false },
-  { id: 'recording', name: 'Full event recording',              desc: 'High-quality recording for content and marketing reuse',    price: 600,  perHour: false },
-  { id: 'podcast',   name: 'Podcast room',                      desc: '2/4/6 people · studio-quality recording environment',      price: 300,  perHour: true  },
+  { id: 'live',      name: 'Live Broadcast — Social Media',     desc: 'Professional live broadcast across major platforms',        price: 1290, perHour: false },
+  { id: 'recording', name: 'Full event recording',              desc: 'High-quality recording for content and marketing reuse',    price: 590,  perHour: false },
 ];
 
 const PROMO = [
-  { id: 'luma',   name: 'Luma Event Page Setup & Promotion',        desc: 'Creation, optimization, and promotion on Luma',           price: 400  },
-  { id: 'email',  name: 'Targeted Email Campaign — 15k Database',   desc: 'Outreach to 15,000+ curated contact database',           price: 1500 },
-  { id: 'social', name: 'Social Media Campaign & Promo Management', desc: 'Planning and execution of social media promotion',        price: 1000 },
+  { id: 'luma',   name: 'Luma Event Page Setup & Promotion',      desc: 'Creation, optimization, and promotion on Luma',                             price: 490  },
+  { id: 'email',  name: 'Selective Outreach — 15k Curated Database', desc: 'Targeted invitations sent to a highly curated contact database',         price: 1470 },
 ];
 
 const BRANDING = [
-  { id: 'identity', name: 'Custom Event Branding & Visual Identity', desc: 'Distinctive visual identity, graphics, promo materials', price: 500,  perHour: false },
-  { id: 'lighting', name: 'Custom Lighting in Your Brand Colors',    desc: 'Lighting design tailored to your brand palette',         price: 400,  perHour: false },
-  { id: 'entrance', name: 'Entrance Branding',                       desc: 'Lift Hall Projection Visualisation · immersive environment', price: 1500, perHour: false },
-  { id: 'stage',    name: 'Stage & Backdrop Branding',               desc: 'Branded content for digital screens',                   price: 1000, perHour: false },
-  { id: 'dj',       name: 'DJ Performance',                          desc: 'Live DJ for vibrant atmosphere and networking energy',   price: 300,  perHour: true  },
+  { id: 'identity', name: 'Custom Event Branding & Visual Identity', desc: 'Distinctive visual identity, graphics, promo materials',                  price: 990,  perHour: false },
+  { id: 'lighting', name: 'Custom Lighting in Your Brand Colors',    desc: 'Lighting design tailored to your brand palette',                          price: 690,  perHour: false },
+  { id: 'entrance', name: 'Entrance Branding',                       desc: 'Lift Hall Projection Visualisation · immersive environment',              price: 990,  perHour: false },
+  { id: 'stage',    name: 'Stage & Screen Motion Branding',          desc: 'Custom animation content for main and side screens, creating a fully immersive environment', price: 970, perHour: false },
 ];
 
 const PRINTED = [
@@ -64,6 +61,7 @@ const OPS = [
   { id: 'hostess',     name: 'Hostesses for Guest Check-in',  desc: 'Professional welcome and registration management',     price: 80,  perHour: true  },
   { id: 'bartender',   name: 'Bartender for Bar Activations', desc: 'Professional drink service and bar atmosphere',        price: 100, perHour: true  },
   { id: 'waiters',     name: 'Waiters (Catering Service)',    desc: 'Smooth food and beverage service',                    price: 80,  perHour: true  },
+  { id: 'dj',         name: 'DJ Performance',               desc: 'Live DJ for vibrant atmosphere and networking energy', price: 300, perHour: true  },
 ];
 
 // ─── Preview images ───────────────────────────────────────────────────────────
