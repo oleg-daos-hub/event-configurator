@@ -149,7 +149,7 @@ body::before { content: ''; position: fixed; inset: 0; background: url('images/b
 .total-bar.visible { display: flex; animation: total-bar-in 0.35s cubic-bezier(0.22, 1, 0.36, 1) both; }
 .total-bar.hiding { display: flex; animation: total-bar-out 0.3s cubic-bezier(0.4, 0, 1, 1) both; }
 @media (min-width: 850px) {
-  .total-bar { right: 1.5rem; left: auto; width: calc(400px - 3rem); }
+  .total-bar { right: 1.5rem; left: auto; width: calc(500px - 3rem); }
 }
 .total-bar-top { display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
 .total-bar-left { display: flex; flex-direction: column; gap: 2px; }

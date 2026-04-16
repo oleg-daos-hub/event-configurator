@@ -4,14 +4,15 @@ const VENUE = [
   { id: 'event-hall',     name: 'Event hall',                         desc: '100 people · stunning Palm views and bar atmosphere',    price: 3000, perHour: true  },
   { id: 'stage-av',       name: 'Main Stage & AV Setup',              desc: 'LED screen, professional sound, stage lighting',         price: 0,    perHour: false, priceIncluded: true },
   { id: 'networking',     name: 'Networking area',                    desc: '70 people · stylish lounge and bar setting',             price: 2000, perHour: true  },
+  { id: 'conference',     name: 'Conference Room',                    desc: 'Up to 30 people · boardroom style',                     price: 1500, perHour: true  },
+];
+
+const VENUE_ROOMS = [
   { id: 'room-dune',      name: 'Meeting room Dune',                  desc: '20 people · workshops and focused discussions',          price: 300,  perHour: true  },
   { id: 'room-matrix',    name: 'Meeting room Matrix',                desc: '6 people · panoramic windows, skyline views',            price: 200,  perHour: true  },
   { id: 'room-herous',    name: 'Meeting room Herous',                desc: '6 people · private space for strategic discussions',     price: 200,  perHour: true  },
   { id: 'room-consensus', name: 'Meeting room Consensus',             desc: '6 people · floor-to-ceiling windows, Dubai skyline',    price: 200,  perHour: true  },
   { id: 'room-dao',       name: 'Meeting room Dao',                   desc: '4 people · intimate space for quick meetings',          price: 150,  perHour: true  },
-  { id: 'storage',        name: 'Storage',                            desc: 'Secure space for materials, merchandise, equipment',    price: 100,  perHour: true  },
-  { id: 'private-office', name: 'Private Office',                     desc: '2/4/6 people · desk setup, screens',                    price: 500,  perHour: true  },
-  { id: 'conference',     name: 'Conference hall',                    desc: 'Up to 30 people · boardroom style',                     price: 1500, perHour: true  },
 ];
 
 const CATERING = [
@@ -136,6 +137,7 @@ function calcTotal() {
     }
   };
   addMulti(VENUE, S.venue);
+  addMulti(VENUE_ROOMS, S.venue);
   addMulti(MEDIA, S.media);
   addMulti(PROMO, S.promo);
   addMulti(BRANDING, S.branding);
@@ -221,7 +223,8 @@ function renderCateringBev(containerId, items, selectedId, subId) {
 }
 
 function renderAll() {
-  renderItemList($('venue-list'),    VENUE,    S.venue,    'venue');
+  renderItemList($('venue-list'),    VENUE,       S.venue,    'venue');
+  renderItemList($('venue-rooms-list'), VENUE_ROOMS, S.venue,    'venue');
   renderItemList($('media-list'),    MEDIA,    S.media,    'media');
   renderItemList($('promo-list'),    PROMO,    S.promo,    'promo');
   renderItemList($('branding-list'), BRANDING, S.branding, 'branding');
@@ -244,18 +247,24 @@ function selectGuests(n) {
 }
 
 function toggleItem(section, id) {
-  const MAP = { venue: VENUE, media: MEDIA, promo: PROMO, branding: BRANDING, printed: PRINTED, ops: OPS };
+  const ALL_VENUE = [...VENUE, ...VENUE_ROOMS];
+  const MAP = { venue: ALL_VENUE, media: MEDIA, promo: PROMO, branding: BRANDING, printed: PRINTED, ops: OPS };
   const items = MAP[section];
   const item = items.find(i => i.id === id);
   if (item.included) return;
   const obj = S[section];
   if (id in obj) { delete obj[id]; } else { obj[id] = item.perHour ? 1 : true; setLeftLabel(item.name); }
-  renderItemList($(`${section}-list`), items, obj, section);
+  if (section === 'venue') {
+    renderItemList($('venue-list'), VENUE, obj, section);
+    renderItemList($('venue-rooms-list'), VENUE_ROOMS, obj, section);
+  } else {
+    renderItemList($(`${section}-list`), items, obj, section);
+  }
   updateTotal();
 }
 
 function changeHrs(section, id, delta) {
-  const MAP = { venue: VENUE, media: MEDIA, branding: BRANDING, ops: OPS };
+  const MAP = { venue: [...VENUE, ...VENUE_ROOMS], media: MEDIA, branding: BRANDING, ops: OPS };
   const item = MAP[section].find(i => i.id === id);
   const obj = S[section];
   const cur = typeof obj[id] === 'number' ? obj[id] : 1;
@@ -312,7 +321,7 @@ function updateTotal() {
 
   const dateTimeReady = !!(S.date && S.time);
   document.querySelector('.guest-slider-wrap').classList.toggle('locked', !dateTimeReady);
-  $('rest').classList.toggle('locked', !S.guests);
+  $('rest').classList.toggle('locked', !dateTimeReady);
 }
 
 // ─── Page navigation ──────────────────────────────────────────────────────────
@@ -344,7 +353,7 @@ function buildSummary() {
     lines.push([item.name, fmtMoney(item.price[S.guests])]);
   };
 
-  addSection('Venue',       VENUE,    S.venue);
+  addSection('Venue',       [...VENUE, ...VENUE_ROOMS], S.venue);
   addSingle('Catering',     CATERING, S.catering);
   if (Object.keys(S.beverages).length && S.guests) {
     lines.push({ header: 'Beverages' });
