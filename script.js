@@ -447,7 +447,15 @@ function submitEnquiry() {
     valid = false;
   }
 
-  if (phone && !isValidPhone(phone)) {
+  if (!company) {
+    setFieldError('f-company', 'Please enter your company name.');
+    valid = false;
+  }
+
+  if (!$('f-phone').value.trim()) {
+    setFieldError('f-phone', 'Please enter your phone number.');
+    valid = false;
+  } else if (phone && !isValidPhone(phone)) {
     setFieldError('f-phone', 'Please enter a valid phone number (e.g. +1 000 000 0000).');
     valid = false;
   }
@@ -666,7 +674,7 @@ initPreviewObserver();
 initFormObserver();
 
 // Clear field error as soon as the user starts correcting the field
-['f-name', 'f-email', 'f-phone'].forEach(id => {
+['f-name', 'f-email', 'f-company', 'f-phone'].forEach(id => {
   $(id).addEventListener('input', () => {
     const fg = $(id).closest('.fg');
     if (fg.classList.contains('error')) {
