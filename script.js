@@ -276,8 +276,15 @@ function renderAll() {
 
 // ─── Handlers ─────────────────────────────────────────────────────────────────
 
+function updateSliderDots(n) {
+  const dots = document.querySelectorAll('.guest-slider-ticks span');
+  const idx = (n - 50) / 10;
+  dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+}
+
 function selectGuests(n) {
   S.guests = n;
+  updateSliderDots(n);
   S.cateringQty = n;
   for (const id in S.beverages) S.beverages[id] = n;
   for (const id in S.printed) {
@@ -772,6 +779,7 @@ const _today = new Date();
 S.date = `${_today.getFullYear()}-${String(_today.getMonth()+1).padStart(2,'0')}-${String(_today.getDate()).padStart(2,'0')}`;
 
 renderAll();
+updateSliderDots(S.guests);
 renderDatePicker();
 renderSlotsHeader();
 renderTimeSlots();
