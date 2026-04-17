@@ -99,6 +99,7 @@ function setLeftLabel(text) {
 
 const S = {
   guests:      50,
+  duration:    2,
   date:        '',
   time:        '',
   venue:       {},
@@ -134,7 +135,8 @@ function calcTotal() {
   const addMulti = (items, stateObj) => {
     for (const [id, val] of Object.entries(stateObj)) {
       const item = items.find(i => i.id === id);
-      if (item) total += itemPrice(item, val);
+      if (!item) continue;
+      total += item.perHour ? item.price * S.duration : itemPrice(item, val);
     }
   };
   addMulti(VENUE, S.venue);
@@ -184,23 +186,13 @@ function renderItemList(container, items, stateObj, section) {
     const priceHtml = item.priceIncluded
       ? `<div class="item-price"><span class="item-included">Included</span></div>`
       : item.perHour
-        ? `<div class="item-price">${fmtMoney(item.price)}<div class="item-price-hint">/hour</div></div>`
+        ? `<div class="item-price">${fmtMoney(item.price * S.duration)}<div class="item-price-hint">${S.duration}h</div></div>`
         : item.perUnit !== undefined
           ? `<div class="item-price">$${item.perUnit}<div class="item-price-hint">/pc</div></div>`
           : `<div class="item-price">${fmtMoney(item.price)}</div>`;
 
     const qty = typeof val === 'number' ? val : S.guests;
-    const hrsHtml = (sel && item.perHour) ? `
-      <div class="hrs-row" onclick="event.stopPropagation()">
-        <span class="hrs-label">Hours:</span>
-        <div class="hrs-stepper">
-          <button class="hrs-btn" onclick="changeHrs('${section}','${item.id}',-1)"><i data-lucide="minus"></i></button>
-          <input type="number" class="hrs-input" id="hrs-${item.id}" value="${hours}" min="1" oninput="setHrs('${section}','${item.id}',+this.value)" onclick="event.stopPropagation()">
-          <button class="hrs-btn" onclick="changeHrs('${section}','${item.id}',+1)"><i data-lucide="plus"></i></button>
-        </div>
-        <span class="hrs-total" id="hrs-total-${item.id}">${fmtMoney(item.price * hours)}</span>
-      </div>`
-      : (sel && item.perUnit !== undefined) ? `
+    const hrsHtml = (sel && item.perUnit !== undefined) ? `
       <div class="hrs-row" onclick="event.stopPropagation()">
         <span class="hrs-label">Qty:</span>
         <div class="hrs-stepper">
@@ -276,6 +268,18 @@ function renderAll() {
 
 // ─── Handlers ─────────────────────────────────────────────────────────────────
 
+function updateDuration(n) {
+  S.duration = n;
+  $('duration-val').textContent = n + (n === 1 ? ' hour' : ' hours');
+  const dots = document.querySelectorAll('.duration-ticks span');
+  dots.forEach((d, i) => d.classList.toggle('active', i === n - 2));
+  renderItemList($('venue-list'),       VENUE,       S.venue, 'venue');
+  renderItemList($('venue-rooms-list'), VENUE_ROOMS, S.venue, 'venue');
+  renderItemList($('media-list'),       MEDIA,       S.media, 'media');
+  renderItemList($('ops-list'),         OPS,         S.ops,   'ops');
+  updateTotal();
+}
+
 function updateSliderDots(n) {
   const dots = document.querySelectorAll('.guest-slider-ticks span');
   const idx = (n - 50) / 10;
@@ -305,7 +309,7 @@ function toggleItem(section, id) {
   const item = items.find(i => i.id === id);
   if (item.included) return;
   const obj = S[section];
-  if (id in obj) { delete obj[id]; } else { obj[id] = item.perHour ? 1 : item.perUnit !== undefined ? S.guests : true; setLeftLabel(item.name); }
+  if (id in obj) { delete obj[id]; } else { obj[id] = item.perUnit !== undefined ? S.guests : true; setLeftLabel(item.name); }
   if (section === 'venue') {
     renderItemList($('venue-list'), VENUE, obj, section);
     renderItemList($('venue-rooms-list'), VENUE_ROOMS, obj, section);
@@ -432,6 +436,7 @@ function updateTotal() {
 
   const dateTimeReady = !!(S.date && S.time);
   document.querySelector('.guest-slider-wrap').classList.toggle('locked', !dateTimeReady);
+  document.querySelector('.duration-wrap').classList.toggle('locked', !dateTimeReady);
   $('rest').classList.toggle('locked', !dateTimeReady);
 }
 
@@ -451,9 +456,8 @@ function buildSummary() {
     sel.forEach(item => {
       const val = stateObj[item.id];
       if (item.included || item.priceIncluded) { lines.push([item.name, 'Included']); return; }
-      const hrs = (item.perHour && typeof val === 'number') ? val : null;
       const qty = (item.perUnit !== undefined && typeof val === 'number') ? val : null;
-      if (hrs) lines.push([item.name, `${hrs}h · ${fmtMoney(item.price * hrs)}`]);
+      if (item.perHour) lines.push([item.name, `${S.duration}h · ${fmtMoney(item.price * S.duration)}`]);
       else if (qty) lines.push([item.name, `${qty} pc · ${fmtMoney(item.perUnit * qty)}`]);
       else lines.push([item.name, fmtMoney(item.price)]);
     });
@@ -780,6 +784,10 @@ S.date = `${_today.getFullYear()}-${String(_today.getMonth()+1).padStart(2,'0')}
 
 renderAll();
 updateSliderDots(S.guests);
+// init duration ticks (2–18 = 17 dots)
+const _durTicks = $('duration-ticks');
+if (_durTicks) { for (let i = 0; i < 17; i++) _durTicks.appendChild(document.createElement('span')); }
+updateDuration(S.duration);
 renderDatePicker();
 renderSlotsHeader();
 renderTimeSlots();

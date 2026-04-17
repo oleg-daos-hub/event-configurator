@@ -69,6 +69,19 @@
       <div class="guest-slider-range"><span>50</span><span>150</span></div>
     </div>
 
+    <div class="duration-wrap">
+      <div class="step-row">
+        <div>
+          <div class="step-title">Event Duration</div>
+          <div class="step-sub">Total length of your event</div>
+        </div>
+      </div>
+      <div class="guest-slider-val" id="duration-val">2 hours</div>
+      <input type="range" id="duration-slider" class="guest-slider" min="2" max="18" step="1" value="2" oninput="updateDuration(+this.value)">
+      <div class="duration-ticks" id="duration-ticks"></div>
+      <div class="guest-slider-range"><span>2h</span><span>18h</span></div>
+    </div>
+
     <div id="rest">
 
     <!-- 2. Venue Spaces -->

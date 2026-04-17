@@ -75,6 +75,11 @@ body::before { content: ''; position: fixed; inset: 0; background: url('images/b
 .guest-slider-ticks span { width: 2px; height: 2px; border-radius: 50%; background: rgba(150,156,166,0.4); display: block; transition: background 0.15s; }
 .guest-slider-ticks span.active { background: #333; }
 .guest-slider-range { display: flex; justify-content: space-between; font-size: 12px; color: #969CA6; margin-top: 3px; }
+.duration-wrap { padding: 0.25rem 0 0.5rem; transition: opacity 0.2s; }
+.duration-wrap.locked { opacity: 0.35; pointer-events: none; user-select: none; }
+.duration-ticks { display: flex; justify-content: space-between; margin-top: 6px; padding: 0 8px; }
+.duration-ticks span { width: 2px; height: 2px; border-radius: 50%; background: rgba(150,156,166,0.4); display: block; transition: background 0.15s; }
+.duration-ticks span.active { background: #333; }
 .size-card.selected { border-color: #333; }
 .size-label { font-size: 16px; font-weight: 500; }
 .size-hint { font-size: 13px; color: #969CA6; margin-top: 4px; }
