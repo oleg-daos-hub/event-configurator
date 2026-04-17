@@ -65,12 +65,11 @@ body::before { content: ''; position: fixed; inset: 0; background: url('images/b
 
 /* Guest count slider */
 .guest-slider-wrap { padding: 0.25rem 0 0.5rem; }
-.guest-slider-val { font-size: 20px; font-weight: 500; color: #333; text-align: center; margin-bottom: 14px; }
+.val-box { display: inline-flex; align-items: center; justify-content: center; background: rgba(150,156,166,0.08); border: 1px solid rgba(150,156,166,0.25); border-radius: 50px; padding: 6px 16px; font-size: 14px; font-weight: 500; color: #333; margin: 0 auto 14px; display: flex; width: fit-content; }
 .guest-slider { -webkit-appearance: none; appearance: none; width: 100%; height: 4px; border-radius: 2px; background: rgba(150,156,166,0.25); outline: none; cursor: pointer; display: block; }
 .guest-slider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 16px; height: 16px; border-radius: 50%; background: #333; cursor: pointer; transition: transform 0.1s; }
 .guest-slider::-webkit-slider-thumb:active { transform: scale(1.2); }
 .guest-slider::-moz-range-thumb { width: 16px; height: 16px; border-radius: 50%; background: #333; border: none; cursor: pointer; }
-.guest-slider-hint { font-size: 13px; color: #969CA6; text-align: center; margin-bottom: 14px; }
 .guest-slider-ticks { display: flex; justify-content: space-between; margin-top: 6px; padding: 0 8px; }
 .guest-slider-ticks span { width: 2px; height: 2px; border-radius: 50%; background: rgba(150,156,166,0.4); display: block; transition: background 0.15s; }
 .guest-slider-ticks span.active { background: #333; }

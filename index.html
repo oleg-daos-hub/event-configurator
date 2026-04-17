@@ -58,8 +58,13 @@
       </div>
     </div>
     <div class="guest-slider-wrap">
-      <div class="guest-slider-val" id="guest-slider-val">50 guests</div>
-      <div class="guest-slider-hint">We'll automatically calculate food and drinks for this count</div>
+      <div class="step-row">
+        <div>
+          <div class="step-title">Number of Guests</div>
+          <div class="step-sub">We'll automatically calculate food and drinks for this count</div>
+        </div>
+      </div>
+      <div class="val-box" id="guest-slider-val">50 guests</div>
       <input type="range" id="guest-slider" class="guest-slider" min="50" max="150" step="10" value="50" oninput="selectGuests(+this.value)">
       <div class="guest-slider-ticks">
         <span></span><span></span><span></span><span></span><span></span>
@@ -76,7 +81,7 @@
           <div class="step-sub">Total length of your event</div>
         </div>
       </div>
-      <div class="guest-slider-val" id="duration-val">2 hours</div>
+      <div class="val-box" id="duration-val">2 hours</div>
       <input type="range" id="duration-slider" class="guest-slider" min="2" max="18" step="1" value="2" oninput="updateDuration(+this.value)">
       <div class="duration-ticks" id="duration-ticks"></div>
       <div class="guest-slider-range"><span>2h</span><span>18h</span></div>
