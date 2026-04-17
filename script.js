@@ -16,16 +16,16 @@ const VENUE_ROOMS = [
 ];
 
 const CATERING = [
-  { id: 'basic',     name: 'Basic Sharing Platters',     desc: 'Light, elegant bites · relaxed networking atmosphere',           price: { 50: 500,  100: 950  } },
-  { id: 'classic',   name: 'Classic Canapés',  desc: '5 items per person · elegant assortment of cold canapés',        price: { 50: 1120, 100: 2150 } },
-  { id: 'extended',  name: 'Extended Canapés', desc: '6 items per person · warm and cold bites',                       price: { 50: 2000, 100: 3950 } },
-  { id: 'signature', name: 'Signature Catering',         desc: '7–8 pieces per person · pass around premium service',            price: { 50: 3900, 100: 7500 } },
+  { id: 'basic',     name: 'Basic Sharing Platters', desc: 'Light, elegant bites · relaxed networking atmosphere',           perPerson: 11 },
+  { id: 'classic',   name: 'Classic Canapés',        desc: '5 items per person · elegant assortment of cold canapés',        perPerson: 19 },
+  { id: 'extended',  name: 'Extended Canapés',       desc: '6 items per person · warm and cold bites',                       perPerson: 37 },
+  { id: 'signature', name: 'Signature Catering',     desc: '7–8 pieces per person · pass-around premium service · waitstaff included', perPerson: 75, waitstaffIncluded: true },
 ];
 
 const BEVERAGES = [
-  { id: 'coffee',    name: 'Tea & Coffee Experience', desc: 'Water, barista coffee (hot or iced), premium teas',               price: { 50: 630,  100: 1075 } },
-  { id: 'lemonade',  name: 'Crafted Lemonades',       desc: 'House-made lemonades · customisable flavours and colours',        price: { 50: 670,  100: 1150 } },
-  { id: 'mocktails', name: 'Signature Mocktails',     desc: 'Alcohol-free cocktails · brand-customisable presentation',        price: { 50: 770,  100: 1100 } },
+  { id: 'coffee',    name: 'Unlimited Coffee & Tea by Barista', desc: 'Infused water (with berries), barista coffee (hot or iced), and 2 premium tea selections', perPerson: 13.5 },
+  { id: 'lemonade',  name: 'Branded Colored Lemonades',         desc: 'House-made lemonades · 1 per guest · customisable flavours & colours',                     perPerson: 5   },
+  { id: 'mocktails', name: 'Signature Mocktails',               desc: 'Alcohol-free cocktails · brand-customisable presentation',                                  perPerson: 9.5 },
 ];
 
 const MEDIA = [
@@ -48,20 +48,22 @@ const BRANDING = [
 ];
 
 const PRINTED = [
-  { id: 'photowall', name: 'Photo wall — Design & Printing',   desc: 'Visual centerpiece for social sharing',              price: 400 },
-  { id: 'rollup',    name: 'Roll up — Design & Printing',      desc: 'Professional banners for venue visibility',          price: 150 },
-  { id: 'badge',     name: 'Custom Badge — Design & Printing', desc: 'Branded badges for easy networking',                 price: 100 },
-  { id: 'lanyards',  name: 'Lanyards — Design & Printing',     desc: 'Subtle branding tool for every attendee',            price: 100 },
-  { id: 'notebooks', name: 'Notebooks & pens',                 desc: 'Branded materials guests keep after the event',      price: 250 },
+  { id: 'photowall', name: 'Photo wall — Design & Printing',   desc: 'Visual centerpiece for social sharing',              price: 370 },
+  { id: 'rollup',    name: 'Roll up — Design & Printing',      desc: 'Professional banners for venue visibility',          price: 160 },
+  { id: 'badge',     name: 'Custom Badge — Design & Printing', desc: 'Branded badges for easy networking',                 perUnit: 9.5  },
+  { id: 'lanyards',  name: 'Lanyards — Design & Printing',     desc: 'Subtle branding tool for every attendee',            perUnit: 9.5  },
+  { id: 'notebooks', name: 'Notebooks & pens',                 desc: 'Branded materials guests keep after the event',      perUnit: 18.5 },
 ];
 
 const OPS = [
-  { id: 'manager',     name: 'Dedicated Event Manager',       desc: 'Full preparation and execution oversight',             price: 0,   perHour: false, included: true },
-  { id: 'coordinator', name: 'On-site Event Coordinator',     desc: 'Logistics, timing, and guest flow management',         price: 0,   perHour: false, included: true },
-  { id: 'hostess',     name: 'Hostesses for Guest Check-in',  desc: 'Professional welcome and registration management',     price: 80,  perHour: true  },
-  { id: 'bartender',   name: 'Bartender for Bar Activations', desc: 'Professional drink service and bar atmosphere',        price: 100, perHour: true  },
-  { id: 'waiters',     name: 'Waiters (Catering Service)',    desc: 'Smooth food and beverage service',                    price: 80,  perHour: true  },
-  { id: 'dj',         name: 'DJ Performance',               desc: 'Live DJ for vibrant atmosphere and networking energy', price: 300, perHour: true  },
+  { id: 'manager',     name: 'Dedicated Event Manager',        desc: 'Full preparation and execution oversight',                              price: 0,   perHour: false, included: true },
+  { id: 'coordinator', name: 'On-site Event Coordinator',      desc: 'Logistics, timing, and guest flow management',                          price: 0,   perHour: false, included: true },
+  { id: 'tech',        name: 'On-site Technical Specialist',   desc: 'AV systems, lighting, and technical support throughout the event',      price: 0,   perHour: false, included: true },
+  { id: 'hostess',     name: 'Hostesses for Guest Check-in',   desc: 'Professional welcome and registration management',                      price: 0,   perHour: false, included: true },
+  { id: 'hostess-add', name: 'Additional Hostesses',           desc: 'Extra hostess support for larger events or multiple check-in points',   price: 80,  perHour: true  },
+  { id: 'bartender',   name: 'Bartender for Bar Activations',  desc: 'Professional drink service and bar atmosphere',                         price: 100, perHour: true  },
+  { id: 'waiters',     name: 'Waiters (Catering Service)',     desc: 'Smooth food and beverage service',                                      price: 80,  perHour: true  },
+  { id: 'dj',          name: 'DJ Performance',                 desc: 'Live DJ for vibrant atmosphere and networking energy',                  price: 300, perHour: true  },
 ];
 
 // ─── Preview images ───────────────────────────────────────────────────────────
@@ -96,17 +98,18 @@ function setLeftLabel(text) {
 // Single-select        → id string or null
 
 const S = {
-  guests:    50,
-  date:      '',
-  time:      '',
-  venue:     {},
-  catering:  null,
-  beverages: {},
-  media:     {},
-  promo:     {},
-  branding:  {},
-  printed:   {},
-  ops:       {},
+  guests:      50,
+  date:        '',
+  time:        '',
+  venue:       {},
+  catering:    null,
+  cateringQty: 50,
+  beverages:   {},
+  media:       {},
+  promo:       {},
+  branding:    {},
+  printed:     {},
+  ops:         {},
 };
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -139,14 +142,19 @@ function calcTotal() {
   addMulti(MEDIA, S.media);
   addMulti(PROMO, S.promo);
   addMulti(BRANDING, S.branding);
-  addMulti(PRINTED, S.printed);
   addMulti(OPS, S.ops);
-  if (S.catering && S.guests) {
+  if (S.catering) {
     const c = CATERING.find(i => i.id === S.catering);
-    if (c) total += guestPrice(c.price, S.guests);
+    if (c) total += c.perPerson * S.cateringQty;
   }
-  if (S.guests) {
-    BEVERAGES.forEach(b => { if (b.id in S.beverages) total += guestPrice(b.price, S.guests); });
+  for (const [id, qty] of Object.entries(S.beverages)) {
+    const b = BEVERAGES.find(i => i.id === id);
+    if (b) total += b.perPerson * qty;
+  }
+  for (const [id, val] of Object.entries(S.printed)) {
+    const item = PRINTED.find(i => i.id === id);
+    if (!item) continue;
+    total += item.perUnit !== undefined ? item.perUnit * val : item.price;
   }
   return total;
 }
@@ -177,15 +185,26 @@ function renderItemList(container, items, stateObj, section) {
       ? `<div class="item-price"><span class="item-included">Included</span></div>`
       : item.perHour
         ? `<div class="item-price">${fmtMoney(item.price)}<div class="item-price-hint">/hour</div></div>`
-        : `<div class="item-price">${fmtMoney(item.price)}</div>`;
+        : item.perUnit !== undefined
+          ? `<div class="item-price">$${item.perUnit}<div class="item-price-hint">/pc</div></div>`
+          : `<div class="item-price">${fmtMoney(item.price)}</div>`;
 
+    const qty = typeof val === 'number' ? val : S.guests;
     const hrsHtml = (sel && item.perHour) ? `
       <div class="hrs-row" onclick="event.stopPropagation()">
         <span class="hrs-label">Hours:</span>
         <button class="hrs-btn" onclick="changeHrs('${section}','${item.id}',-1)"><i data-lucide="minus"></i></button>
-        <span class="hrs-val" id="hrs-${item.id}">${hours}</span>
+        <input type="number" class="hrs-input" id="hrs-${item.id}" value="${hours}" min="1" oninput="setHrs('${section}','${item.id}',+this.value)" onclick="event.stopPropagation()">
         <button class="hrs-btn" onclick="changeHrs('${section}','${item.id}',+1)"><i data-lucide="plus"></i></button>
         <span class="hrs-total" id="hrs-total-${item.id}">${fmtMoney(item.price * hours)}</span>
+      </div>`
+      : (sel && item.perUnit !== undefined) ? `
+      <div class="hrs-row" onclick="event.stopPropagation()">
+        <span class="hrs-label">Qty:</span>
+        <button class="hrs-btn" onclick="changePrintedQty('${item.id}',-1)"><i data-lucide="minus"></i></button>
+        <input type="number" class="hrs-input" id="qty-${item.id}" value="${qty}" min="1" oninput="setPrintedQty('${item.id}',+this.value)" onclick="event.stopPropagation()">
+        <button class="hrs-btn" onclick="changePrintedQty('${item.id}',+1)"><i data-lucide="plus"></i></button>
+        <span class="hrs-total" id="qty-total-${item.id}">${fmtMoney(item.perUnit * qty)}</span>
       </div>` : '';
 
     return `<div class="item-card${sel ? ' selected' : ''}" onclick="toggleItem('${section}','${item.id}')">
@@ -207,14 +226,30 @@ function renderCateringBev(containerId, items, selectedId, subId) {
   const sub = S.guests ? `Prices for ${S.guests} people` : 'Select guest count to see prices';
   $(subId).textContent = sub;
   const section = containerId === 'catering-grid' ? 'catering' : 'beverages';
+  const label = section === 'catering' ? 'Portions:' : 'Servings:';
   $(containerId).innerHTML = items.map(item => {
     const sel = section === 'beverages' ? item.id in selectedId : selectedId === item.id;
-    const price = S.guests ? fmtMoney(guestPrice(item.price, S.guests)) : '—';
-    return `<div class="pkg-card${sel ? ' selected' : ''}" onclick="selectSingle('${section}','${item.id}')">
-      <div class="pkg-img"></div>
-      <div class="pkg-price">${price}</div>
-      <div class="pkg-name">${item.name}</div>
-      <div class="pkg-includes">${item.desc}</div>
+    const qty = section === 'beverages'
+      ? (typeof selectedId[item.id] === 'number' ? selectedId[item.id] : S.guests)
+      : S.cateringQty;
+    const counterHtml = sel ? `
+      <div class="hrs-row" onclick="event.stopPropagation()">
+        <span class="hrs-label">${label}</span>
+        <button class="hrs-btn" onclick="changePkgQty('${section}','${item.id}',-1)"><i data-lucide="minus"></i></button>
+        <input type="number" class="hrs-input" id="pkg-qty-${item.id}" value="${qty}" min="1" oninput="setPkgQty('${section}','${item.id}',+this.value)" onclick="event.stopPropagation()">
+        <button class="hrs-btn" onclick="changePkgQty('${section}','${item.id}',+1)"><i data-lucide="plus"></i></button>
+        <span class="hrs-total" id="pkg-total-${item.id}">${fmtMoney(item.perPerson * qty)}</span>
+      </div>` : '';
+    return `<div class="item-card${sel ? ' selected' : ''}" onclick="selectSingle('${section}','${item.id}')">
+      <div class="item-main">
+        <div class="item-chk"><i data-lucide="check" class="item-chk-tick"></i></div>
+        <div class="item-info">
+          <div class="item-name">${item.name}</div>
+          <div class="item-desc">${item.desc}</div>
+        </div>
+        <div class="item-price">$${item.perPerson}<div class="item-price-hint">/person</div></div>
+      </div>
+      ${counterHtml}
     </div>`;
   }).join('');
   if (typeof lucide !== 'undefined') lucide.createIcons();
@@ -237,10 +272,16 @@ function renderAll() {
 
 function selectGuests(n) {
   S.guests = n;
+  S.cateringQty = n;
+  for (const id in S.beverages) S.beverages[id] = n;
+  for (const id in S.printed) {
+    if (PRINTED.find(i => i.id === id)?.perUnit !== undefined) S.printed[id] = n;
+  }
   const lbl = $('guest-slider-val');
   if (lbl) lbl.textContent = n + ' guests';
   renderCateringBev('catering-grid',  CATERING,  S.catering,  'catering-sub');
   renderCateringBev('beverages-grid', BEVERAGES, S.beverages, 'beverages-sub');
+  renderItemList($('printed-list'), PRINTED, S.printed, 'printed');
   updateTotal();
 }
 
@@ -251,7 +292,7 @@ function toggleItem(section, id) {
   const item = items.find(i => i.id === id);
   if (item.included) return;
   const obj = S[section];
-  if (id in obj) { delete obj[id]; } else { obj[id] = item.perHour ? 1 : true; setLeftLabel(item.name); }
+  if (id in obj) { delete obj[id]; } else { obj[id] = item.perHour ? 1 : item.perUnit !== undefined ? S.guests : true; setLeftLabel(item.name); }
   if (section === 'venue') {
     renderItemList($('venue-list'), VENUE, obj, section);
     renderItemList($('venue-rooms-list'), VENUE_ROOMS, obj, section);
@@ -268,7 +309,7 @@ function changeHrs(section, id, delta) {
   const cur = typeof obj[id] === 'number' ? obj[id] : 1;
   const next = Math.max(1, cur + delta);
   obj[id] = next;
-  $(`hrs-${id}`).textContent = next;
+  $(`hrs-${id}`).value = next;
   $(`hrs-total-${id}`).textContent = fmtMoney(item.price * next);
   updateTotal();
 }
@@ -276,15 +317,74 @@ function changeHrs(section, id, delta) {
 function selectSingle(section, id) {
   if (section === 'beverages') {
     const item = BEVERAGES.find(i => i.id === id);
-    if (id in S.beverages) { delete S.beverages[id]; } else { S.beverages[id] = true; if (item) setLeftLabel(item.name); }
+    if (id in S.beverages) { delete S.beverages[id]; } else { S.beverages[id] = S.guests; if (item) setLeftLabel(item.name); }
     renderCateringBev('beverages-grid', BEVERAGES, S.beverages, 'beverages-sub');
   } else {
     const item = CATERING.find(i => i.id === id);
     const selecting = S.catering !== id;
     S.catering = selecting ? id : null;
+    if (selecting) S.cateringQty = S.guests;
     if (selecting && item) setLeftLabel(item.name);
     renderCateringBev('catering-grid', CATERING, S.catering, 'catering-sub');
   }
+  updateTotal();
+}
+
+function changePkgQty(section, id, delta) {
+  if (section === 'catering') {
+    S.cateringQty = Math.max(1, S.cateringQty + delta);
+    const item = CATERING.find(i => i.id === id);
+    $(`pkg-qty-${id}`).value = S.cateringQty;
+    $(`pkg-total-${id}`).textContent = 'fmtMoney(item.perPerson * S.cateringQty);
+  } else {
+    const cur = typeof S.beverages[id] === 'number' ? S.beverages[id] : S.guests;
+    S.beverages[id] = Math.max(1, cur + delta);
+    const item = BEVERAGES.find(i => i.id === id);
+    $(`pkg-qty-${id}`).value = S.beverages[id];
+    $(`pkg-total-${id}`).textContent = 'fmtMoney(item.perPerson * S.beverages[id]);
+  }
+  updateTotal();
+}
+
+function setHrs(section, id, v) {
+  const MAP = { venue: [...VENUE, ...VENUE_ROOMS], media: MEDIA, branding: BRANDING, ops: OPS };
+  const item = MAP[section].find(i => i.id === id);
+  const next = Math.max(1, parseInt(v) || 1);
+  S[section][id] = next;
+  const el = $(`hrs-${id}`);
+  if (el && +el.value !== next) el.value = next;
+  $(`hrs-total-${id}`).textContent = fmtMoney(item.price * next);
+  updateTotal();
+}
+
+function setPkgQty(section, id, v) {
+  const next = Math.max(1, parseInt(v) || 1);
+  if (section === 'catering') {
+    S.cateringQty = next;
+    const item = CATERING.find(i => i.id === id);
+    $(`pkg-total-${id}`).textContent = 'fmtMoney(item.perPerson * next);
+  } else {
+    S.beverages[id] = next;
+    const item = BEVERAGES.find(i => i.id === id);
+    $(`pkg-total-${id}`).textContent = 'fmtMoney(item.perPerson * next);
+  }
+  updateTotal();
+}
+
+function setPrintedQty(id, v) {
+  const item = PRINTED.find(i => i.id === id);
+  const next = Math.max(1, parseInt(v) || 1);
+  S.printed[id] = next;
+  $(`qty-total-${id}`).textContent = fmtMoney(item.perUnit * next);
+  updateTotal();
+}
+
+function changePrintedQty(id, delta) {
+  const item = PRINTED.find(i => i.id === id);
+  const cur = typeof S.printed[id] === 'number' ? S.printed[id] : S.guests;
+  S.printed[id] = Math.max(1, cur + delta);
+  $(`qty-${id}`).value = S.printed[id];
+  $(`qty-total-${id}`).textContent = fmtMoney(item.perUnit * S.printed[id]);
   updateTotal();
 }
 
@@ -338,25 +438,24 @@ function buildSummary() {
     sel.forEach(item => {
       const val = stateObj[item.id];
       if (item.included || item.priceIncluded) { lines.push([item.name, 'Included']); return; }
-      const hrs = typeof val === 'number' ? val : null;
-      lines.push([item.name, hrs ? `${hrs}h · ${fmtMoney(item.price * hrs)}` : fmtMoney(item.price)]);
+      const hrs = (item.perHour && typeof val === 'number') ? val : null;
+      const qty = (item.perUnit !== undefined && typeof val === 'number') ? val : null;
+      if (hrs) lines.push([item.name, `${hrs}h · ${fmtMoney(item.price * hrs)}`]);
+      else if (qty) lines.push([item.name, `${qty} pc · ${fmtMoney(item.perUnit * qty)}`]);
+      else lines.push([item.name, fmtMoney(item.price)]);
     });
   };
 
-  const addSingle = (title, items, id) => {
-    if (!id || !S.guests) return;
-    const item = items.find(i => i.id === id);
-    if (!item) return;
-    lines.push({ header: title });
-    lines.push([item.name, fmtMoney(item.price[S.guests])]);
-  };
-
   addSection('Venue',       [...VENUE, ...VENUE_ROOMS], S.venue);
-  addSingle('Catering',     CATERING, S.catering);
-  if (Object.keys(S.beverages).length && S.guests) {
+  if (S.catering) {
+    const c = CATERING.find(i => i.id === S.catering);
+    if (c) { lines.push({ header: 'Catering' }); lines.push([c.name, `${S.cateringQty} portions · ${fmtMoney(c.perPerson * S.cateringQty)}`]); }
+  }
+  if (Object.keys(S.beverages).length) {
     lines.push({ header: 'Beverages' });
     BEVERAGES.filter(b => b.id in S.beverages).forEach(b => {
-      lines.push([b.name, fmtMoney(b.price[S.guests])]);
+      const qty = S.beverages[b.id];
+      lines.push([b.name, `${qty} servings · ${fmtMoney(b.perPerson * qty)}`]);
     });
   }
   addSection('Media',       MEDIA,    S.media);
