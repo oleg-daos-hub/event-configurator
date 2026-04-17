@@ -248,7 +248,7 @@ function renderCateringBev(containerId, items, selectedId, subId) {
       </div>` : '';
     return `<div class="item-card${sel ? ' selected' : ''}" onclick="selectSingle('${section}','${item.id}')">
       <div class="item-main">
-        <div class="item-chk"><i data-lucide="check" class="item-chk-tick"></i></div>
+        ${section === 'beverages' ? '<div class="item-chk"><i data-lucide="check" class="item-chk-tick"></i></div>' : ''}
         <div class="item-info">
           <div class="item-name">${item.name}</div>
           <div class="item-desc">${item.desc}</div>
