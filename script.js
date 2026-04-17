@@ -335,13 +335,13 @@ function changePkgQty(section, id, delta) {
     S.cateringQty = Math.max(1, S.cateringQty + delta);
     const item = CATERING.find(i => i.id === id);
     $(`pkg-qty-${id}`).value = S.cateringQty;
-    $(`pkg-total-${id}`).textContent = 'fmtMoney(item.perPerson * S.cateringQty);
+    $(`pkg-total-${id}`).textContent = fmtMoney(item.perPerson * S.cateringQty);
   } else {
     const cur = typeof S.beverages[id] === 'number' ? S.beverages[id] : S.guests;
     S.beverages[id] = Math.max(1, cur + delta);
     const item = BEVERAGES.find(i => i.id === id);
     $(`pkg-qty-${id}`).value = S.beverages[id];
-    $(`pkg-total-${id}`).textContent = 'fmtMoney(item.perPerson * S.beverages[id]);
+    $(`pkg-total-${id}`).textContent = fmtMoney(item.perPerson * S.beverages[id]);
   }
   updateTotal();
 }
@@ -362,11 +362,11 @@ function setPkgQty(section, id, v) {
   if (section === 'catering') {
     S.cateringQty = next;
     const item = CATERING.find(i => i.id === id);
-    $(`pkg-total-${id}`).textContent = 'fmtMoney(item.perPerson * next);
+    $(`pkg-total-${id}`).textContent = fmtMoney(item.perPerson * next);
   } else {
     S.beverages[id] = next;
     const item = BEVERAGES.find(i => i.id === id);
-    $(`pkg-total-${id}`).textContent = 'fmtMoney(item.perPerson * next);
+    $(`pkg-total-${id}`).textContent = fmtMoney(item.perPerson * next);
   }
   updateTotal();
 }
