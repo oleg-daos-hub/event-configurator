@@ -193,17 +193,21 @@ function renderItemList(container, items, stateObj, section) {
     const hrsHtml = (sel && item.perHour) ? `
       <div class="hrs-row" onclick="event.stopPropagation()">
         <span class="hrs-label">Hours:</span>
-        <button class="hrs-btn" onclick="changeHrs('${section}','${item.id}',-1)"><i data-lucide="minus"></i></button>
-        <input type="number" class="hrs-input" id="hrs-${item.id}" value="${hours}" min="1" oninput="setHrs('${section}','${item.id}',+this.value)" onclick="event.stopPropagation()">
-        <button class="hrs-btn" onclick="changeHrs('${section}','${item.id}',+1)"><i data-lucide="plus"></i></button>
+        <div class="hrs-stepper">
+          <button class="hrs-btn" onclick="changeHrs('${section}','${item.id}',-1)"><i data-lucide="minus"></i></button>
+          <input type="number" class="hrs-input" id="hrs-${item.id}" value="${hours}" min="1" oninput="setHrs('${section}','${item.id}',+this.value)" onclick="event.stopPropagation()">
+          <button class="hrs-btn" onclick="changeHrs('${section}','${item.id}',+1)"><i data-lucide="plus"></i></button>
+        </div>
         <span class="hrs-total" id="hrs-total-${item.id}">${fmtMoney(item.price * hours)}</span>
       </div>`
       : (sel && item.perUnit !== undefined) ? `
       <div class="hrs-row" onclick="event.stopPropagation()">
         <span class="hrs-label">Qty:</span>
-        <button class="hrs-btn" onclick="changePrintedQty('${item.id}',-1)"><i data-lucide="minus"></i></button>
-        <input type="number" class="hrs-input" id="qty-${item.id}" value="${qty}" min="1" oninput="setPrintedQty('${item.id}',+this.value)" onclick="event.stopPropagation()">
-        <button class="hrs-btn" onclick="changePrintedQty('${item.id}',+1)"><i data-lucide="plus"></i></button>
+        <div class="hrs-stepper">
+          <button class="hrs-btn" onclick="changePrintedQty('${item.id}',-1)"><i data-lucide="minus"></i></button>
+          <input type="number" class="hrs-input" id="qty-${item.id}" value="${qty}" min="1" oninput="setPrintedQty('${item.id}',+this.value)" onclick="event.stopPropagation()">
+          <button class="hrs-btn" onclick="changePrintedQty('${item.id}',+1)"><i data-lucide="plus"></i></button>
+        </div>
         <span class="hrs-total" id="qty-total-${item.id}">${fmtMoney(item.perUnit * qty)}</span>
       </div>` : '';
 
@@ -235,9 +239,11 @@ function renderCateringBev(containerId, items, selectedId, subId) {
     const counterHtml = sel ? `
       <div class="hrs-row" onclick="event.stopPropagation()">
         <span class="hrs-label">${label}</span>
-        <button class="hrs-btn" onclick="changePkgQty('${section}','${item.id}',-1)"><i data-lucide="minus"></i></button>
-        <input type="number" class="hrs-input" id="pkg-qty-${item.id}" value="${qty}" min="1" oninput="setPkgQty('${section}','${item.id}',+this.value)" onclick="event.stopPropagation()">
-        <button class="hrs-btn" onclick="changePkgQty('${section}','${item.id}',+1)"><i data-lucide="plus"></i></button>
+        <div class="hrs-stepper">
+          <button class="hrs-btn" onclick="changePkgQty('${section}','${item.id}',-1)"><i data-lucide="minus"></i></button>
+          <input type="number" class="hrs-input" id="pkg-qty-${item.id}" value="${qty}" min="1" oninput="setPkgQty('${section}','${item.id}',+this.value)" onclick="event.stopPropagation()">
+          <button class="hrs-btn" onclick="changePkgQty('${section}','${item.id}',+1)"><i data-lucide="plus"></i></button>
+        </div>
         <span class="hrs-total" id="pkg-total-${item.id}">${fmtMoney(item.perPerson * qty)}</span>
       </div>` : '';
     return `<div class="item-card${sel ? ' selected' : ''}" onclick="selectSingle('${section}','${item.id}')">

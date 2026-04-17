@@ -95,12 +95,14 @@ body::before { content: ''; position: fixed; inset: 0; background: url('images/b
 .item-included { font-size: 12px; color: #999; font-style: italic; font-weight: 400; }
 
 /* Hours stepper */
-.hrs-row { display: flex; align-items: center; gap: 8px; margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(150, 156, 166, 0.1); }
+.hrs-row { display: flex; align-items: center; gap: 10px; margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(150, 156, 166, 0.1); }
 .hrs-label { font-size: 13px; color: #969CA6; }
-.hrs-btn { width: 26px; height: 26px; border-radius: 50%; border: 1px solid transparent; background: rgba(150, 156, 166, 0.08); backdrop-filter: blur(4px); cursor: pointer; font-size: 15px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: border-color 0.15s; outline: none; color: #333; }
-.hrs-btn:hover { border-color: rgba(51, 51, 51, 0.1); }
+.hrs-stepper { display: inline-flex; align-items: center; gap: 6px; background: rgba(150,156,166,0.08); border: 1px solid rgba(150,156,166,0.25); border-radius: 50px; padding: 2px; }
+.hrs-btn { background: none; border: none; padding: 0; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #969CA6; outline: none; flex-shrink: 0; transition: background 0.15s, color 0.15s; font-family: inherit; }
+.hrs-btn:hover { background: rgba(150,156,166,0.2); color: #333; }
+.hrs-btn .lucide { width: 14px; height: 14px; }
 .hrs-val { font-size: 14px; font-weight: 500; color: #333; min-width: 16px; text-align: center; }
-.hrs-input { width: 30px; font-size: 14px; font-weight: 500; color: #333; text-align: center; background: none; border: 1px solid rgba(51,51,51,0.1); border-radius: 30px; outline: none; padding: 2px 0; font-family: inherit; -moz-appearance: textfield; }
+.hrs-input { width: 28px; font-size: 14px; font-weight: 500; color: #333; text-align: center; background: none; border: none; outline: none; padding: 0; font-family: inherit; -moz-appearance: textfield; }
 .hrs-input::-webkit-inner-spin-button, .hrs-input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
 .hrs-total { margin-left: auto; font-size: 14px; font-weight: 500; color: #333; }
 
