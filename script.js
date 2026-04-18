@@ -272,7 +272,7 @@ function updateDuration(n) {
   S.duration = n;
   $('duration-val').textContent = n + (n === 1 ? ' hour' : ' hours');
   const dots = document.querySelectorAll('.duration-ticks span');
-  dots.forEach((d, i) => d.classList.toggle('active', i === n - 2));
+  dots.forEach((d, i) => d.classList.toggle('active', i <= n - 2));
   renderItemList($('venue-list'),       VENUE,       S.venue, 'venue');
   renderItemList($('venue-rooms-list'), VENUE_ROOMS, S.venue, 'venue');
   renderItemList($('media-list'),       MEDIA,       S.media, 'media');
@@ -283,7 +283,7 @@ function updateDuration(n) {
 function updateSliderDots(n) {
   const dots = document.querySelectorAll('.guest-slider-ticks span');
   const idx = (n - 50) / 10;
-  dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+  dots.forEach((d, i) => d.classList.toggle('active', i <= idx));
 }
 
 function selectGuests(n) {
