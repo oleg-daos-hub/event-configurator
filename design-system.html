@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Design System — DAOS Hub</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* ── DS overrides ── */
+    body { padding: 2rem; overflow: auto; }
+    body::before { opacity: 0.15; }
+    .split-layout { display: block; height: auto; overflow: visible; padding: 0; }
+    .split-left, .split-right { display: block; width: auto; height: auto; overflow: visible; position: static; }
+
+    /* ── Shell ── */
+    .ds-wrap { max-width: 760px; margin: 0 auto; padding-bottom: 6rem; }
+    .ds-header { margin-bottom: 2.5rem; }
+    .ds-logo { margin-bottom: 12px; }
+    .ds-title { font-size: 32px; font-weight: 500; margin-bottom: 6px; }
+    .ds-subtitle { font-size: 14px; color: #969CA6; }
+
+    /* ── Tabs ── */
+    .ds-tabs { display: flex; gap: 4px; margin-bottom: 2.5rem; background: rgba(150,156,166,0.08); border-radius: 16px; padding: 4px; width: fit-content; }
+    .ds-tab { padding: 7px 18px; border-radius: 12px; font-family: inherit; font-size: 13px; font-weight: 500; border: none; cursor: pointer; background: transparent; color: #969CA6; transition: background 0.15s, color 0.15s; }
+    .ds-tab.active { background: #333; color: #fff; }
+
+    /* ── Panels ── */
+    .ds-panel { display: none; }
+    .ds-panel.active { display: block; }
+
+    /* ── Sections ── */
+    .ds-section { margin-bottom: 3rem; }
+    .ds-section-title { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(150,156,166,0.6); margin-bottom: 1.25rem; }
+    .ds-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-start; }
+
+    /* ── Color swatches ── */
+    .swatch { border-radius: 14px; overflow: hidden; width: 120px; }
+    .swatch-color { height: 72px; }
+    .swatch-info { padding: 8px 10px; background: rgba(150,156,166,0.06); border: 1px solid rgba(150,156,166,0.12); border-top: none; border-radius: 0 0 14px 14px; }
+    .swatch-name { font-size: 12px; font-weight: 500; color: #333; }
+    .swatch-hex  { font-size: 11px; color: #969CA6; margin-top: 2px; font-variant-numeric: tabular-nums; }
+
+    /* ── Surface samples ── */
+    .surface-sample { border-radius: 16px; padding: 1.25rem; min-width: 160px; flex: 1; }
+    .surface-label { font-size: 12px; font-weight: 500; margin-bottom: 4px; }
+    .surface-desc  { font-size: 11px; color: #969CA6; }
+
+    /* ── Typography scale ── */
+    .type-scale { display: flex; flex-direction: column; }
+    .ts-row { display: grid; grid-template-columns: 120px 60px 1fr 180px; align-items: baseline; gap: 0 1.5rem; padding: 14px 0; border-bottom: 1px solid rgba(150,156,166,0.1); }
+    .ts-row:last-child { border-bottom: none; }
+    .ts-name  { flex-shrink: 0; }
+    .ts-size  { flex-shrink: 0; }
+    .ts-example { }
+    .ts-usage { font-size: 11px; color: rgba(150,156,166,0.6); align-self: center; }
+
+    /* ── Component blocks ── */
+    .cmp-block { margin-bottom: 3rem; }
+    .cmp-title { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(150,156,166,0.5); margin-bottom: 1.25rem; }
+    .cmp-demo { padding: 1.5rem; background: rgba(150,156,166,0.04); border-radius: 20px; border: 1px solid rgba(150,156,166,0.1); }
+
+    /* ── State tags ── */
+    .state-group { display: flex; flex-direction: column; gap: 6px; }
+    .state-tag { font-size: 11px; font-weight: 500; color: rgba(150,156,166,0.6); letter-spacing: 0.04em; padding-left: 2px; display: flex; align-items: center; gap: 6px; }
+    .state-tag::after { content: ''; flex: 1; height: 1px; background: rgba(150,156,166,0.12); }
+    .state-stack { display: flex; flex-direction: column; gap: 16px; }
+
+    /* ── States side by side (for compact components) ── */
+    .states-grid { display: flex; gap: 12px; flex-wrap: wrap; }
+    .states-grid .state-group { flex: 1; min-width: 120px; }
+
+    /* ── Interactive hint ── */
+    .cmp-hint { font-size: 11px; color: #969CA6; margin-bottom: 12px; }
+  </style>
+</head>
+<body>
+
+<div class="ds-wrap">
+
+  <div class="ds-header">
+    <div class="ds-logo">
+      <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M9.88142 1.47632C5.22919 1.47632 1.45894 5.29324 1.45894 9.99912C1.45894 14.705 5.23093 18.5219 9.88142 18.5219C14.5319 18.5219 18.3039 14.705 18.3039 9.99912C18.3039 5.29324 14.5337 1.47632 9.88142 1.47632ZM0 9.99912C0 4.47658 4.42389 0 9.88142 0C15.3389 0 19.7628 4.47658 19.7628 9.99912C19.7628 15.5217 15.3389 19.9982 9.88142 19.9982C4.42389 19.9982 0 15.5217 0 9.99912Z" fill="#333"/>
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M8.02148 9.99919C8.02148 8.9603 8.85292 8.11719 9.88133 8.11719C10.9097 8.11719 11.7412 8.95853 11.7412 9.99919C11.7412 11.0398 10.9097 11.8812 9.88133 11.8812C8.85292 11.8812 8.02148 11.0398 8.02148 9.99919Z" fill="#333"/>
+      </svg>
+    </div>
+    <div class="ds-title">Design System</div>
+    <div class="ds-subtitle">DAOS Hub — Event Configurator</div>
+  </div>
+
+  <div class="ds-tabs">
+    <button class="ds-tab active" onclick="showTab(event,'foundations')">Foundations</button>
+    <button class="ds-tab" onclick="showTab(event,'components')">Components</button>
+  </div>
+
+  <!-- ══════════════════ FOUNDATIONS ══════════════════ -->
+  <div class="ds-panel active" id="tab-foundations">
+
+    <!-- Typography -->
+    <div class="ds-section">
+      <div class="ds-section-title">Typography · Roobert PRO</div>
+
+      <div class="type-scale">
+
+        <div class="ts-row">
+          <div class="ts-name" style="font-size:40px;font-weight:500;">Page title</div>
+          <div class="ts-size" style="font-size:40px;font-weight:500;">40</div>
+          <div class="ts-example" style="font-size:40px;font-weight:500;line-height:1.1;">Build your own event</div>
+          <div class="ts-usage">Заголовок конфигуратора</div>
+        </div>
+
+        <div class="ts-row">
+          <div class="ts-name" style="font-size:26px;font-weight:500;">Total</div>
+          <div class="ts-size" style="font-size:26px;font-weight:500;">26</div>
+          <div class="ts-example" style="font-size:26px;font-weight:500;">Build your own event</div>
+          <div class="ts-usage">Сумма в total bar</div>
+        </div>
+
+        <div class="ts-row">
+          <div class="ts-name" style="font-size:20px;font-weight:500;">Section</div>
+          <div class="ts-size" style="font-size:20px;font-weight:500;">20</div>
+          <div class="ts-example" style="font-size:20px;font-weight:500;">Build your own event</div>
+          <div class="ts-usage">Заголовки секций</div>
+        </div>
+
+        <div class="ts-row">
+          <div class="ts-name" style="font-size:18px;font-weight:500;">Price</div>
+          <div class="ts-size" style="font-size:18px;font-weight:500;">18</div>
+          <div class="ts-example" style="font-size:18px;font-weight:500;">Build your own event</div>
+          <div class="ts-usage">Цена в package card</div>
+        </div>
+
+        <div class="ts-row">
+          <div class="ts-name" style="font-size:15px;font-weight:500;">Button</div>
+          <div class="ts-size" style="font-size:15px;font-weight:500;">15</div>
+          <div class="ts-example" style="font-size:15px;font-weight:500;">Build your own event</div>
+          <div class="ts-usage">Кнопки</div>
+        </div>
+
+        <div class="ts-row">
+          <div class="ts-name" style="font-size:14px;font-weight:500;">Item name</div>
+          <div class="ts-size" style="font-size:14px;font-weight:500;">14</div>
+          <div class="ts-example" style="font-size:14px;font-weight:500;">Build your own event</div>
+          <div class="ts-usage">Названия позиций, цены, inputs</div>
+        </div>
+
+        <div class="ts-row">
+          <div class="ts-name" style="font-size:13px;font-weight:400;color:#969CA6;">Label</div>
+          <div class="ts-size" style="font-size:13px;font-weight:400;color:#969CA6;">13</div>
+          <div class="ts-example" style="font-size:13px;font-weight:400;color:#969CA6;">Build your own event</div>
+          <div class="ts-usage">Лейблы форм, мета total bar</div>
+        </div>
+
+        <div class="ts-row">
+          <div class="ts-name" style="font-size:12px;font-weight:400;color:#969CA6;">Body</div>
+          <div class="ts-size" style="font-size:12px;font-weight:400;color:#969CA6;">12</div>
+          <div class="ts-example" style="font-size:12px;font-weight:400;color:#969CA6;">Build your own event</div>
+          <div class="ts-usage">Описания карточек, includes</div>
+        </div>
+
+        <div class="ts-row" style="border-bottom:none;">
+          <div class="ts-name" style="font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:0.08em;color:#969CA6;">Caption</div>
+          <div class="ts-size" style="font-size:11px;font-weight:500;color:#969CA6;">11</div>
+          <div class="ts-example" style="font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:0.08em;color:#969CA6;">Build your own event</div>
+          <div class="ts-usage">Бейджи секций, state labels</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Colors -->
+    <div class="ds-section">
+      <div class="ds-section-title">Colors</div>
+      <div class="ds-row">
+        <div class="swatch">
+          <div class="swatch-color" style="background:#333333;"></div>
+          <div class="swatch-info"><div class="swatch-name">Primary</div><div class="swatch-hex">#333333</div></div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-color" style="background:#ffffff;border:1px solid rgba(150,156,166,0.2);"></div>
+          <div class="swatch-info"><div class="swatch-name">White</div><div class="swatch-hex">#FFFFFF</div></div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-color" style="background:#969CA6;"></div>
+          <div class="swatch-info"><div class="swatch-name">Secondary Text</div><div class="swatch-hex">#969CA6</div></div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-color" style="background:rgba(150,156,166,0.25);"></div>
+          <div class="swatch-info"><div class="swatch-name">Border Default</div><div class="swatch-hex">rgba(150,156,166, .25)</div></div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-color" style="background:rgba(51,51,51,0.1);"></div>
+          <div class="swatch-info"><div class="swatch-name">Border Hover</div><div class="swatch-hex">rgba(51,51,51, .1)</div></div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-color" style="background:#FF3B30;"></div>
+          <div class="swatch-info"><div class="swatch-name">Error / Required</div><div class="swatch-hex">#FF3B30</div></div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-color" style="background:rgba(0,0,0,0.8);"></div>
+          <div class="swatch-info"><div class="swatch-name">Total Bar BG</div><div class="swatch-hex">rgba(0,0,0, .8)</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Surfaces -->
+    <div class="ds-section">
+      <div class="ds-section-title">Surfaces</div>
+      <div class="ds-row">
+        <div class="surface-sample" style="background:rgba(150,156,166,0.08);backdrop-filter:blur(4px);border:1px solid transparent;">
+          <div class="surface-label">Default</div>
+          <div class="surface-desc">bg 0.08 · blur(4px) · border transparent</div>
+        </div>
+        <div class="surface-sample" style="background:rgba(150,156,166,0.08);backdrop-filter:blur(4px);border:1px solid rgba(51,51,51,0.1);">
+          <div class="surface-label">Hover</div>
+          <div class="surface-desc">Same · border rgba(51,51,51, .1)</div>
+        </div>
+        <div class="surface-sample" style="background:rgba(150,156,166,0.08);backdrop-filter:blur(4px);border:1px solid #333;">
+          <div class="surface-label">Selected</div>
+          <div class="surface-desc">Same · border #333</div>
+        </div>
+        <div class="surface-sample" style="background:rgba(0,0,0,0.8);backdrop-filter:blur(9px);border:1px solid rgba(255,255,255,0.1);color:#fff;">
+          <div class="surface-label" style="color:#fff;">Overlay</div>
+          <div class="surface-desc" style="color:rgba(255,255,255,0.5);">bg 0.8 black · blur(9px) · border white .1</div>
+        </div>
+        <div class="surface-sample" style="background:rgba(150,156,166,0.08);border:1px solid rgba(150,156,166,0.25);border-radius:50px;padding:6px 16px;flex:none;width:fit-content;align-self:flex-start;">
+          <div class="surface-label" style="font-size:14px;font-weight:500;margin:0;">Pill</div>
+          <div class="surface-desc" style="margin-top:4px;">r-50px · border .25</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Border Radius -->
+    <div class="ds-section">
+      <div class="ds-section-title">Border Radius</div>
+      <div class="ds-row" style="align-items:flex-end;">
+        <div style="text-align:center;">
+          <div style="width:52px;height:52px;background:rgba(150,156,166,0.12);border-radius:6px;margin:0 auto 8px;"></div>
+          <div style="font-size:12px;font-weight:500;">6px</div>
+          <div style="font-size:11px;color:#969CA6;">Date cell</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="width:52px;height:52px;background:rgba(150,156,166,0.12);border-radius:10px;margin:0 auto 8px;"></div>
+          <div style="font-size:12px;font-weight:500;">10px</div>
+          <div style="font-size:11px;color:#969CA6;">Nav groups</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="width:52px;height:52px;background:rgba(150,156,166,0.12);border-radius:12px;margin:0 auto 8px;"></div>
+          <div style="font-size:12px;font-weight:500;">12px</div>
+          <div style="font-size:11px;color:#969CA6;">Time slot</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="width:52px;height:52px;background:rgba(150,156,166,0.12);border-radius:16px;margin:0 auto 8px;"></div>
+          <div style="font-size:12px;font-weight:500;">16px</div>
+          <div style="font-size:11px;color:#969CA6;">Date picker</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="width:52px;height:52px;background:rgba(150,156,166,0.12);border-radius:20px;margin:0 auto 8px;"></div>
+          <div style="font-size:12px;font-weight:500;">20px</div>
+          <div style="font-size:11px;color:#969CA6;">Cards, inputs</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="width:52px;height:52px;background:rgba(150,156,166,0.12);border-radius:50px;margin:0 auto 8px;"></div>
+          <div style="font-size:12px;font-weight:500;">50px</div>
+          <div style="font-size:11px;color:#969CA6;">Pills, buttons</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="width:52px;height:52px;background:rgba(150,156,166,0.12);border-radius:50%;margin:0 auto 8px;"></div>
+          <div style="font-size:12px;font-weight:500;">50%</div>
+          <div style="font-size:11px;color:#969CA6;">Checkbox, dot</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /foundations -->
+
+
+  <!-- ══════════════════ COMPONENTS ══════════════════ -->
+  <div class="ds-panel" id="tab-components">
+
+    <!-- Toggle Card -->
+    <div class="cmp-block">
+      <div class="cmp-title">Toggle Card — Multi-select</div>
+      <div class="cmp-demo">
+        <div class="item-list">
+          <div class="item-card ds-toggle" onclick="dsToggle(this)">
+            <div class="item-main">
+              <div class="item-chk"><svg class="item-chk-tick" viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3" fill="none"/></svg></div>
+              <div class="item-info">
+                <div class="item-name">Conference Room</div>
+                <div class="item-desc">Up to 30 people · boardroom style</div>
+              </div>
+              <div class="item-price">$1,500<div class="item-price-hint">/ hr</div></div>
+            </div>
+          </div>
+          <div class="item-card ds-toggle" onclick="dsToggle(this)">
+            <div class="item-main">
+              <div class="item-chk"><svg class="item-chk-tick" viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3" fill="none"/></svg></div>
+              <div class="item-info">
+                <div class="item-name">Networking Area</div>
+                <div class="item-desc">70 people · stylish lounge and bar setting</div>
+              </div>
+              <div class="item-price">$2,000<div class="item-price-hint">/ hr</div></div>
+            </div>
+          </div>
+          <div class="item-card selected ds-toggle" onclick="dsToggle(this)">
+            <div class="item-main">
+              <div class="item-chk"><svg class="item-chk-tick" viewBox="0 0 12 12" style="opacity:1;"><polyline points="2,6 5,9 10,3" fill="none"/></svg></div>
+              <div class="item-info">
+                <div class="item-name">Event Hall</div>
+                <div class="item-desc">100 people · stunning Palm views and bar atmosphere</div>
+              </div>
+              <div class="item-price">$3,000<div class="item-price-hint">/ hr</div></div>
+            </div>
+            <div class="hrs-row" onclick="event.stopPropagation()">
+              <span class="hrs-label">Hours</span>
+              <div class="hrs-stepper">
+                <button class="hrs-btn" onclick="dsHrs(this,-1)">
+                  <svg class="lucide" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                </button>
+                <span class="hrs-val">3</span>
+                <button class="hrs-btn" onclick="dsHrs(this,1)">
+                  <svg class="lucide" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                </button>
+              </div>
+              <span class="hrs-total">$9,000</span>
+            </div>
+          </div>
+          <div class="item-card included" style="cursor:default;">
+            <div class="item-main">
+              <div class="item-chk" style="opacity:0.35;"></div>
+              <div class="item-info">
+                <div class="item-name">Main Stage &amp; AV Setup</div>
+                <div class="item-desc">LED screen, professional sound, stage lighting</div>
+              </div>
+              <div class="item-price"><span class="item-included">Included</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Package Card -->
+    <div class="cmp-block">
+      <div class="cmp-title">Package Card — Single-select</div>
+      <div class="cmp-demo">
+        <div style="display:flex;gap:12px;">
+          <div class="item-card ds-pkg" onclick="dsPkg(this)" style="flex:1;border-radius:20px;padding:1rem;cursor:pointer;">
+            <div class="pkg-price">$550 <span class="pkg-price-unit">/ 50 guests</span></div>
+            <div class="pkg-name">Basic Sharing Platters</div>
+            <div class="pkg-includes">Light, elegant bites · relaxed networking</div>
+          </div>
+          <div class="item-card selected ds-pkg" onclick="dsPkg(this)" style="flex:1;border-radius:20px;padding:1rem;cursor:pointer;">
+            <div class="pkg-price">$950 <span class="pkg-price-unit">/ 50 guests</span></div>
+            <div class="pkg-name">Classic Canapés</div>
+            <div class="pkg-includes">5 items per person · elegant assortment</div>
+          </div>
+          <div class="item-card ds-pkg" onclick="dsPkg(this)" style="flex:1;border-radius:20px;padding:1rem;cursor:pointer;">
+            <div class="pkg-price">$1,850 <span class="pkg-price-unit">/ 50 guests</span></div>
+            <div class="pkg-name">Extended Canapés</div>
+            <div class="pkg-includes">6 items per person · warm and cold bites</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Val Box + Slider -->
+    <div class="cmp-block">
+      <div class="cmp-title">Value Badge + Slider</div>
+      <div class="cmp-demo">
+        <div style="text-align:center;">
+          <div class="val-box" id="ds-guest-val">50 guests</div>
+          <input type="range" id="ds-guest-slider" class="guest-slider" min="50" max="150" step="10" value="50"
+            oninput="dsUpdateSlider(this)">
+          <div class="guest-slider-ticks" id="ds-guest-ticks">
+            <span class="active"></span><span class="active"></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+          </div>
+          <div class="guest-slider-range"><span>50</span><span>150</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Time Slot -->
+    <div class="cmp-block">
+      <div class="cmp-title">Time Slot</div>
+      <div class="cmp-demo">
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <div class="time-slot ds-timeslot" onclick="dsTimeSlot(this)">10:00</div>
+          <div class="time-slot ds-timeslot" onclick="dsTimeSlot(this)">12:00</div>
+          <div class="time-slot selected ds-timeslot" onclick="dsTimeSlot(this)">14:00</div>
+          <div class="time-slot ds-timeslot" onclick="dsTimeSlot(this)">16:00</div>
+          <div class="time-slot ds-timeslot" onclick="dsTimeSlot(this)">18:00</div>
+          <div class="time-slot ds-timeslot" onclick="dsTimeSlot(this)">20:00</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Buttons -->
+    <div class="cmp-block">
+      <div class="cmp-title">Buttons</div>
+      <div class="cmp-demo">
+        <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:center;">
+          <button class="btn-submit" style="width:auto;margin:0;padding:12px 28px;">Leave a request</button>
+          <div style="background:rgba(0,0,0,0.8);padding:12px 16px;border-radius:16px;">
+            <button class="btn-submit" style="width:auto;margin:0;padding:12px 28px;background:#fff;color:#333;">Leave a request</button>
+          </div>
+          <button class="btn-back">← Back</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Form Inputs -->
+    <div class="cmp-block">
+      <div class="cmp-title">Form Inputs</div>
+      <div class="cmp-demo">
+        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:12px;">
+          <div style="flex:1;min-width:160px;">
+            <div class="fg">
+              <label>Name <span class="req">*</span></label>
+              <input type="text" placeholder="Your name">
+            </div>
+          </div>
+          <div style="flex:1;min-width:160px;">
+            <div class="fg">
+              <label>Email <span class="req">*</span></label>
+              <input type="email" placeholder="you@company.com">
+            </div>
+          </div>
+          <div style="flex:1;min-width:160px;">
+            <div class="fg error">
+              <label>Company <span class="req">*</span></label>
+              <input type="text" placeholder="ACME Inc.">
+              <span class="field-error">This field is required</span>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="fg">
+            <label>Notes</label>
+            <textarea placeholder="Any additional details…"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Total Bar -->
+    <div class="cmp-block">
+      <div class="cmp-title">Total Bar</div>
+      <div class="cmp-demo" style="padding:0;">
+        <div style="background:rgba(0,0,0,0.8);backdrop-filter:blur(9px);border-radius:20px;padding:0.875rem 1.25rem;color:#fff;display:flex;flex-direction:column;gap:0.875rem;">
+          <div class="total-bar-top">
+            <div class="total-bar-left">
+              <div class="total-bar-meta">Your event</div>
+              <div class="total-bar-datetime">Apr 25, 2026 · 18:00</div>
+            </div>
+            <div class="total-bar-right">
+              <div style="font-size:13px;color:rgba(255,255,255,0.5);">Total</div>
+              <div class="total-bar-val">$12,400</div>
+            </div>
+          </div>
+          <button class="btn-submit" style="margin:0;background:#fff;color:#333;">Leave a request</button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /components -->
+
+</div><!-- /ds-wrap -->
+
+<script>
+  function showTab(e, name) {
+    document.querySelectorAll('.ds-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.ds-panel').forEach(p => p.classList.remove('active'));
+    document.getElementById('tab-' + name).classList.add('active');
+    e.target.classList.add('active');
+  }
+
+  /* Toggle Card */
+  function dsToggle(card) {
+    const wasSelected = card.classList.contains('selected');
+    card.classList.toggle('selected');
+    const tick = card.querySelector('.item-chk-tick');
+    if (tick) tick.style.opacity = wasSelected ? '0' : '1';
+    const hrsRow = card.querySelector('.hrs-row');
+    if (hrsRow) hrsRow.style.display = wasSelected ? 'none' : 'flex';
+  }
+
+  /* Hours stepper */
+  function dsHrs(btn, delta) {
+    const stepper = btn.closest('.hrs-stepper');
+    const valEl = stepper.querySelector('.hrs-val');
+    const totalEl = btn.closest('.hrs-row').querySelector('.hrs-total');
+    let hrs = parseInt(valEl.textContent) + delta;
+    if (hrs < 1) hrs = 1;
+    valEl.textContent = hrs;
+    totalEl.textContent = '$' + (hrs * 3000).toLocaleString();
+  }
+
+  /* Slider with ticks */
+  function dsUpdateSlider(input) {
+    const val = parseInt(input.value);
+    document.getElementById('ds-guest-val').textContent = val + ' guests';
+    const idx = (val - 50) / 10;
+    document.querySelectorAll('#ds-guest-ticks span').forEach((s, i) => {
+      s.classList.toggle('active', i <= idx);
+    });
+  }
+
+  /* Package Card single-select */
+  function dsPkg(card) {
+    card.closest('.cmp-demo').querySelectorAll('.ds-pkg').forEach(c => c.classList.remove('selected'));
+    card.classList.add('selected');
+  }
+
+  /* Time Slot single-select */
+  function dsTimeSlot(slot) {
+    slot.closest('div').querySelectorAll('.ds-timeslot').forEach(s => s.classList.remove('selected'));
+    slot.classList.add('selected');
+  }
+</script>
+
+</body>
+</html>
