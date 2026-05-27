@@ -497,12 +497,111 @@ function scrollToForm() {
   }
 }
 
+function scrollToSection(id) {
+  const el = $(id);
+  if (!el) return;
+  const panel = document.querySelector('.split-right');
+  if (panel) panel.scrollTo({ top: el.offsetTop - 80, behavior: 'smooth' });
+  else el.scrollIntoView({ behavior: 'smooth' });
+}
+
+function renderSummary() {
+  const panel = $('summary-panel');
+  if (!panel) return;
+
+  const sections = [];
+
+  const detailItems = [];
+  if (S.date) { const [y,m,d] = S.date.split('-'); detailItems.push(['Date', `${parseInt(d)} ${DP_MONTHS[parseInt(m)-1]} ${y}`]); }
+  if (S.time) detailItems.push(['Time', fmt(S.time)]);
+  detailItems.push(['Guests', S.guests + ' people']);
+  detailItems.push(['Duration', S.duration + (S.duration === 1 ? ' hour' : ' hours')]);
+  sections.push({ title: 'Event', scrollId: null, items: detailItems });
+
+  const venueSelected = [...VENUE, ...VENUE_ROOMS].filter(i => i.included || i.id in S.venue);
+  if (venueSelected.length) {
+    sections.push({ title: 'Venue Spaces', scrollId: 'venue-list', items: venueSelected.map(item =>
+      item.included ? [item.name, 'Included'] : [item.name, `${S.duration}h · ${fmtMoney(item.price * S.duration)}`]
+    )});
+  }
+
+  if (S.catering) {
+    const c = CATERING.find(i => i.id === S.catering);
+    if (c) sections.push({ title: 'Catering', scrollId: 'catering-grid', items: [[c.name, `${S.cateringQty} · ${fmtMoney(c.perPerson * S.cateringQty)}`]] });
+  }
+
+  const bevSelected = BEVERAGES.filter(b => b.id in S.beverages);
+  if (bevSelected.length) {
+    sections.push({ title: 'Beverages', scrollId: 'beverages-grid', items: bevSelected.map(b => {
+      const qty = S.beverages[b.id];
+      return [b.name, `${qty} · ${fmtMoney(b.perPerson * qty)}`];
+    })});
+  }
+
+  const mediaSelected = MEDIA.filter(i => i.id in S.media);
+  if (mediaSelected.length) {
+    sections.push({ title: 'Media Coverage', scrollId: 'media-list', items: mediaSelected.map(item =>
+      [item.name, item.perHour ? `${S.duration}h · ${fmtMoney(item.price * S.duration)}` : fmtMoney(item.price)]
+    )});
+  }
+
+  const opsSelected = OPS.filter(i => i.included || i.id in S.ops);
+  if (opsSelected.length) {
+    sections.push({ title: 'Operations', scrollId: 'ops-list', items: opsSelected.map(item =>
+      item.included ? [item.name, 'Included'] : [item.name, `${S.duration}h · ${fmtMoney(item.price * S.duration)}`]
+    )});
+  }
+
+  const promoSelected = PROMO.filter(i => i.id in S.promo);
+  if (promoSelected.length) {
+    sections.push({ title: 'Promo Services', scrollId: 'promo-list', items: promoSelected.map(item => [item.name, fmtMoney(item.price)]) });
+  }
+
+  const brandingSelected = BRANDING.filter(i => i.id in S.branding);
+  if (brandingSelected.length) {
+    sections.push({ title: 'Branding', scrollId: 'branding-list', items: brandingSelected.map(item => [item.name, fmtMoney(item.price)]) });
+  }
+
+  const printedSelected = PRINTED.filter(i => i.id in S.printed);
+  if (printedSelected.length) {
+    sections.push({ title: 'Printed Materials', scrollId: 'printed-list', items: printedSelected.map(item => {
+      const val = S.printed[item.id];
+      return [item.name, item.perUnit !== undefined ? `${val} pc · ${fmtMoney(item.perUnit * val)}` : fmtMoney(item.price)];
+    })});
+  }
+
+  panel.innerHTML = `
+    <div class="summary-title">Summary</div>
+    <div class="summary-scroll">
+      ${sections.map(s => `
+        <div class="summary-section">
+          <div class="summary-section-header">
+            <span class="summary-section-title">${s.title}</span>
+            ${s.scrollId ? `<button class="summary-edit-btn" onclick="scrollToSection('${s.scrollId}')">Edit</button>` : ''}
+          </div>
+          ${s.items.map(([name, val]) => `
+            <div class="summary-row">
+              <span class="summary-row-name">${name}</span>
+              <span class="summary-row-val">${val}</span>
+            </div>`).join('')}
+        </div>`).join('')}
+    </div>
+    <div class="summary-footer">
+      <span class="summary-total-lbl">Total</span>
+      <span class="summary-total-val">${fmtMoney(calcTotal())}</span>
+    </div>
+  `;
+}
+
 function initFormObserver() {
   const section = $('enquiry-section');
   if (!section) return;
   const root = document.querySelector('.split-right') || null;
   const observer = new IntersectionObserver(entries => {
     formInView = entries[0].isIntersecting;
+    if (formInView) renderSummary();
+    const splitLeft = document.querySelector('.split-left');
+    if (splitLeft) splitLeft.classList.toggle('summary-active', formInView);
     updateTotal();
   }, { root, threshold: 0.05 });
   observer.observe(section);
