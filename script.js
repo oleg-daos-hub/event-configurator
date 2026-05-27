@@ -487,11 +487,22 @@ function buildSummary() {
 
 let formInView = false;
 let _formLockTimer = null;
+let _formMinScroll = null;
+
+function _initScrollLock() {
+  const panel = document.querySelector('.split-right');
+  if (!panel || panel._scrollLockAttached) return;
+  panel._scrollLockAttached = true;
+  panel.addEventListener('scroll', () => {
+    if (_formMinScroll !== null && panel.scrollTop < _formMinScroll) {
+      panel.scrollTop = _formMinScroll;
+    }
+  }, { passive: true });
+}
 
 function _releaseSplitRightLock() {
   clearTimeout(_formLockTimer);
-  const panel = document.querySelector('.split-right');
-  if (panel) panel.style.overflowY = '';
+  _formMinScroll = null;
 }
 
 function scrollToForm() {
@@ -499,11 +510,13 @@ function scrollToForm() {
   if (!section) return;
   const panel = document.querySelector('.split-right');
   if (panel && window.innerWidth >= 850) {
+    _initScrollLock();
+    _formMinScroll = null;
     const target = panel.scrollTop + section.getBoundingClientRect().top - panel.getBoundingClientRect().top;
     panel.scrollTo({ top: target, behavior: 'smooth' });
     clearTimeout(_formLockTimer);
     _formLockTimer = setTimeout(() => {
-      if (formInView) panel.style.overflowY = 'hidden';
+      if (formInView) _formMinScroll = panel.scrollTop;
     }, 700);
   } else {
     section.scrollIntoView({ behavior: 'smooth' });
