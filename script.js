@@ -954,7 +954,7 @@ window.addEventListener('resize', () => {
     if (splitLeft) splitLeft.classList.remove('summary-active');
     const mob = $('summary-mobile');
     if (mob) mob.classList.remove('visible');
-    updateTotal();
+    renderAll();
     initFormObserver();
     initPreviewObserver();
   }, 200);
