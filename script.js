@@ -491,7 +491,7 @@ function scrollToForm() {
   const section = $('enquiry-section');
   if (!section) return;
   const panel = document.querySelector('.split-right');
-  if (panel) {
+  if (panel && window.innerWidth >= 850) {
     panel.scrollTo({ top: section.offsetTop - 16, behavior: 'smooth' });
   } else {
     section.scrollIntoView({ behavior: 'smooth' });
@@ -502,8 +502,11 @@ function scrollToSection(id) {
   const el = $(id);
   if (!el) return;
   const panel = document.querySelector('.split-right');
-  if (panel) panel.scrollTo({ top: el.offsetTop - 80, behavior: 'smooth' });
-  else el.scrollIntoView({ behavior: 'smooth' });
+  if (panel && window.innerWidth >= 850) {
+    panel.scrollTo({ top: el.offsetTop - 80, behavior: 'smooth' });
+  } else {
+    el.scrollIntoView({ behavior: 'smooth' });
+  }
 }
 
 function buildSummarySections() {
