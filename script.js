@@ -486,51 +486,20 @@ function buildSummary() {
 }
 
 let formInView = false;
-let _formLockTimer = null;
-let _formMinScroll = null;
-
-function _initScrollLock() {
-  const panel = document.querySelector('.split-right');
-  if (!panel || panel._scrollLockAttached) return;
-  panel._scrollLockAttached = true;
-  panel.addEventListener('scroll', () => {
-    if (_formMinScroll !== null && panel.scrollTop < _formMinScroll) {
-      panel.scrollTop = _formMinScroll;
-    }
-  }, { passive: true });
-}
-
-function _releaseSplitRightLock() {
-  clearTimeout(_formLockTimer);
-  _formMinScroll = null;
-}
 
 function scrollToForm() {
   const section = $('enquiry-section');
   if (!section) return;
   const panel = document.querySelector('.split-right');
   if (panel && window.innerWidth >= 850) {
-    _initScrollLock();
-    _formMinScroll = null;
     const target = panel.scrollTop + section.getBoundingClientRect().top - panel.getBoundingClientRect().top;
     panel.scrollTo({ top: target, behavior: 'smooth' });
-    clearTimeout(_formLockTimer);
-    _formLockTimer = setTimeout(() => {
-      if (formInView) _formMinScroll = panel.scrollTop;
-    }, 700);
   } else {
     section.scrollIntoView({ behavior: 'smooth' });
   }
 }
 
 function scrollToSection(id) {
-  _releaseSplitRightLock();
-  if (formInView) {
-    formInView = false;
-    const splitLeft = document.querySelector('.split-left');
-    if (splitLeft) splitLeft.classList.remove('summary-active');
-    updateTotal();
-  }
   const el = $(id);
   if (!el) return;
   const panel = document.querySelector('.split-right');
@@ -668,8 +637,6 @@ function initFormObserver() {
     if (formInView) {
       renderSummary();
       if (window.innerWidth >= 850) scrollToForm();
-    } else {
-      _releaseSplitRightLock();
     }
     const splitLeft = document.querySelector('.split-left');
     if (splitLeft) splitLeft.classList.toggle('summary-active', formInView);
@@ -988,7 +955,6 @@ window.addEventListener('resize', () => {
     if (isDesktop === _lastBreakpoint) return;
     _lastBreakpoint = isDesktop;
     formInView = false;
-    _releaseSplitRightLock();
     const splitLeft = document.querySelector('.split-left');
     if (splitLeft) splitLeft.classList.remove('summary-active');
     const mob = $('summary-mobile');
