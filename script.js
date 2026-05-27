@@ -486,24 +486,44 @@ function buildSummary() {
 }
 
 let formInView = false;
+let _formLockTimer = null;
+
+function _releaseSplitRightLock() {
+  clearTimeout(_formLockTimer);
+  const panel = document.querySelector('.split-right');
+  if (panel) panel.style.overflowY = '';
+}
 
 function scrollToForm() {
   const section = $('enquiry-section');
   if (!section) return;
   const panel = document.querySelector('.split-right');
   if (panel && window.innerWidth >= 850) {
-    panel.scrollTo({ top: section.offsetTop - 16, behavior: 'smooth' });
+    const target = panel.scrollTop + section.getBoundingClientRect().top - panel.getBoundingClientRect().top;
+    panel.scrollTo({ top: target, behavior: 'smooth' });
+    clearTimeout(_formLockTimer);
+    _formLockTimer = setTimeout(() => {
+      if (formInView) panel.style.overflowY = 'hidden';
+    }, 700);
   } else {
     section.scrollIntoView({ behavior: 'smooth' });
   }
 }
 
 function scrollToSection(id) {
+  _releaseSplitRightLock();
+  if (formInView) {
+    formInView = false;
+    const splitLeft = document.querySelector('.split-left');
+    if (splitLeft) splitLeft.classList.remove('summary-active');
+    updateTotal();
+  }
   const el = $(id);
   if (!el) return;
   const panel = document.querySelector('.split-right');
   if (panel && window.innerWidth >= 850) {
-    panel.scrollTo({ top: el.offsetTop - 80, behavior: 'smooth' });
+    const target = panel.scrollTop + el.getBoundingClientRect().top - panel.getBoundingClientRect().top - 80;
+    panel.scrollTo({ top: Math.max(0, target), behavior: 'smooth' });
   } else {
     el.scrollIntoView({ behavior: 'smooth' });
   }
@@ -632,7 +652,12 @@ function initFormObserver() {
   const onFormViewChange = (isInView) => {
     if (isInView === formInView) return;
     formInView = isInView;
-    if (formInView) renderSummary();
+    if (formInView) {
+      renderSummary();
+      if (window.innerWidth >= 850) scrollToForm();
+    } else {
+      _releaseSplitRightLock();
+    }
     const splitLeft = document.querySelector('.split-left');
     if (splitLeft) splitLeft.classList.toggle('summary-active', formInView);
     updateTotal();
@@ -950,6 +975,7 @@ window.addEventListener('resize', () => {
     if (isDesktop === _lastBreakpoint) return;
     _lastBreakpoint = isDesktop;
     formInView = false;
+    _releaseSplitRightLock();
     const splitLeft = document.querySelector('.split-left');
     if (splitLeft) splitLeft.classList.remove('summary-active');
     const mob = $('summary-mobile');
