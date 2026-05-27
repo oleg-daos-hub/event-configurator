@@ -422,6 +422,7 @@ function updateTotal() {
     bar.addEventListener('animationend', () => { bar.classList.remove('visible', 'hiding'); }, { once: true });
   }
   $('enquiry-section').classList.toggle('locked', total === 0);
+  if (formInView) renderSummary();
 
   $('tbl-guests').textContent = S.guests ? `${S.guests} guests` : '';
   const dtParts = [];
@@ -616,15 +617,31 @@ function renderSummary() {
 function initFormObserver() {
   const section = $('enquiry-section');
   if (!section) return;
-  const root = window.innerWidth >= 850 ? (document.querySelector('.split-right') || null) : null;
-  const observer = new IntersectionObserver(entries => {
-    formInView = entries[0].isIntersecting;
+
+  const onFormViewChange = (isInView) => {
+    if (isInView === formInView) return;
+    formInView = isInView;
     if (formInView) renderSummary();
     const splitLeft = document.querySelector('.split-left');
     if (splitLeft) splitLeft.classList.toggle('summary-active', formInView);
     updateTotal();
-  }, { root, threshold: 0.05 });
-  observer.observe(section);
+  };
+
+  if (window.innerWidth >= 850) {
+    const root = document.querySelector('.split-right') || null;
+    const observer = new IntersectionObserver(entries => {
+      onFormViewChange(entries[0].isIntersecting);
+    }, { root, threshold: 0.05 });
+    observer.observe(section);
+  } else {
+    const panel = document.querySelector('.split-right') || window;
+    const checkScroll = () => {
+      const rect = section.getBoundingClientRect();
+      onFormViewChange(rect.top < window.innerHeight * 0.95 && rect.bottom > 0);
+    };
+    window.addEventListener('scroll', checkScroll, { passive: true });
+    checkScroll();
+  }
 }
 
 // ─── Form validation ──────────────────────────────────────────────────────────
