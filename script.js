@@ -894,22 +894,22 @@ function setPreview(key) {
 function initPreviewObserver() {
   if (window.innerWidth < 850) return;
   const sectionMap = [
-    { el: document.querySelector('.datetime-block'), key: 'details'   },
-    { el: document.querySelector('.guest-slider-wrap'), key: 'guests'  },
-    { el: $('venue-list'),                           key: 'venue'     },
-    { el: $('catering-grid'),                        key: 'catering'  },
-    { el: $('beverages-grid'),                       key: 'beverages' },
-    { el: $('media-list'),                           key: 'media'     },
-    { el: $('promo-list'),                           key: 'promo'     },
-    { el: $('branding-list'),                        key: 'branding'  },
-    { el: $('printed-list'),                         key: 'printed'   },
-    { el: $('ops-list'),                             key: 'ops'       },
+    { el: document.querySelector('.datetime-block'),    key: 'details',   label: 'Event Date & Time' },
+    { el: document.querySelector('.guest-slider-wrap'), key: 'guests',    label: 'Number of Guests' },
+    { el: $('venue-list'),                              key: 'venue',     label: 'Venue Spaces' },
+    { el: $('catering-grid'),                           key: 'catering',  label: 'Catering' },
+    { el: $('beverages-grid'),                          key: 'beverages', label: 'Beverages' },
+    { el: $('media-list'),                              key: 'media',     label: 'Media Coverage' },
+    { el: $('promo-list'),                              key: 'promo',     label: 'Promo Services' },
+    { el: $('branding-list'),                           key: 'branding',  label: 'Branding & The Daos Effect' },
+    { el: $('printed-list'),                            key: 'printed',   label: 'Printed Materials' },
+    { el: $('ops-list'),                                key: 'ops',       label: 'Operations & Hospitality' },
   ];
   const observer = new IntersectionObserver(entries => {
     entries.forEach(e => {
       if (e.isIntersecting) {
         const found = sectionMap.find(s => s.el === e.target);
-        if (found) setPreview(found.key);
+        if (found) setLeftLabel(found.label);
       }
     });
   }, { root: document.querySelector('.split-right'), rootMargin: '0px 0px -50% 0px', threshold: 0 });
