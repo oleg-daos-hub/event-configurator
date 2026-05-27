@@ -608,11 +608,12 @@ function renderSummary() {
   const mobile = $('summary-mobile');
   if (mobile) {
     mobile.innerHTML = `
-      <div class="summary-mobile-header">
-        <span class="summary-title">Summary</span>
+      <div class="summary-title">Summary</div>
+      ${sectionsHTML}
+      <div class="summary-footer">
+        <span class="summary-total-lbl">Total</span>
         <span class="summary-total-val">${total}</span>
-      </div>
-      ${sectionsHTML}`;
+      </div>`;
     mobile.classList.add('visible');
   }
 }
