@@ -640,7 +640,7 @@ function initFormObserver() {
     const panel = document.querySelector('.split-right') || window;
     const checkScroll = () => {
       const rect = section.getBoundingClientRect();
-      onFormViewChange(rect.top < window.innerHeight * 0.95 && rect.bottom > 0);
+      onFormViewChange(rect.top < window.innerHeight * 0.5 && rect.bottom > 0);
     };
     window.addEventListener('scroll', checkScroll, { passive: true });
     checkScroll();
