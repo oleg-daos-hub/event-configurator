@@ -618,9 +618,16 @@ function renderSummary() {
   }
 }
 
+let _formObserver = null;
+let _formScrollHandler = null;
+let _previewObserverRef = null;
+
 function initFormObserver() {
   const section = $('enquiry-section');
   if (!section) return;
+
+  if (_formObserver) { _formObserver.disconnect(); _formObserver = null; }
+  if (_formScrollHandler) { window.removeEventListener('scroll', _formScrollHandler); _formScrollHandler = null; }
 
   const onFormViewChange = (isInView) => {
     if (isInView === formInView) return;
@@ -633,18 +640,17 @@ function initFormObserver() {
 
   if (window.innerWidth >= 850) {
     const root = document.querySelector('.split-right') || null;
-    const observer = new IntersectionObserver(entries => {
+    _formObserver = new IntersectionObserver(entries => {
       onFormViewChange(entries[0].isIntersecting);
     }, { root, threshold: 0.05 });
-    observer.observe(section);
+    _formObserver.observe(section);
   } else {
-    const panel = document.querySelector('.split-right') || window;
-    const checkScroll = () => {
+    _formScrollHandler = () => {
       const rect = section.getBoundingClientRect();
       onFormViewChange(rect.top < window.innerHeight * 0.5 && rect.bottom > 0);
     };
-    window.addEventListener('scroll', checkScroll, { passive: true });
-    checkScroll();
+    window.addEventListener('scroll', _formScrollHandler, { passive: true });
+    _formScrollHandler();
   }
 }
 
@@ -893,6 +899,7 @@ function setPreview(key) {
 }
 
 function initPreviewObserver() {
+  if (_previewObserverRef) { _previewObserverRef.disconnect(); _previewObserverRef = null; }
   if (window.innerWidth < 850) return;
   const sectionMap = [
     { el: document.querySelector('.datetime-block'),    key: 'details',   label: 'Event Date & Time' },
@@ -906,7 +913,7 @@ function initPreviewObserver() {
     { el: $('printed-list'),                            key: 'printed',   label: 'Printed Materials' },
     { el: $('ops-list'),                                key: 'ops',       label: 'Operations & Hospitality' },
   ];
-  const observer = new IntersectionObserver(entries => {
+  _previewObserverRef = new IntersectionObserver(entries => {
     entries.forEach(e => {
       if (e.isIntersecting) {
         const found = sectionMap.find(s => s.el === e.target);
@@ -914,7 +921,7 @@ function initPreviewObserver() {
       }
     });
   }, { root: document.querySelector('.split-right'), rootMargin: '0px 0px -50% 0px', threshold: 0 });
-  sectionMap.forEach(s => { if (s.el) observer.observe(s.el); });
+  sectionMap.forEach(s => { if (s.el) _previewObserverRef.observe(s.el); });
 }
 
 // ─── Init ─────────────────────────────────────────────────────────────────────
@@ -933,6 +940,25 @@ renderSlotsHeader();
 renderTimeSlots();
 initPreviewObserver();
 initFormObserver();
+
+let _lastBreakpoint = window.innerWidth >= 850;
+let _resizeTimer = null;
+window.addEventListener('resize', () => {
+  clearTimeout(_resizeTimer);
+  _resizeTimer = setTimeout(() => {
+    const isDesktop = window.innerWidth >= 850;
+    if (isDesktop === _lastBreakpoint) return;
+    _lastBreakpoint = isDesktop;
+    formInView = false;
+    const splitLeft = document.querySelector('.split-left');
+    if (splitLeft) splitLeft.classList.remove('summary-active');
+    const mob = $('summary-mobile');
+    if (mob) mob.classList.remove('visible');
+    updateTotal();
+    initFormObserver();
+    initPreviewObserver();
+  }, 200);
+});
 
 // Clear field error as soon as the user starts correcting the field
 ['f-name', 'f-email', 'f-company', 'f-phone'].forEach(id => {
