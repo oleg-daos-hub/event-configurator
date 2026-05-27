@@ -317,6 +317,26 @@ input[type="time"]::-webkit-date-and-time-value { text-align: left; margin: 0; }
   .split-layout { padding: 12px 12px 0; }
 }
 
+/* ─── Summary mobile (inline card) ───────────────────────────────────────── */
+#summary-mobile { display: none; margin-bottom: 2rem; }
+#summary-mobile.visible { display: block; }
+
+.summary-mobile-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 1.25rem; }
+.summary-mobile-header .summary-title { font-size: 20px; font-weight: 500; color: #333; letter-spacing: -0.01em; }
+.summary-mobile-header .summary-total-val { font-size: 20px; font-weight: 500; color: #333; }
+
+@media (min-width: 850px) { #summary-mobile { display: none !important; } }
+
+/* ─── Summary shared styles ───────────────────────────────────────────────── */
+.summary-section { margin-bottom: 1rem; }
+.summary-section-header { display: flex; align-items: center; justify-content: space-between; padding-bottom: 6px; border-bottom: 1px solid rgba(150,156,166,0.15); margin-bottom: 4px; }
+.summary-section-title { font-size: 10px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; color: rgba(150,156,166,0.7); }
+.summary-edit-btn { background: none; border: none; padding: 0; font-family: inherit; font-size: 12px; color: #333; text-decoration: underline; text-underline-offset: 2px; cursor: pointer; }
+.summary-edit-btn:hover { color: #666; }
+.summary-row { display: flex; justify-content: space-between; align-items: baseline; padding: 3px 0; }
+.summary-row-name { font-size: 13px; color: #333; flex: 1; min-width: 0; margin-right: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.summary-row-val { font-size: 12px; color: #969CA6; flex-shrink: 0; }
+
 /* ─── Summary panel (desktop only) ───────────────────────────────────────── */
 #summary-panel { display: none; }
 
@@ -345,21 +365,8 @@ input[type="time"]::-webkit-date-and-time-value { text-align: left; margin: 0; }
   .split-left.summary-active #summary-panel { transform: translateY(0); }
 
   .summary-title { font-size: 28px; font-weight: 500; color: #333; letter-spacing: -0.02em; margin-bottom: 1.5rem; flex-shrink: 0; }
-
   .summary-scroll { flex: 1; overflow-y: auto; scrollbar-width: none; }
   .summary-scroll::-webkit-scrollbar { display: none; }
-
-  .summary-section { margin-bottom: 1rem; }
-  .summary-section-header { display: flex; align-items: center; justify-content: space-between; padding-bottom: 6px; border-bottom: 1px solid rgba(150,156,166,0.15); margin-bottom: 4px; }
-  .summary-section-title { font-size: 10px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; color: rgba(150,156,166,0.7); }
-
-  .summary-edit-btn { background: none; border: none; padding: 0; font-family: inherit; font-size: 12px; color: #333; text-decoration: underline; text-underline-offset: 2px; cursor: pointer; }
-  .summary-edit-btn:hover { color: #666; }
-
-  .summary-row { display: flex; justify-content: space-between; align-items: baseline; padding: 3px 0; }
-  .summary-row-name { font-size: 13px; color: #333; flex: 1; min-width: 0; margin-right: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .summary-row-val { font-size: 12px; color: #969CA6; flex-shrink: 0; }
-
   .summary-footer { flex-shrink: 0; padding-top: 1rem; margin-top: 0.5rem; border-top: 1px solid rgba(150,156,166,0.2); display: flex; justify-content: space-between; align-items: baseline; }
   .summary-total-lbl { font-size: 15px; font-weight: 500; color: #333; }
   .summary-total-val { font-size: 26px; font-weight: 500; color: #333; }

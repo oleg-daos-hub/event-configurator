@@ -505,10 +505,7 @@ function scrollToSection(id) {
   else el.scrollIntoView({ behavior: 'smooth' });
 }
 
-function renderSummary() {
-  const panel = $('summary-panel');
-  if (!panel) return;
-
+function buildSummarySections() {
   const sections = [];
 
   const detailItems = [];
@@ -570,33 +567,56 @@ function renderSummary() {
     })});
   }
 
-  panel.innerHTML = `
-    <div class="summary-title">Summary</div>
-    <div class="summary-scroll">
-      ${sections.map(s => `
-        <div class="summary-section">
-          <div class="summary-section-header">
-            <span class="summary-section-title">${s.title}</span>
-            ${s.scrollId ? `<button class="summary-edit-btn" onclick="scrollToSection('${s.scrollId}')">Edit</button>` : ''}
-          </div>
-          ${s.items.map(([name, val]) => `
-            <div class="summary-row">
-              <span class="summary-row-name">${name}</span>
-              <span class="summary-row-val">${val}</span>
-            </div>`).join('')}
+  return sections;
+}
+
+function renderSectionsHTML(sections) {
+  return sections.map(s => `
+    <div class="summary-section">
+      <div class="summary-section-header">
+        <span class="summary-section-title">${s.title}</span>
+        ${s.scrollId ? `<button class="summary-edit-btn" onclick="scrollToSection('${s.scrollId}')">Edit</button>` : ''}
+      </div>
+      ${s.items.map(([name, val]) => `
+        <div class="summary-row">
+          <span class="summary-row-name">${name}</span>
+          <span class="summary-row-val">${val}</span>
         </div>`).join('')}
-    </div>
-    <div class="summary-footer">
-      <span class="summary-total-lbl">Total</span>
-      <span class="summary-total-val">${fmtMoney(calcTotal())}</span>
-    </div>
-  `;
+    </div>`).join('');
+}
+
+function renderSummary() {
+  const sections = buildSummarySections();
+  const sectionsHTML = renderSectionsHTML(sections);
+  const total = fmtMoney(calcTotal());
+
+  const panel = $('summary-panel');
+  if (panel) {
+    panel.innerHTML = `
+      <div class="summary-title">Summary</div>
+      <div class="summary-scroll">${sectionsHTML}</div>
+      <div class="summary-footer">
+        <span class="summary-total-lbl">Total</span>
+        <span class="summary-total-val">${total}</span>
+      </div>`;
+  }
+
+  const mobile = $('summary-mobile');
+  if (mobile) {
+    mobile.innerHTML = `
+      <div class="summary-mobile-header">
+        <span class="summary-title">Summary</span>
+        <span class="summary-total-val">${total}</span>
+      </div>
+      ${sectionsHTML}`;
+    mobile.classList.add('visible');
+  }
 }
 
 function initFormObserver() {
   const section = $('enquiry-section');
   if (!section) return;
-  const root = document.querySelector('.split-right') || null;
+  const root = window.innerWidth >= 850 ? (document.querySelector('.split-right') || null) : null;
   const observer = new IntersectionObserver(entries => {
     formInView = entries[0].isIntersecting;
     if (formInView) renderSummary();
