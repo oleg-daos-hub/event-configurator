@@ -618,8 +618,10 @@ function renderSummary() {
 let _formObserver = null;
 let _formVisibleObserver = null;
 let _formScrollHandler = null;
+let _formScrollTarget = null;
 let _previewObserverRef = null;
 let _mobilePreviewScrollHandler = null;
+let _mobilePreviewScrollTarget = null;
 
 function initFormObserver() {
   const section = $('enquiry-section');

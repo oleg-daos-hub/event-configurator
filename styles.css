@@ -297,31 +297,27 @@ input[type="time"]::-webkit-date-and-time-value { text-align: left; margin: 0; }
 }
 
 @media (max-width: 849px) {
-  .split-layout { display: flex; flex-direction: column; box-sizing: border-box; }
+  body { padding: 12px; }
+  .split-layout { display: block; }
+  .split-left-wrap {
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    right: 12px;
+    z-index: 10;
+    transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .split-left-wrap.summary-active { transform: translateY(calc(-100% - 24px)); }
   .split-left {
     display: block;
-    flex: none;
     width: 100%;
-    box-sizing: border-box;
-    aspect-ratio: 4 / 3;
+    aspect-ratio: 16 / 9;
     max-height: 260px;
-    position: sticky;
-    top: 12px;
-    z-index: 10;
     background: #000;
     border-radius: 20px;
     overflow: hidden;
-    transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
   }
-  .split-left.summary-active {
-    transform: translateY(calc(-100% - 24px));
-  }
-  .split-right { height: auto; overflow: visible; }
-}
-
-@media (max-width: 599px) {
-  body { padding: 12px; }
-  .split-layout { padding: 12px 12px 0; }
+  .split-right { height: auto; overflow: visible; padding-top: calc(min((100vw - 24px) * 9 / 16, 260px) + 12px); }
 }
 
 /* ─── Summary mobile (inline card) ───────────────────────────────────────── */
