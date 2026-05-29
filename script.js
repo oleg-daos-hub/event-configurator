@@ -617,6 +617,7 @@ function renderSummary() {
 let _formObserver = null;
 let _formScrollHandler = null;
 let _previewObserverRef = null;
+let _mobilePreviewScrollHandler = null;
 
 function initFormObserver() {
   const section = $('enquiry-section');
@@ -934,6 +935,33 @@ function initPreviewObserver() {
   sectionMap.forEach(s => { if (s.el) _previewObserverRef.observe(s.el); });
 }
 
+function initMobilePreviewScroll() {
+  if (_mobilePreviewScrollHandler) { window.removeEventListener('scroll', _mobilePreviewScrollHandler); _mobilePreviewScrollHandler = null; }
+  if (window.innerWidth >= 850) return;
+  const sectionMap = [
+    { el: document.querySelector('.datetime-block'), key: 'details'    },
+    { el: $('venue-list'),                           key: 'venue'      },
+    { el: $('venue-rooms-list'),                     key: 'venue_rooms'},
+    { el: $('catering-grid'),                        key: 'catering'   },
+    { el: $('beverages-grid'),                       key: 'beverages'  },
+    { el: $('media-list'),                           key: 'media'      },
+    { el: $('promo-list'),                           key: 'promo'      },
+    { el: $('branding-list'),                        key: 'branding'   },
+    { el: $('printed-list'),                         key: 'printed'    },
+    { el: $('ops-list'),                             key: 'ops'        },
+  ].filter(s => s.el);
+  _mobilePreviewScrollHandler = () => {
+    const line = window.innerHeight * 0.6;
+    let active = null;
+    for (const s of sectionMap) {
+      if (s.el.getBoundingClientRect().top <= line) active = s;
+    }
+    if (active) setPreview(active.key);
+  };
+  window.addEventListener('scroll', _mobilePreviewScrollHandler, { passive: true });
+  _mobilePreviewScrollHandler();
+}
+
 // ─── Init ─────────────────────────────────────────────────────────────────────
 
 const _today = new Date();
@@ -950,6 +978,7 @@ renderSlotsHeader();
 renderTimeSlots();
 Object.values(PREVIEW_IMAGES).filter((v,i,a)=>a.indexOf(v)===i).forEach(src => { new Image().src = src; });
 initPreviewObserver();
+initMobilePreviewScroll();
 initFormObserver();
 
 let _lastBreakpoint = window.innerWidth >= 850;
@@ -968,6 +997,7 @@ window.addEventListener('resize', () => {
     renderAll();
     initFormObserver();
     initPreviewObserver();
+    initMobilePreviewScroll();
   }, 200);
 });
 
