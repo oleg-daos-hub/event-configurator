@@ -407,7 +407,7 @@ function updateTotal() {
   $('p1-total').style.color = total > 0 ? '' : '#969CA6';
   $('p1-total').style.fontSize = total > 0 ? '' : '14px';
   const bar = document.querySelector('.total-bar');
-  const shouldShow = total > 0 && !formInView;
+  const shouldShow = total > 0 && !formVisible;
   if (shouldShow) {
     bar.classList.remove('hiding');
     bar.classList.add('visible');
@@ -480,6 +480,7 @@ function buildSummary() {
 }
 
 let formInView = false;
+let formVisible = false;
 
 function scrollToForm() {
   const section = $('enquiry-section');
@@ -615,6 +616,7 @@ function renderSummary() {
 }
 
 let _formObserver = null;
+let _formVisibleObserver = null;
 let _formScrollHandler = null;
 let _previewObserverRef = null;
 let _mobilePreviewScrollHandler = null;
@@ -624,6 +626,7 @@ function initFormObserver() {
   if (!section) return;
 
   if (_formObserver) { _formObserver.disconnect(); _formObserver = null; }
+  if (_formVisibleObserver) { _formVisibleObserver.disconnect(); _formVisibleObserver = null; }
   if (_formScrollHandler) { window.removeEventListener('scroll', _formScrollHandler); _formScrollHandler = null; }
 
   const onFormViewChange = (isInView) => {
@@ -634,6 +637,8 @@ function initFormObserver() {
     }
     const splitLeft = document.querySelector('.split-left');
     if (splitLeft) splitLeft.classList.toggle('summary-active', formInView);
+    const splitWrap = document.querySelector('.split-left-wrap');
+    if (splitWrap) splitWrap.classList.toggle('summary-active', formInView);
     updateTotal();
   };
 
@@ -646,12 +651,18 @@ function initFormObserver() {
       } else if (entry.boundingClientRect.top > (entry.rootBounds?.bottom ?? 0)) {
         onFormViewChange(false);
       }
-      // section above zone (scrolled past) — keep summary active
     }, { root, rootMargin: '0px 0px -80% 0px', threshold: 0 });
     _formObserver.observe(section);
+    _formVisibleObserver = new IntersectionObserver(entries => {
+      formVisible = entries[0].isIntersecting;
+      updateTotal();
+    }, { root, threshold: 0 });
+    _formVisibleObserver.observe(section);
   } else {
     _formScrollHandler = () => {
       const rect = section.getBoundingClientRect();
+      const visible = rect.top < window.innerHeight && rect.bottom > 0;
+      if (visible !== formVisible) { formVisible = visible; updateTotal(); }
       onFormViewChange(rect.top < window.innerHeight * 0.5 && rect.bottom > 0);
     };
     window.addEventListener('scroll', _formScrollHandler, { passive: true });
@@ -919,10 +930,10 @@ function initPreviewObserver() {
     { el: $('catering-grid'),                           key: 'catering'  },
     { el: $('beverages-grid'),                          key: 'beverages' },
     { el: $('media-list'),                              key: 'media'     },
+    { el: $('ops-list'),                                key: 'ops'       },
     { el: $('promo-list'),                              key: 'promo'     },
     { el: $('branding-list'),                           key: 'branding'  },
     { el: $('printed-list'),                            key: 'printed'   },
-    { el: $('ops-list'),                                key: 'ops'       },
   ];
   _previewObserverRef = new IntersectionObserver(entries => {
     entries.forEach(e => {
@@ -945,10 +956,10 @@ function initMobilePreviewScroll() {
     { el: $('catering-grid'),                        key: 'catering'   },
     { el: $('beverages-grid'),                       key: 'beverages'  },
     { el: $('media-list'),                           key: 'media'      },
+    { el: $('ops-list'),                             key: 'ops'        },
     { el: $('promo-list'),                           key: 'promo'      },
     { el: $('branding-list'),                        key: 'branding'   },
     { el: $('printed-list'),                         key: 'printed'    },
-    { el: $('ops-list'),                             key: 'ops'        },
   ].filter(s => s.el);
   _mobilePreviewScrollHandler = () => {
     const line = window.innerHeight * 0.6;
@@ -992,6 +1003,8 @@ window.addEventListener('resize', () => {
     formInView = false;
     const splitLeft = document.querySelector('.split-left');
     if (splitLeft) splitLeft.classList.remove('summary-active');
+    const splitWrap = document.querySelector('.split-left-wrap');
+    if (splitWrap) splitWrap.classList.remove('summary-active');
     const mob = $('summary-mobile');
     if (mob) mob.classList.remove('visible');
     renderAll();
