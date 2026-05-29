@@ -69,28 +69,20 @@ const OPS = [
 // ─── Preview images ───────────────────────────────────────────────────────────
 
 const PREVIEW_IMAGES = {
-  default:   'images/background.png',
-  details:   'images/background.png',
-  guests:    'images/background.png',
-  venue:     'images/background.png',
-  catering:  'images/background.png',
-  beverages: 'images/background.png',
-  media:     'images/background.png',
-  promo:     'images/background.png',
-  branding:  'images/background.png',
-  printed:   'images/background.png',
-  ops:       'images/background.png',
-  checkout:  'images/background.png',
+  default:   'images/Hero.webp',
+  details:   'images/Hero.webp',
+  venue:      'images/Venue Spaces.webp',
+  venue_rooms:'images/Meeting Rooms.webp',
+  catering:  'images/Catering.webp',
+  beverages: 'images/Baverages.webp',
+  media:     'images/Media Coverage.webp',
+  promo:     'images/Promo Services.webp',
+  branding:  'images/Branding.webp',
+  printed:   'images/Printed Materials.webp',
+  ops:       'images/Operations.webp',
+  checkout:  'images/Hero.webp',
 };
 
-// ─── Left panel label ────────────────────────────────────────────────────────
-
-function setLeftLabel(text) {
-  const el = document.getElementById('split-label');
-  if (!el) return;
-  el.style.opacity = '0';
-  setTimeout(() => { el.textContent = text; el.style.opacity = '1'; }, 150);
-}
 
 // ─── State ────────────────────────────────────────────────────────────────────
 // Multi-select perHour → value = hours (number)
@@ -309,7 +301,9 @@ function toggleItem(section, id) {
   const item = items.find(i => i.id === id);
   if (item.included) return;
   const obj = S[section];
-  if (id in obj) { delete obj[id]; } else { obj[id] = item.perUnit !== undefined ? S.guests : true; setLeftLabel(item.name); }
+  if (id in obj) { delete obj[id]; } else { obj[id] = item.perUnit !== undefined ? S.guests : true; }
+  const previewKey = section === 'venue' && VENUE_ROOMS.some(i => i.id === id) ? 'venue_rooms' : section;
+  setPreview(previewKey);
   if (section === 'venue') {
     renderItemList($('venue-list'), VENUE, obj, section);
     renderItemList($('venue-rooms-list'), VENUE_ROOMS, obj, section);
@@ -334,16 +328,16 @@ function changeHrs(section, id, delta) {
 function selectSingle(section, id) {
   if (section === 'beverages') {
     const item = BEVERAGES.find(i => i.id === id);
-    if (id in S.beverages) { delete S.beverages[id]; } else { S.beverages[id] = S.guests; if (item) setLeftLabel(item.name); }
+    if (id in S.beverages) { delete S.beverages[id]; } else { S.beverages[id] = S.guests; }
     renderCateringBev('beverages-grid', BEVERAGES, S.beverages, 'beverages-sub');
   } else {
     const item = CATERING.find(i => i.id === id);
     const selecting = S.catering !== id;
     S.catering = selecting ? id : null;
     if (selecting) S.cateringQty = S.guests;
-    if (selecting && item) setLeftLabel(item.name);
     renderCateringBev('catering-grid', CATERING, S.catering, 'catering-sub');
   }
+  setPreview(section);
   updateTotal();
 }
 
@@ -636,7 +630,6 @@ function initFormObserver() {
     formInView = isInView;
     if (formInView) {
       renderSummary();
-      if (window.innerWidth >= 850) scrollToForm();
     }
     const splitLeft = document.querySelector('.split-left');
     if (splitLeft) splitLeft.classList.toggle('summary-active', formInView);
@@ -646,8 +639,14 @@ function initFormObserver() {
   if (window.innerWidth >= 850) {
     const root = document.querySelector('.split-right') || null;
     _formObserver = new IntersectionObserver(entries => {
-      onFormViewChange(entries[0].isIntersecting);
-    }, { root, threshold: 0.05 });
+      const entry = entries[0];
+      if (entry.isIntersecting) {
+        onFormViewChange(true);
+      } else if (entry.boundingClientRect.top > (entry.rootBounds?.bottom ?? 0)) {
+        onFormViewChange(false);
+      }
+      // section above zone (scrolled past) — keep summary active
+    }, { root, rootMargin: '0px 0px -80% 0px', threshold: 0 });
     _formObserver.observe(section);
   } else {
     _formScrollHandler = () => {
@@ -891,41 +890,47 @@ function selectTime(t) {
 // ─── Preview ──────────────────────────────────────────────────────────────────
 
 let _currentPreview = 'default';
+let _activeLayer = 'a';
 
 function setPreview(key) {
   if (_currentPreview === key) return;
   _currentPreview = key;
-  const img = $('split-img');
-  if (!img) return;
   const src = PREVIEW_IMAGES[key] || PREVIEW_IMAGES.default;
-  if (img.src.endsWith(src)) return;
-  img.classList.add('fading');
-  setTimeout(() => { img.src = src; img.classList.remove('fading'); }, 200);
+  const front = $(`split-img-${_activeLayer}`);
+  const nextLayer = _activeLayer === 'a' ? 'b' : 'a';
+  const back = $(`split-img-${nextLayer}`);
+  if (!front || !back) return;
+  _activeLayer = nextLayer;
+  back.src = src;
+  (back.decode ? back.decode() : Promise.resolve()).then(() => {
+    back.style.opacity = '1';
+    front.style.opacity = '0';
+  });
 }
 
 function initPreviewObserver() {
   if (_previewObserverRef) { _previewObserverRef.disconnect(); _previewObserverRef = null; }
   if (window.innerWidth < 850) return;
   const sectionMap = [
-    { el: document.querySelector('.datetime-block'),    key: 'details',   label: 'Event Date & Time' },
-    { el: document.querySelector('.guest-slider-wrap'), key: 'guests',    label: 'Number of Guests' },
-    { el: $('venue-list'),                              key: 'venue',     label: 'Venue Spaces' },
-    { el: $('catering-grid'),                           key: 'catering',  label: 'Catering' },
-    { el: $('beverages-grid'),                          key: 'beverages', label: 'Beverages' },
-    { el: $('media-list'),                              key: 'media',     label: 'Media Coverage' },
-    { el: $('promo-list'),                              key: 'promo',     label: 'Promo Services' },
-    { el: $('branding-list'),                           key: 'branding',  label: 'Branding & The Daos Effect' },
-    { el: $('printed-list'),                            key: 'printed',   label: 'Printed Materials' },
-    { el: $('ops-list'),                                key: 'ops',       label: 'Operations & Hospitality' },
+    { el: document.querySelector('.datetime-block'),    key: 'details'   },
+    { el: $('venue-list'),                              key: 'venue'      },
+    { el: $('venue-rooms-list'),                        key: 'venue_rooms'},
+    { el: $('catering-grid'),                           key: 'catering'  },
+    { el: $('beverages-grid'),                          key: 'beverages' },
+    { el: $('media-list'),                              key: 'media'     },
+    { el: $('promo-list'),                              key: 'promo'     },
+    { el: $('branding-list'),                           key: 'branding'  },
+    { el: $('printed-list'),                            key: 'printed'   },
+    { el: $('ops-list'),                                key: 'ops'       },
   ];
   _previewObserverRef = new IntersectionObserver(entries => {
     entries.forEach(e => {
       if (e.isIntersecting) {
         const found = sectionMap.find(s => s.el === e.target);
-        if (found) setLeftLabel(found.label);
+        if (found) setPreview(found.key);
       }
     });
-  }, { root: document.querySelector('.split-right'), rootMargin: '0px 0px -50% 0px', threshold: 0 });
+  }, { root: document.querySelector('.split-right'), rootMargin: '0px 0px -80% 0px', threshold: 0 });
   sectionMap.forEach(s => { if (s.el) _previewObserverRef.observe(s.el); });
 }
 
@@ -943,6 +948,7 @@ updateDuration(S.duration);
 renderDatePicker();
 renderSlotsHeader();
 renderTimeSlots();
+Object.values(PREVIEW_IMAGES).filter((v,i,a)=>a.indexOf(v)===i).forEach(src => { new Image().src = src; });
 initPreviewObserver();
 initFormObserver();
 
