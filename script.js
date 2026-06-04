@@ -1,8 +1,8 @@
 // ─── Data ─────────────────────────────────────────────────────────────────────
 
 const VENUE = [
-  { id: 'event-hall',     name: 'Event hall',                         desc: '100 people · stunning Palm views and bar atmosphere',    price: 3000, perHour: true  },
   { id: 'stage-av',       name: 'Main Stage & AV Setup',              desc: 'LED screen, professional sound, stage lighting',         price: 0,    perHour: false, included: true },
+  { id: 'event-hall',     name: 'Event hall',                         desc: '100 people · stunning Palm views and bar atmosphere',    price: 3000, perHour: true  },
   { id: 'networking',     name: 'Networking area',                    desc: '70 people · stylish lounge and bar setting',             price: 2000, perHour: true  },
   { id: 'conference',     name: 'Conference Room',                    desc: 'Up to 30 people · boardroom style',                     price: 1500, perHour: true  },
 ];
@@ -69,18 +69,55 @@ const OPS = [
 // ─── Preview images ───────────────────────────────────────────────────────────
 
 const PREVIEW_IMAGES = {
-  default:   'images/Hero.webp',
-  details:   'images/Hero.webp',
-  venue:      'images/Venue Spaces.webp',
-  venue_rooms:'images/Meeting Rooms.webp',
-  catering:  'images/Catering.webp',
-  beverages: 'images/Baverages.webp',
-  media:     'images/Media Coverage.webp',
-  promo:     'images/Promo Services.webp',
-  branding:  'images/Branding.webp',
-  printed:   'images/Printed Materials.webp',
-  ops:       'images/Operations.webp',
-  checkout:  'images/Hero.webp',
+  default:      'images/Hero.webp',
+  details:      'images/Hero.webp',
+  venue:        'images/1_Venue Spaces/Venue Spaces_Cover.webp',
+  venue_rooms:  'images/Meeting Rooms.webp',
+  catering:     'images/2_Catering/Catering_Cover.webp',
+  beverages:    'images/3_Baverages/Baverages_Cover.webp',
+  media:        'images/5_Media Coverage/Media Coverage_Cover.webp',
+  promo:        'images/7_Promo Services/Promo Services_Cover.webp',
+  branding:     'images/8_Branding/Branding_Cover.webp',
+  printed:      'images/9_Printed Materials/Printed Materials_Cover.webp',
+  ops:          'images/6_Operations/Operations_Cover.webp',
+  checkout:     'images/Hero.webp',
+  // venue items
+  'item_event-hall':  'images/1_Venue Spaces/Event Hall.webp',
+  'item_stage-av':    'images/1_Venue Spaces/Main Stage.webp',
+  'item_networking':  'images/1_Venue Spaces/Networking Area.webp',
+  'item_conference':  'images/1_Venue Spaces/Conference Room.webp',
+  // media items
+  'item_photo':       'images/5_Media Coverage/Photographer.webp',
+  'item_video':       'images/5_Media Coverage/Videographer.webp',
+  'item_live':        'images/5_Media Coverage/Live broadcast.webp',
+  'item_recording':   'images/5_Media Coverage/Full event Recording.webp',
+  // ops items
+  'item_manager':     'images/6_Operations/Event Manager.webp',
+  'item_coordinator': 'images/6_Operations/Event Coordinator.webp',
+  'item_hostess':     'images/6_Operations/Hostesses for Check-in.webp',
+  'item_hostess-add': 'images/6_Operations/Additional Hostesses.webp',
+  'item_waiters':     'images/6_Operations/Waiters.webp',
+  'item_dj':          'images/6_Operations/DJ.webp',
+  // catering items
+  'item_basic':       'images/2_Catering/Basic.webp',
+  'item_classic':     'images/2_Catering/Classic.webp',
+  'item_extended':    'images/2_Catering/Extended.webp',
+  'item_signature':   'images/2_Catering/Signature.webp',
+  // beverages items
+  'item_coffee':      'images/3_Baverages/Coffee and Tea.webp',
+  'item_lemonade':    'images/3_Baverages/Lemonades.webp',
+  'item_mocktails':   'images/3_Baverages/Mocktails.webp',
+  // promo items
+  'item_luma':        'images/7_Promo Services/Luma.webp',
+  // branding items
+  'item_entrance':    'images/8_Branding/Entrance Branding.webp',
+  'item_identity':    'images/8_Branding/Visual Identity.webp',
+  // printed items
+  'item_badge':       'images/9_Printed Materials/Badge.webp',
+  'item_lanyards':    'images/9_Printed Materials/Lanyards.webp',
+  'item_notebooks':   'images/9_Printed Materials/Notebooks.webp',
+  'item_photowall':   'images/9_Printed Materials/Photo wall.webp',
+  'item_rollup':      'images/9_Printed Materials/Roll up.webp',
 };
 
 
@@ -301,9 +338,10 @@ function toggleItem(section, id) {
   const item = items.find(i => i.id === id);
   if (item.included) return;
   const obj = S[section];
-  if (id in obj) { delete obj[id]; } else { obj[id] = item.perUnit !== undefined ? S.guests : true; }
+  const wasSelected = id in obj;
+  if (wasSelected) { delete obj[id]; } else { obj[id] = item.perUnit !== undefined ? S.guests : true; }
   const previewKey = section === 'venue' && VENUE_ROOMS.some(i => i.id === id) ? 'venue_rooms' : section;
-  setPreview(previewKey);
+  if (wasSelected) { setPreview(previewKey); } else { setItemPreview(id, previewKey); }
   if (section === 'venue') {
     renderItemList($('venue-list'), VENUE, obj, section);
     renderItemList($('venue-rooms-list'), VENUE_ROOMS, obj, section);
@@ -326,18 +364,18 @@ function changeHrs(section, id, delta) {
 }
 
 function selectSingle(section, id) {
+  let selecting;
   if (section === 'beverages') {
-    const item = BEVERAGES.find(i => i.id === id);
-    if (id in S.beverages) { delete S.beverages[id]; } else { S.beverages[id] = S.guests; }
+    selecting = !(id in S.beverages);
+    if (selecting) { S.beverages[id] = S.guests; } else { delete S.beverages[id]; }
     renderCateringBev('beverages-grid', BEVERAGES, S.beverages, 'beverages-sub');
   } else {
-    const item = CATERING.find(i => i.id === id);
-    const selecting = S.catering !== id;
+    selecting = S.catering !== id;
     S.catering = selecting ? id : null;
     if (selecting) S.cateringQty = S.guests;
     renderCateringBev('catering-grid', CATERING, S.catering, 'catering-sub');
   }
-  setPreview(section);
+  if (selecting) { setItemPreview(id, section); } else { setPreview(section); }
   updateTotal();
 }
 
@@ -905,6 +943,11 @@ function selectTime(t) {
 
 let _currentPreview = 'default';
 let _activeLayer = 'a';
+
+function setItemPreview(itemId, sectionKey) {
+  const key = 'item_' + itemId;
+  setPreview(key in PREVIEW_IMAGES ? key : sectionKey);
+}
 
 function setPreview(key) {
   if (_currentPreview === key) return;
