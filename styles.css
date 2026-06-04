@@ -351,8 +351,9 @@ input[type="time"]::-webkit-date-and-time-value { text-align: left; margin: 0; }
     overflow: hidden;
   }
   .split-left-wrap.summary-active #summary-panel {
-    overflow-y: auto;
-    scrollbar-width: none;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
     background: rgba(150,156,166,0.08);
     backdrop-filter: blur(4px);
     border: 1px solid rgba(150,156,166,0.2);
@@ -361,7 +362,8 @@ input[type="time"]::-webkit-date-and-time-value { text-align: left; margin: 0; }
     box-sizing: border-box;
   }
 
-  .summary-scroll { overflow-y: auto; scrollbar-width: none; }
+  .summary-title { flex-shrink: 0; }
+  .summary-scroll { flex: 1; min-height: 0; overflow-y: auto; scrollbar-width: none; }
   .summary-scroll::-webkit-scrollbar { display: none; }
   .summary-footer { flex-shrink: 0; margin-top: 0; }
   .summary-total-lbl { font-size: 15px; }
