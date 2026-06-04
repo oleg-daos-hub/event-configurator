@@ -349,13 +349,13 @@ input[type="time"]::-webkit-date-and-time-value { text-align: left; margin: 0; }
     display: block;
     min-height: 0;
     overflow: hidden;
+    width: min(600px, 100%);
+    margin-left: auto;
   }
   .split-left-wrap.summary-active #summary-panel {
     display: flex;
     flex-direction: column;
     min-height: 0;
-    width: min(600px, 100%);
-    margin-left: auto;
     background: rgba(150,156,166,0.08);
     backdrop-filter: blur(4px);
     border: 1px solid rgba(150,156,166,0.2);
