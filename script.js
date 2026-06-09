@@ -112,6 +112,7 @@ const PREVIEW_IMAGES = {
   // branding items
   'item_entrance':    'images/8_Branding/Entrance Branding.webp',
   'item_identity':    'images/8_Branding/Visual Identity.webp',
+  'item_lighting':    ['images/8_Branding/Lighting_1.webp', 'images/8_Branding/Lighting_2.webp', 'images/8_Branding/Lighting_3.webp', 'images/8_Branding/Lighting_4.webp'],
   // printed items
   'item_badge':       'images/9_Printed Materials/Badge.webp',
   'item_lanyards':    'images/9_Printed Materials/Lanyards.webp',
