@@ -92,6 +92,7 @@ const PREVIEW_IMAGES = {
   'item_live':        'images/5_Media Coverage/Live broadcast.webp',
   'item_recording':   'images/5_Media Coverage/Full event Recording.webp',
   // ops items
+  'item_bartender':   ['images/6_Operations/Bartender_1.webp', 'images/6_Operations/Bartender_2.webp'],
   'item_manager':     'images/6_Operations/Event Manager.webp',
   'item_coordinator': 'images/6_Operations/Event Coordinator.webp',
   'item_hostess':     'images/6_Operations/Hostesses for Check-in.webp',
