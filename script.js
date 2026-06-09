@@ -99,14 +99,14 @@ const PREVIEW_IMAGES = {
   'item_waiters':     'images/6_Operations/Waiters.webp',
   'item_dj':          'images/6_Operations/DJ.webp',
   // catering items
-  'item_basic':       'images/2_Catering/Basic.webp',
-  'item_classic':     'images/2_Catering/Classic.webp',
-  'item_extended':    'images/2_Catering/Extended.webp',
-  'item_signature':   'images/2_Catering/Signature.webp',
+  'item_basic':       ['images/2_Catering/Basic_1.webp', 'images/2_Catering/Basic_2.webp'],
+  'item_classic':     ['images/2_Catering/Classic_1.webp', 'images/2_Catering/Classic_2.webp', 'images/2_Catering/Classic_3.webp'],
+  'item_extended':    ['images/2_Catering/Extended_1.webp', 'images/2_Catering/Extended_2.webp', 'images/2_Catering/Extended_3.webp', 'images/2_Catering/Extended_4.webp'],
+  'item_signature':   ['images/2_Catering/Signature_1.webp', 'images/2_Catering/Signature_2.webp', 'images/2_Catering/Signature_3.webp'],
   // beverages items
-  'item_coffee':      'images/3_Baverages/Coffee and Tea.webp',
-  'item_lemonade':    'images/3_Baverages/Lemonades.webp',
-  'item_mocktails':   'images/3_Baverages/Mocktails.webp',
+  'item_coffee':      [':tl', 'images/3_Baverages/Coffee and Tea_1.webp', 'images/3_Baverages/Coffee and Tea_2.webp', 'images/3_Baverages/Coffee and Tea_3.webp'],
+  'item_lemonade':    [':tl', 'images/3_Baverages/Lemonades_1.webp', 'images/3_Baverages/Lemonades_3.webp', 'images/3_Baverages/Lemonades_2.webp'],
+  'item_mocktails':   ['images/3_Baverages/Mocktails_1.webp', 'images/3_Baverages/Mocktails_2.webp', 'images/3_Baverages/Mocktails_3.webp'],
   // promo items
   'item_luma':        'images/7_Promo Services/Luma.webp',
   // branding items
@@ -952,17 +952,41 @@ function setItemPreview(itemId, sectionKey) {
 function setPreview(key) {
   if (_currentPreview === key) return;
   _currentPreview = key;
-  const src = PREVIEW_IMAGES[key] || PREVIEW_IMAGES.default;
+  const value = PREVIEW_IMAGES[key] || PREVIEW_IMAGES.default;
   const front = $(`split-img-${_activeLayer}`);
   const nextLayer = _activeLayer === 'a' ? 'b' : 'a';
   const back = $(`split-img-${nextLayer}`);
+  const dual = $('split-img-dual');
   if (!front || !back) return;
   _activeLayer = nextLayer;
-  back.src = src;
-  (back.decode ? back.decode() : Promise.resolve()).then(() => {
-    back.style.opacity = '1';
-    front.style.opacity = '0';
-  });
+
+  const triple = $('split-img-triple');
+  const tripleL = $('split-img-triple-l');
+  const quad = $('split-img-quad');
+  const allMulti = [dual, triple, tripleL, quad];
+
+  if (Array.isArray(value)) {
+    let images = value;
+    let container, ids;
+    if (images[0] === ':tl') { images = images.slice(1); container = tripleL; ids = ['tl1','tl2','tl3']; }
+    else if (images.length === 2) { container = dual; ids = ['d1','d2']; }
+    else if (images.length === 3) { container = triple; ids = ['t1','t2','t3']; }
+    else { container = quad; ids = ['q1','q2','q3','q4']; }
+    const imgs = ids.map((id, i) => { const el = $('split-img-' + id); el.src = images[i] || ''; return el; });
+    Promise.all(imgs.map(img => img.src && img.decode ? img.decode() : Promise.resolve())).then(() => {
+      allMulti.forEach(c => { if (c) c.style.opacity = '0'; });
+      if (container) container.style.opacity = '1';
+      front.style.opacity = '0';
+      back.style.opacity = '0';
+    });
+  } else {
+    back.src = value;
+    (back.decode ? back.decode() : Promise.resolve()).then(() => {
+      back.style.opacity = '1';
+      front.style.opacity = '0';
+      allMulti.forEach(c => { if (c) c.style.opacity = '0'; });
+    });
+  }
 }
 
 function initPreviewObserver() {
