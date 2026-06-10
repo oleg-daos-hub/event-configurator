@@ -102,7 +102,7 @@ const PREVIEW_IMAGES = {
   // catering items
   'item_basic':       ['images/2_Catering/Basic_1.webp', 'images/2_Catering/Basic_2.webp'],
   'item_classic':     ['images/2_Catering/Classic_1.webp', 'images/2_Catering/Classic_2.webp', 'images/2_Catering/Classic_3.webp'],
-  'item_extended':    ['images/2_Catering/Extended_1.webp', 'images/2_Catering/Extended_2.webp', 'images/2_Catering/Extended_3.webp', 'images/2_Catering/Extended_4.webp'],
+  'item_extended':    [':bento', 'images/2_Catering/Extended_1.webp', 'images/2_Catering/Extended_2.webp', 'images/2_Catering/Extended_3.webp', 'images/2_Catering/Extended_4.webp'],
   'item_signature':   ['images/2_Catering/Signature_1.webp', 'images/2_Catering/Signature_2.webp', 'images/2_Catering/Signature_3.webp'],
   // beverages items
   'item_coffee':      [':tl', 'images/3_Baverages/Coffee and Tea_1.webp', 'images/3_Baverages/Coffee and Tea_2.webp', 'images/3_Baverages/Coffee and Tea_3.webp'],
