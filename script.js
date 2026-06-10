@@ -113,6 +113,7 @@ const PREVIEW_IMAGES = {
   // branding items
   'item_entrance':    'images/8_Branding/Entrance Branding.webp',
   'item_identity':    'images/8_Branding/Visual Identity.webp',
+  'item_stage':       'images/8_Branding/Branding_Motion.webm',
   'item_lighting':    [':bento', 'images/8_Branding/Lighting_1.webp', 'images/8_Branding/Lighting_2.webp', 'images/8_Branding/Lighting_3.webp', 'images/8_Branding/Lighting_4.webp'],
   // printed items
   'item_badge':       'images/9_Printed Materials/Badge.webp',
@@ -966,7 +967,19 @@ function setPreview(key) {
   const tripleL = $('split-img-triple-l');
   const quad = $('split-img-quad');
   const bento = $('split-img-bento');
+  const video = $('split-video');
   const allMulti = [dual, triple, tripleL, quad, bento];
+
+  if (typeof value === 'string' && /\.(webm|mp4)$/i.test(value)) {
+    if (video.src !== value) video.src = value;
+    video.style.opacity = '1';
+    front.style.opacity = '0';
+    back.style.opacity = '0';
+    allMulti.forEach(c => { if (c) c.style.opacity = '0'; });
+    return;
+  }
+
+  if (video) video.style.opacity = '0';
 
   if (Array.isArray(value)) {
     let images = value;

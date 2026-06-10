@@ -275,6 +275,7 @@ input[type="time"]::-webkit-date-and-time-value { text-align: left; margin: 0; }
 /* ─── Split image layers (global) ──────────────────────────────────────────── */
 .split-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; border-radius: 20px; transition: opacity 0.6s ease; }
 .split-img-back { opacity: 0; }
+.split-video { opacity: 0; }
 .split-img-dual { position: absolute; inset: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; opacity: 0; transition: opacity 0.6s ease; pointer-events: none; }
 .split-img-dual img { width: 100%; height: 100%; min-height: 0; min-width: 0; object-fit: cover; object-position: center; border-radius: 20px; }
 .split-img-triple { position: absolute; inset: 0; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 20px; opacity: 0; transition: opacity 0.6s ease; pointer-events: none; }
