@@ -113,7 +113,7 @@ const PREVIEW_IMAGES = {
   // branding items
   'item_entrance':    'images/8_Branding/Entrance Branding.webp',
   'item_identity':    'images/8_Branding/Visual Identity.webp',
-  'item_lighting':    ['images/8_Branding/Lighting_1.webp', 'images/8_Branding/Lighting_2.webp', 'images/8_Branding/Lighting_3.webp', 'images/8_Branding/Lighting_4.webp'],
+  'item_lighting':    [':bento', 'images/8_Branding/Lighting_1.webp', 'images/8_Branding/Lighting_2.webp', 'images/8_Branding/Lighting_3.webp', 'images/8_Branding/Lighting_4.webp'],
   // printed items
   'item_badge':       'images/9_Printed Materials/Badge.webp',
   'item_lanyards':    'images/9_Printed Materials/Lanyards.webp',
@@ -965,12 +965,14 @@ function setPreview(key) {
   const triple = $('split-img-triple');
   const tripleL = $('split-img-triple-l');
   const quad = $('split-img-quad');
-  const allMulti = [dual, triple, tripleL, quad];
+  const bento = $('split-img-bento');
+  const allMulti = [dual, triple, tripleL, quad, bento];
 
   if (Array.isArray(value)) {
     let images = value;
     let container, ids;
-    if (images[0] === ':tl') { images = images.slice(1); container = tripleL; ids = ['tl1','tl2','tl3']; }
+    if (images[0] === ':tl')    { images = images.slice(1); container = tripleL; ids = ['tl1','tl2','tl3']; }
+    else if (images[0] === ':bento') { images = images.slice(1); container = bento; ids = ['bn1','bn2','bn3','bn4']; }
     else if (images.length === 2) { container = dual; ids = ['d1','d2']; }
     else if (images.length === 3) { container = triple; ids = ['t1','t2','t3']; }
     else { container = quad; ids = ['q1','q2','q3','q4']; }
