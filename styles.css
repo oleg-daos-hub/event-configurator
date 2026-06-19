@@ -136,7 +136,7 @@ body::before { content: ''; position: fixed; top: 0; bottom: 0; left: 0; right: 
 .datetime-block { margin-bottom: 20px; }
 /* Datetime header (above both boxes) */
 .datetime-header { display: flex; gap: 8px; align-items: center; margin-bottom: 6px; }
-.dt-cal-header { flex: 1; display: flex; align-items: center; justify-content: space-between; min-width: 0; }
+.dt-cal-header { flex: 1; display: flex; align-items: center; justify-content: space-between; min-width: 0; padding: 0 20px; }
 .dt-cal-label { font-size: 13px; }
 .dt-month { font-weight: 600; color: #333; }
 .dt-year { color: #333; }
@@ -151,7 +151,7 @@ body::before { content: ''; position: fixed; top: 0; bottom: 0; left: 0; right: 
 
 /* Datetime body */
 .datetime-body { display: flex; gap: 8px; }
-.date-picker { flex: 1; min-width: 0; height: 190px; overflow: hidden; background: rgba(255,255,255,0.4); backdrop-filter: blur(4px); border: none; border-radius: 20px; padding: 10px; box-sizing: border-box; max-width: calc(100% - 153px); box-shadow: inset -0.5px 1px 0 rgba(255,255,255,0.6), inset -0.5px -1px 0 rgba(255,255,255,0.6); }
+.date-picker { flex: 1; min-width: 0; height: 190px; overflow: hidden; background: rgba(255,255,255,0.4); backdrop-filter: blur(4px); border: none; border-radius: 20px; padding: 10px 20px; box-sizing: border-box; max-width: calc(100% - 153px); box-shadow: inset -0.5px 1px 0 rgba(255,255,255,0.6), inset -0.5px -1px 0 rgba(255,255,255,0.6); }
 .time-slots-wrap { width: 145px; flex-shrink: 0; height: 190px; overflow: hidden; }
 .time-slots { display: flex; flex-direction: column; gap: 5px; overflow-y: auto; scrollbar-width: none; height: 100%; }
 .time-slots::-webkit-scrollbar { display: none; }
