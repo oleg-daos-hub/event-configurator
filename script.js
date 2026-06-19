@@ -617,7 +617,7 @@ function renderSectionsHTML(sections) {
     <div class="summary-section">
       <div class="summary-section-header">
         <span class="summary-section-title">${s.title}</span>
-        ${s.scrollId ? `<button class="summary-edit-btn" onclick="scrollToSection('${s.scrollId}')"><svg width="16" height="16" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.99995 2.58599L10.9999 5.58599M0.5 13.086L4.13832 12.3529C4.33147 12.314 4.50881 12.2189 4.6481 12.0795L12.7928 3.93031C13.1833 3.5396 13.1831 2.90627 12.7922 2.51589L11.0669 0.792493C10.6762 0.40227 10.0432 0.402536 9.65288 0.793087L1.5073 8.94313C1.36829 9.08222 1.27337 9.2592 1.23442 9.45195L0.5 13.086Z" stroke="#333333" stroke-linecap="round" stroke-linejoin="round"/></svg></button>` : ''}
+        ${s.scrollId ? `<button class="summary-edit-btn" onclick="scrollToSection('${s.scrollId}')"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.99995 2.58599L10.9999 5.58599M0.5 13.086L4.13832 12.3529C4.33147 12.314 4.50881 12.2189 4.6481 12.0795L12.7928 3.93031C13.1833 3.5396 13.1831 2.90627 12.7922 2.51589L11.0669 0.792493C10.6762 0.40227 10.0432 0.402536 9.65288 0.793087L1.5073 8.94313C1.36829 9.08222 1.27337 9.2592 1.23442 9.45195L0.5 13.086Z" stroke="#333333" stroke-linecap="round" stroke-linejoin="round"/></svg></button>` : ''}
       </div>
       ${s.items.map(([name, val]) => `
         <div class="summary-row">
