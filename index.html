@@ -49,15 +49,8 @@
       </svg>
     </div>
     <h1 class="cfg-title">Build your own event</h1>
-    <p class="cfg-desc">Just define the content — we'll handle the rest.</p>
 
     <!-- 1. Event details -->
-    <div class="step-row">
-<div>
-        <div class="step-title">Event Date & Time</div>
-        <div class="step-sub">Choose event date & time</div>
-      </div>
-    </div>
     <div class="datetime-block">
       <div class="datetime-header">
         <div class="dt-cal-header" id="dt-cal-header"></div>
@@ -84,14 +77,17 @@
           <div class="step-sub">We'll automatically calculate food and drinks for this count</div>
         </div>
       </div>
-      <div class="val-box" id="guest-slider-val">50 guests</div>
+      <div class="slider-labels-row">
+        <span class="slider-range-label">50</span>
+        <div class="val-box" id="guest-slider-val">50</div>
+        <span class="slider-range-label">150</span>
+      </div>
       <input type="range" id="guest-slider" class="guest-slider" min="50" max="150" step="10" value="50" oninput="selectGuests(+this.value)">
       <div class="guest-slider-ticks">
         <span></span><span></span><span></span><span></span><span></span>
         <span></span><span></span><span></span><span></span><span></span>
         <span></span>
       </div>
-      <div class="guest-slider-range"><span>50</span><span>150</span></div>
     </div>
 
     <div class="duration-wrap">
@@ -101,10 +97,13 @@
           <div class="step-sub">Total length of your event</div>
         </div>
       </div>
-      <div class="val-box" id="duration-val">2 hours</div>
+      <div class="slider-labels-row">
+        <span class="slider-range-label">2h</span>
+        <div class="val-box" id="duration-val">2h</div>
+        <span class="slider-range-label">18h</span>
+      </div>
       <input type="range" id="duration-slider" class="guest-slider" min="2" max="18" step="1" value="2" oninput="updateDuration(+this.value)">
       <div class="duration-ticks" id="duration-ticks"></div>
-      <div class="guest-slider-range"><span>2h</span><span>18h</span></div>
     </div>
 
     <div id="rest">
