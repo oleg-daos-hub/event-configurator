@@ -452,12 +452,26 @@ function updateTotal() {
   if (shouldShow) {
     bar.classList.remove('hiding');
     bar.classList.add('visible');
+    if (window.innerWidth < 850) {
+      requestAnimationFrame(() => {
+        const photoH = Math.min((window.innerWidth - 24) * 9 / 16, 260);
+        const barH = bar.offsetHeight;
+        const splitRight = document.querySelector('.split-right');
+        if (splitRight) splitRight.style.paddingTop = `${photoH + 12 + barH - 20 + 8}px`;
+      });
+    }
   } else if (bar.classList.contains('visible') && !bar.classList.contains('hiding')) {
     bar.classList.add('hiding');
-    bar.addEventListener('animationend', () => { bar.classList.remove('visible', 'hiding'); }, { once: true });
+    bar.addEventListener('animationend', () => {
+      bar.classList.remove('visible', 'hiding');
+      if (window.innerWidth < 850) {
+        const splitRight = document.querySelector('.split-right');
+        if (splitRight) splitRight.style.paddingTop = '';
+      }
+    }, { once: true });
   }
   $('enquiry-section').classList.toggle('locked', total === 0);
-  if (formInView) renderSummary();
+  renderSummary();
 
   $('tbl-guests').textContent = S.guests ? `${S.guests} guests` : '';
   const dtParts = [];
@@ -526,25 +540,13 @@ let formVisible = false;
 function scrollToForm() {
   const section = $('enquiry-section');
   if (!section) return;
-  const panel = document.querySelector('.split-right');
-  if (panel && window.innerWidth >= 850) {
-    const target = panel.scrollTop + section.getBoundingClientRect().top - panel.getBoundingClientRect().top;
-    panel.scrollTo({ top: target, behavior: 'smooth' });
-  } else {
-    section.scrollIntoView({ behavior: 'smooth' });
-  }
+  section.scrollIntoView({ behavior: 'smooth' });
 }
 
 function scrollToSection(id) {
   const el = $(id);
   if (!el) return;
-  const panel = document.querySelector('.split-right');
-  if (panel && window.innerWidth >= 850) {
-    const target = panel.scrollTop + el.getBoundingClientRect().top - panel.getBoundingClientRect().top - 80;
-    panel.scrollTo({ top: Math.max(0, target), behavior: 'smooth' });
-  } else {
-    el.scrollIntoView({ behavior: 'smooth' });
-  }
+  el.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 function buildSummarySections() {
@@ -652,7 +654,7 @@ function renderSummary() {
         <span class="summary-total-lbl">Total</span>
         <span class="summary-total-val">${total}</span>
       </div>`;
-    mobile.classList.add('visible');
+    if (formInView) mobile.classList.add('visible');
   }
 }
 
@@ -675,18 +677,12 @@ function initFormObserver() {
   const onFormViewChange = (isInView) => {
     if (isInView === formInView) return;
     formInView = isInView;
-    if (formInView) {
-      renderSummary();
-    }
-    const splitLeft = document.querySelector('.split-left');
-    if (splitLeft) splitLeft.classList.toggle('summary-active', formInView);
     const splitWrap = document.querySelector('.split-left-wrap');
     if (splitWrap) splitWrap.classList.toggle('summary-active', formInView);
     updateTotal();
   };
 
   if (window.innerWidth >= 850) {
-    const root = document.querySelector('.split-right') || null;
     _formObserver = new IntersectionObserver(entries => {
       const entry = entries[0];
       if (entry.isIntersecting) {
@@ -694,17 +690,18 @@ function initFormObserver() {
       } else if (entry.boundingClientRect.top > (entry.rootBounds?.bottom ?? 0)) {
         onFormViewChange(false);
       }
-    }, { root, rootMargin: '0px 0px -80% 0px', threshold: 0 });
+    }, { root: null, rootMargin: '0px 0px -80% 0px', threshold: 0 });
     _formObserver.observe(section);
     _formVisibleObserver = new IntersectionObserver(entries => {
-      formVisible = entries[0].isIntersecting;
+      const entry = entries[0];
+      formVisible = entry.isIntersecting || entry.boundingClientRect.top < 0;
       updateTotal();
-    }, { root, threshold: 0 });
+    }, { root: null, threshold: 0 });
     _formVisibleObserver.observe(section);
   } else {
     _formScrollHandler = () => {
       const rect = section.getBoundingClientRect();
-      const visible = rect.top < window.innerHeight && rect.bottom > 0;
+      const visible = rect.top < window.innerHeight;
       if (visible !== formVisible) { formVisible = visible; updateTotal(); }
       onFormViewChange(rect.top < window.innerHeight * 0.5 && rect.bottom > 0);
     };
@@ -1085,8 +1082,6 @@ window.addEventListener('resize', () => {
     if (isDesktop === _lastBreakpoint) return;
     _lastBreakpoint = isDesktop;
     formInView = false;
-    const splitLeft = document.querySelector('.split-left');
-    if (splitLeft) splitLeft.classList.remove('summary-active');
     const splitWrap = document.querySelector('.split-left-wrap');
     if (splitWrap) splitWrap.classList.remove('summary-active');
     const mob = $('summary-mobile');
