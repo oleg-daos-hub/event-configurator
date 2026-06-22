@@ -677,13 +677,9 @@ function initFormObserver() {
   const onFormViewChange = (isInView) => {
     if (isInView === formInView) return;
     formInView = isInView;
-    const splitWrap = document.querySelector('.split-left-wrap');
-    if (splitWrap) {
-      if (window.innerWidth >= 850) {
-        splitWrap.scrollTo({ top: isInView ? window.innerHeight : 0, behavior: 'smooth' });
-      } else {
-        splitWrap.classList.toggle('summary-active', isInView);
-      }
+    if (window.innerWidth < 850) {
+      const splitWrap = document.querySelector('.split-left-wrap');
+      if (splitWrap) splitWrap.classList.toggle('summary-active', isInView);
     }
     updateTotal();
   };
@@ -1089,7 +1085,7 @@ window.addEventListener('resize', () => {
     _lastBreakpoint = isDesktop;
     formInView = false;
     const splitWrap = document.querySelector('.split-left-wrap');
-    if (splitWrap) { splitWrap.scrollTop = 0; splitWrap.classList.remove('summary-active'); }
+    if (splitWrap) splitWrap.classList.remove('summary-active');
     const mob = $('summary-mobile');
     if (mob) mob.classList.remove('visible');
     renderAll();
