@@ -368,14 +368,17 @@
     <div class="cmp-block">
       <div class="cmp-title">Value Badge + Slider</div>
       <div class="cmp-demo">
-        <div style="text-align:center;">
-          <div class="val-box" id="ds-guest-val">50 guests</div>
+        <div class="guest-slider-wrap">
+          <div class="slider-labels-row">
+            <span class="slider-range-label">50</span>
+            <div class="val-box" id="ds-guest-val">50</div>
+            <span class="slider-range-label">150</span>
+          </div>
           <input type="range" id="ds-guest-slider" class="guest-slider" min="50" max="150" step="10" value="50"
             oninput="dsUpdateSlider(this)">
           <div class="guest-slider-ticks" id="ds-guest-ticks">
             <span class="active"></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
           </div>
-          <div class="guest-slider-range"><span>50</span><span>150</span></div>
         </div>
       </div>
     </div>
@@ -499,7 +502,7 @@
   /* Slider with ticks */
   function dsUpdateSlider(input) {
     const val = parseInt(input.value);
-    document.getElementById('ds-guest-val').textContent = val + ' guests';
+    document.getElementById('ds-guest-val').textContent = val;
     const idx = (val - 50) / 10;
     document.querySelectorAll('#ds-guest-ticks span').forEach((s, i) => {
       s.classList.toggle('active', i <= idx);
