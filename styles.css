@@ -497,10 +497,10 @@ input[type="time"]::-webkit-date-and-time-value { text-align: left; margin: 0; }
 .faq-list {
   background: rgba(145, 150, 161, 0.10);
   border-radius: 20px;
-  padding: 6px;
+  padding: 8px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
 }
 
 .faq-item {
@@ -676,11 +676,12 @@ input[type="time"]::-webkit-date-and-time-value { text-align: left; margin: 0; }
 }
 
 @media (min-width: 850px) {
-  .site-footer { padding: 20px; }
+  .site-footer { padding: 20px; height: 100vh; box-sizing: border-box; }
 
   .footer-inner {
     border-radius: 40px;
     padding-bottom: 60px;
+    height: 100%;
   }
 
   /* Two-column FAQ section: left = badge+heading, right = accordion */
@@ -704,7 +705,7 @@ input[type="time"]::-webkit-date-and-time-value { text-align: left; margin: 0; }
   .faq-list {
     flex: 1;
     margin-top: 0;
-    padding-top: 40px;
+    padding-top: 8px;
   }
 
   .footer-divider {

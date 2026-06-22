@@ -538,9 +538,16 @@ let formInView = false;
 let formVisible = false;
 
 function scrollToForm() {
+  if (window.innerWidth >= 850) {
+    const panel = $('summary-panel');
+    if (panel) {
+      const top = window.scrollY + panel.getBoundingClientRect().top - 48;
+      window.scrollTo({ top, behavior: 'smooth' });
+      return;
+    }
+  }
   const section = $('enquiry-section');
-  if (!section) return;
-  section.scrollIntoView({ behavior: 'smooth' });
+  if (section) section.scrollIntoView({ behavior: 'smooth' });
 }
 
 function scrollToSection(id) {
