@@ -1098,6 +1098,10 @@ window.addEventListener('resize', () => {
   }, 200);
 });
 
+function toggleFaq(btn) {
+  btn.closest('.faq-item').classList.toggle('open');
+}
+
 // Clear field error as soon as the user starts correcting the field
 ['f-name', 'f-email', 'f-company', 'f-phone'].forEach(id => {
   $(id).addEventListener('input', () => {
