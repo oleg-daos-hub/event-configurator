@@ -356,8 +356,6 @@ input[type="time"]::-webkit-date-and-time-value { text-align: left; margin: 0; }
 
   .split-right { width: 500px; flex-shrink: 0; padding: 48px 24px 120px 0; box-sizing: border-box; }
   .split-right .cfg { max-width: 500px; padding: 1.5rem; margin: 0; }
-
-  .site-footer { padding: 0 1.5rem 1.5rem; }
 }
 
 @media (max-width: 849px) {
@@ -438,7 +436,7 @@ input[type="time"]::-webkit-date-and-time-value { text-align: left; margin: 0; }
    SITE FOOTER
    ============================================================ */
 .site-footer {
-  padding: 0 0 1.5rem;
+  padding: 10px;
 }
 
 .footer-inner {
@@ -677,17 +675,24 @@ input[type="time"]::-webkit-date-and-time-value { text-align: left; margin: 0; }
 }
 
 @media (min-width: 850px) {
+  .site-footer { padding: 20px; }
+
   .footer-inner {
     border-radius: 40px;
     padding-bottom: 60px;
   }
 
+  /* Two-column FAQ section: left = badge+heading, right = accordion */
   .footer-faq-section {
-    padding: 60px 40px 0;
+    display: flex;
+    align-items: flex-start;
+    padding: 60px 60px 0;
   }
 
   .footer-faq-head {
+    flex: 1;
     align-items: flex-start;
+    padding-bottom: 0;
   }
 
   .footer-heading {
@@ -695,14 +700,20 @@ input[type="time"]::-webkit-date-and-time-value { text-align: left; margin: 0; }
     text-align: left;
   }
 
+  .faq-list {
+    flex: 1;
+    margin-top: 0;
+    padding-top: 40px;
+  }
+
   .footer-divider {
-    margin: 60px 40px 0;
+    margin: 60px 0 0;
   }
 
   .footer-bottom {
     padding: 0 40px;
     margin-top: 40px;
-    gap: 32px;
+    gap: 40px;
   }
 
   .footer-legal-row {
@@ -715,5 +726,9 @@ input[type="time"]::-webkit-date-and-time-value { text-align: left; margin: 0; }
     gap: 16px;
     align-items: center;
     flex-wrap: wrap;
+  }
+
+  .footer-meta-row {
+    justify-content: space-between;
   }
 }
