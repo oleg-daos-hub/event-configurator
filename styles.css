@@ -379,12 +379,17 @@ input[type="time"]::-webkit-date-and-time-value { text-align: left; margin: 0; }
     border-radius: var(--r-xl);
     overflow: hidden;
   }
+  .split-img-dual,
+  .split-img-triple,
+  .split-img-triple-l,
+  .split-img-quad,
+  .split-img-bento { gap: 10px; }
   .photo-mask {
     display: block;
     position: absolute;
     top: -12px; left: -12px; right: -12px;
     height: calc(min((100vw - 24px) * 9 / 16, 260px) + 12px);
-    background: linear-gradient(to bottom, #fff 44.664%, transparent);
+    background: linear-gradient(to bottom, #fff 80%, transparent);
     pointer-events: none;
   }
   .split-right {
